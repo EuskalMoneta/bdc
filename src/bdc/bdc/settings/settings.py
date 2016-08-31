@@ -58,6 +58,10 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.locale.LocaleMiddleware',
 ]
 
+AUTHENTICATION_BACKENDS = (
+    'bdc.auth_backend.BDCAuthBackend',
+)
+
 API_PUBLIC_URL = os.environ.get('API_PUBLIC_URL')
 
 # CSP headers
