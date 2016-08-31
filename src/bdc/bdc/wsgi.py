@@ -1,5 +1,5 @@
 """
-WSGI config for bureaudechange project.
+WSGI config for bdc project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "bureaudechange.settings.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "bdc.settings.settings")
 
 application = get_wsgi_application()

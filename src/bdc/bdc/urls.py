@@ -28,14 +28,12 @@ urlpatterns = [
     # url(r'^i18n/', include(i18n)),
     url(r'^i18n/setlang_custom/$', base_views.setlang_custom, name='setlang_custom'),
 
-    # home
-    url(r'^$', base_views.home, name='home'),
     # JavaScript config for this Django/React app
     url(r'^config\.js$', base_views.config_js, name='config_js'),
     # login
     url(r'^login/?$', login, {'template_name': 'login.html'}, name='login'),
     # logout
-    url(r'^logout/?$', logout, {'next_page': reverse_lazy('home')}, name='logout'),
+    url(r'^logout/?$', logout, {'next_page': reverse_lazy('member-search')}, name='logout'),
 
     # our bureau de change Django apps
     url(r'^members/(?P<member_id>\d+)/?$', members_views.index, name='member-show'),

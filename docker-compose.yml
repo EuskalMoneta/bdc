@@ -1,12 +1,19 @@
 version: '2'
 
 services:
-  bureaudechange:
-    build: src/bureaudechange
+  bdc:
+    build: src/bdc
     volumes:
-      - ./src/bureaudechange:/usr/src/app
+      - ./src/bdc:/usr/src/app
       - /usr/src/app/node_modules
     ports:
       - 8001:8000
-    links:
-      - api
+    environment:
+      - API_PUBLIC_URL=http://localhost:8000/
+    networks:
+      - eusko
+
+networks:
+  eusko:
+    external:
+      name: api_eusko

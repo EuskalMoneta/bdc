@@ -9,12 +9,6 @@ from django.utils.translation import LANGUAGE_SESSION_KEY, check_for_language
 log = logging.getLogger('sentry')
 
 
-@login_required
-def home(request):
-    # homepage for bureauchange app
-    return render(request, 'home.html')
-
-
 def config_js(request):
     # JavaScript config for this Django/React app
     return render(request, 'config.js')
