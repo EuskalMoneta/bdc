@@ -15,10 +15,11 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from django.contrib.auth.views import login, logout
+from django.contrib.auth.views import logout
 from django.core.urlresolvers import reverse_lazy
 
 from base import views as base_views
+from bdc.auth import login_view
 from manager import views as manager_views
 from members import views as members_views
 
@@ -31,7 +32,7 @@ urlpatterns = [
     # JavaScript config for this Django/React app
     url(r'^config\.js$', base_views.config_js, name='config_js'),
     # login
-    url(r'^login/?$', login, {'template_name': 'login.html'}, name='login'),
+    url(r'^login/?$', login_view, name='login'),
     # logout
     url(r'^logout/?$', logout, {'next_page': reverse_lazy('member-search')}, name='logout'),
 
@@ -40,6 +41,7 @@ urlpatterns = [
     url(r'^members/add$', members_views.add, name='member-add'),
     url(r'^members/subscription/add/(?P<member_id>\d+)/?$',
         members_views.add_subscription, name='member-subscription-add'),
+    url(r'^$', members_views.search, name='home'),
     url(r'^members/search$', members_views.search, name='member-search'),
 
     url(r'^manager/?$', manager_views.index, name='manager'),

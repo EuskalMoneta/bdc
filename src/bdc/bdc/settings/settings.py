@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     'base',
     'manager',
 
-    'raven.contrib.django.raven_compat',
+    # 'raven.contrib.django.raven_compat',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -58,11 +58,12 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.locale.LocaleMiddleware',
 ]
 
-AUTHENTICATION_BACKENDS = (
-    'bdc.auth_backend.BDCAuthBackend',
-)
+AUTHENTICATION_BACKENDS = [
+    'bdc.auth.BDCAuthBackend',
+]
 
 API_PUBLIC_URL = os.environ.get('API_PUBLIC_URL')
+API_PUBLIC_URL += '' if API_PUBLIC_URL.endswith('/') else '/'
 
 # CSP headers
 CSP_DEFAULT_SRC = ["'self'"]
@@ -173,48 +174,22 @@ RAVEN_CONFIG = {
 
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': True,
+    'disable_existing_loggers': False,
     'root': {
         'level': 'DEBUG',
-        'handlers': [],
+        'handlers': ['console'],
     },
     'formatters': {
-        'simple': {
-            'format': '%(asctime)s %(levelname)s %(name)s %(funcName)s '
-                      '%(message)s'
-        },
         'verbose': {
             'format': '%(levelname)s %(asctime)s %(module)s '
                       '%(process)d %(thread)d %(message)s'
         },
     },
     'handlers': {
-        'sentry': {
-            'level': 'DEBUG',
-            'class': 'raven.contrib.django.raven_compat.handlers.'
-                     'SentryHandler',
-        },
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'verbose'
         }
-    },
-    'loggers': {
-        'all': {
-            'level': 'DEBUG' if DEBUG else 'INFO',
-            'handlers': ['sentry', 'console'],
-            'propagate': True,
-        },
-        'sentry': {
-            'level': 'DEBUG' if DEBUG else 'INFO',
-            'handlers': ['sentry'],
-            'propagate': True,
-        },
-        'console': {
-            'level': 'DEBUG' if DEBUG else 'INFO',
-            'handlers': ['console'],
-            'propagate': True,
-        },
     },
 }
