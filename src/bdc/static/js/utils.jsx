@@ -23,7 +23,7 @@ var getToken = () => {
     return sessionStorage.getItem('api-token-auth')
 }
 
-var fetchCustom = (url, method, promise, token, data, promiseError) => {
+var fetchCustom = (url, method, promise, token, data, promiseError=null) => {
     var payload = {
         method: method,
         headers: {
@@ -40,7 +40,7 @@ var fetchCustom = (url, method, promise, token, data, promiseError) => {
     if (!promiseError) {
         var promiseError = (err) => {
             // Error during request, or parsing NOK :(
-            console.log(url, method, promise, token, data, promiseError, err)
+            console.error(url, method, promise, token, data, promiseError, err)
         }
     }
 
@@ -51,36 +51,45 @@ var fetchCustom = (url, method, promise, token, data, promiseError) => {
     .catch(promiseError)
 }
 
+var fetchGetToken = (username, password, promiseSuccess, promiseError) => {
+    sessionStorage.removeItem('api-token-auth')
+
+    fetch(getAPIBaseURL + 'api-token-auth/',
+    {
+        method: 'post',
+        body: JSON.stringify({'username': username, 'password': password}),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(checkStatus)
+    .then(parseJSON)
+    .then(storeToken)
+    .then(promiseSuccess)
+    .catch(promiseError)
+}
+
 var fetchAuth = (url, method, promise, data=null, promiseError=null) => {
     var token = getToken()
     if (token) {
+        // We have a token
         console.log("We have a token")
-        // Cas 2: On a le token
         fetchCustom(url, method, promise, token, data, promiseError)
     }
     else {
-        console.log("We need a token")
-        // Cas 1: On a pas le token
-        fetch(getAPIBaseURL + 'api-token-auth/',
-        {
-            method: 'post',
-            body: JSON.stringify({'username': 'admin', 'password': 'admin'}),
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(checkStatus)
-        .then(parseJSON)
-        .then(storeToken)
-        .then((token) => {
-            fetchCustom(url, method, promise, token, data, promiseError)
-        })
-        .catch(err => {
-            // Error during request, or parsing NOK :(
-            console.log(url, method, promise, data, promiseError, err)
-        })
+        // We need a token
+        console.log("We need a token, we redirect to login")
+        // Redirect to login page (with next parameter ?)
+        window.config.getLoginURL
     }
+}
+
+var getUrlParameter = (name) => {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    var results = regex.exec(location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
 }
 
 var isMemberIdEusko = (values, value) =>
@@ -228,6 +237,9 @@ module.exports = {
     checkStatus: checkStatus,
     parseJSON: parseJSON,
     fetchAuth: fetchAuth,
+    fetchCustom: fetchCustom,
+    fetchGetToken: fetchGetToken,
+    getUrlParameter: getUrlParameter,
     isMemberIdEusko: isMemberIdEusko,
     titleCase: titleCase,
     getCurrentLang: getCurrentLang,
