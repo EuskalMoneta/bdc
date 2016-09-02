@@ -43,8 +43,8 @@ class LoginPage extends React.Component {
         this.state = {
             canSubmit: false,
             invalidLogin: false,
-            username: 'B001',
-            password: 'B001'
+            username: '',
+            password: ''
         }
     }
 
@@ -95,8 +95,9 @@ class LoginPage extends React.Component {
                     var next = getUrlParameter('next')
                     if (!next)
                         next = window.config.getLoginRedirectURL
+
                     console.log('redirect to: ' + next)
-                    // window.location.assign(next)
+                    window.location.assign(next)
                 })
                 .catch((err) => {
                     // Error during request, or parsing NOK :(

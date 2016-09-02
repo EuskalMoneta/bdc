@@ -65,6 +65,9 @@ AUTHENTICATION_BACKENDS = [
 API_PUBLIC_URL = os.environ.get('API_PUBLIC_URL')
 API_PUBLIC_URL += '' if API_PUBLIC_URL.endswith('/') else '/'
 
+API_INTERNAL_URL = os.environ.get('API_INTERNAL_URL')
+API_INTERNAL_URL += '' if API_INTERNAL_URL.endswith('/') else '/'
+
 # CSP headers
 CSP_DEFAULT_SRC = ["'self'"]
 CSP_FONT_SRC = ["'self'", "http://fonts.gstatic.com"]
