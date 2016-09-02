@@ -79,9 +79,10 @@ var fetchAuth = (url, method, promise, data=null, promiseError=null) => {
     }
     else {
         // We need a token
-        console.log("We need a token, we redirect to login")
+        console.error("We need a token, we redirect to login")
+        console.error(window.config.getLoginURL)
         // Redirect to login page (with next parameter ?)
-        window.config.getLoginURL
+        window.location.assign(window.config.getLoginURL)
     }
 }
 
