@@ -8,7 +8,7 @@ import {
 
 const MemberShow = React.createClass({
 
-    componentWillMount: function() {
+    componentWillMount() {
         this.state = {
             memberID: document.getElementById("member_id").value,
             member: undefined
@@ -21,16 +21,20 @@ const MemberShow = React.createClass({
         fetchAuth(this.props.url + this.state.memberID + '/', 'get', computeMemberData)
     },
 
-    render: function() {
+    render() {
         if (this.state.member) {
-            if (moment.unix(this.state.member.datefin) > moment())
+            // Whether or not, we have a up-to-date member subscription
+            if (moment.unix(this.state.member.datefin) > moment()) {
                 var memberStatus = (
                     <a href={"/members/subscription/add/" + this.state.member.id}
                        className="btn btn-success member-show-statut" data-eusko="member-show-statut">
                         {__("À jour")}
                     </a>
                 )
-            else
+
+                var memberStatusUpToDate = true
+            }
+            else {
                 var memberStatus = (
                     <a href={"/members/subscription/add/" + this.state.member.id}
                        className="btn btn-warning member-show-statut"
@@ -39,13 +43,40 @@ const MemberShow = React.createClass({
                     </a>
                 )
 
-            if (this.state.member.login.startsWith("Z", 0))
+                var memberStatusUpToDate = false
+            }
+
+            // Whether or not, we have a business member or a individual
+            if (this.state.member.login.startsWith("Z", 0)) {
+                // We have a business member
+
                 var memberName = (
-                    <div className="col-sm-4" >
+                    <div className="col-sm-4">
                         <span className="member-show-societe">{this.state.member.societe}</span>
                     </div>
                 )
-            else
+
+                // Whether or not, we have a up-to-date member subscription
+                // "Change"
+                // "Reconversion" (bouton primaire)
+                if (memberStatusUpToDate) {
+                    var memberActions = (
+                        <div className="row member-show-div-margin-left">
+                            <a className="btn btn-default">{__("Change")}</a>
+                            <a className="btn btn-info">{__("Reconversion")}</a>
+                        </div>
+                    )
+                }
+                // aucune opération n'est accessible
+                else {
+                    var memberActions = (
+                        <div className="row">
+                        </div>
+                    )
+                }
+            }
+            else {
+                // We have a individual member
                 var memberName = (
                     <div className="col-sm-4" >
                         <span className="member-show-civility">{titleCase(this.state.member.civility_id) + " "}</span>
@@ -54,6 +85,31 @@ const MemberShow = React.createClass({
                         </span>
                     </div>
                 )
+
+                // Whether or not, we have a up-to-date member subscription
+                // "Change" (bouton primaire)
+                // "Cotisation"
+                if (memberStatusUpToDate) {
+                    var memberActions = (
+                        <div className="row member-show-div-margin-left">
+                            <a className="btn btn-info">{__("Change")}</a>
+                            <a href={"/members/subscription/add/" + this.state.member.id} className="btn btn-info">
+                                {__("Cotisation")}
+                            </a>
+                        </div>
+                    )
+                }
+                // "Cotisation" (bouton primaire)
+                else {
+                    var memberActions = (
+                        <div className="row member-show-div-margin-left">
+                            <a href={"/members/subscription/add/" + this.state.member.id} className="btn btn-info">
+                                {__("Cotisation")}
+                            </a>
+                        </div>
+                    )
+                }
+            }
 
             if (this.state.member.address)
                 var memberAddress = (
@@ -95,6 +151,7 @@ const MemberShow = React.createClass({
                             </div>
                         </div>
                     </div>
+                    {memberActions}
                 </div>
             )
         }
