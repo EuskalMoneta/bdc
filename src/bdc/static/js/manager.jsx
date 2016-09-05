@@ -11,40 +11,27 @@ class Manager extends React.Component {
 
         // Default state
         this.state = {
-            data: undefined,
             stockBilletsData: undefined,
             caisseEuroData: undefined,
             caisseEuskoData: undefined,
             retourEuskoData: undefined,
         }
 
-        // Get payment_modes
+        // Get Accounts Summaries:
+        // Stock de billets: stock_de_billets_bdc
+        // Caisse euros: caisse_euro_bdc
+        // Caisse eusko: caisse_eusko_bdc
+        // Retour eusko: retours_d_eusko_bdc
         var computeManagerData = (data) => {
-            this.setState({data: data.result})
-
-            this.setState({stockBilletsData:
-                           _.filter(data.result,
-                                    function(item){ return item.type.name == "Stock de billets BDC" })
-                          })
-
-            this.setState({caisseEuroData:
-                           _.filter(data.result,
-                                    function(item){ return item.type.name == "Caisse € BDC" })
-                          })
-
-            this.setState({caisseEuskoData:
-                           _.filter(data.result,
-                                    function(item){ return item.type.name == "Caisse eusko BDC" })
-                          })
-
-            this.setState({retourEuskoData:
-                           _.filter(data.result,
-                                    function(item){ return item.type.name == "Retours d'eusko BDC" })
-                          })
+            this.setState({
+                stockBilletsData: _.filter(data, (item) => { return item.type.id == "stock_de_billets_bdc" })[0],
+                caisseEuroData: _.filter(data, (item) => { return item.type.id == "caisse_euro_bdc" })[0],
+                caisseEuskoData: _.filter(data, (item) => { return item.type.id == "caisse_eusko_bdc" })[0],
+                retourEuskoData: _.filter(data, (item) => { return item.type.id == "retours_d_eusko_bdc" })[0]
+            })
         }
         fetchAuth(getAPIBaseURL + "accounts-summaries/", 'get', computeManagerData)
     }
-
 
     render() {
         return (
@@ -58,17 +45,20 @@ class Manager extends React.Component {
     }
 }
 
-class StockBillets extends React.Component {
-    constructor(props) {
-        super(props)
-
-
-        // Default state
-        this.state = {
-            amount: this.props.data.balance,
-            currency: this.props.data.currency.suffix
+var StockBillets = React.createClass({
+    getInitialState() {
+        return {
+            balance: '',
+            currency: '',
         }
-    }
+    },
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.data) {
+            this.setState({balance: nextProps.data.balance,
+                           currency: nextProps.data.currency})
+        }
+    },
 
     render() {
         return (
@@ -80,7 +70,7 @@ class StockBillets extends React.Component {
                     <div className="row">
                         <div className="col-md-8 col-sm-4">
                             <label className="control-label col-md-3">{__("Solde")} :</label>&nbsp;
-                            <span className="col-md-5">{this.state.amount + " " + this.state.currency}</span>
+                            <span className="col-md-5">{this.state.balance + " " + this.state.currency}</span>
                         </div>
                         <div className="col-md-4">
                             <a className="btn btn-default">{__("Historique")}</a>
@@ -98,9 +88,27 @@ class StockBillets extends React.Component {
             </div>
         )
     }
-}
+})
 
-class CaisseEuro extends React.Component {
+var CaisseEuro = React.createClass({
+    getInitialState() {
+        return {
+            balance: '',
+            currency: '',
+            cash: '',
+            cheques: '',
+        }
+    },
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.data) {
+            this.setState({balance: nextProps.data.balance,
+                           cash: '',
+                           checks: '',
+                           currency: nextProps.data.currency})
+        }
+    },
+
     render() {
         return (
             <div className="panel panel-info">
@@ -111,7 +119,7 @@ class CaisseEuro extends React.Component {
                     <div className="row">
                         <div className="col-md-8 col-sm-4">
                             <label className="control-label col-md-3">{__("Solde")} :</label>&nbsp;
-                            <span className="col-md-5">1232 eusko</span>
+                            <span className="col-md-5">{this.state.balance + " " + this.state.currency}</span>
                         </div>
                         <div className="col-md-4">
                             <a className="btn btn-default">{__("Historique")}</a>
@@ -120,13 +128,13 @@ class CaisseEuro extends React.Component {
                      <div className="row">
                         <div className="col-md-8 col-sm-4">
                             <label className="control-label col-md-3">{__("Espèces")} :</label>&nbsp;
-                            <span className="col-md-5">742 €</span>
+                            <span className="col-md-5">{this.state.cash + " " + this.state.currency}</span>
                         </div>
                     </div>
                     <div className="row margin-top">
                         <div className="col-md-8 col-sm-4">
                             <label className="control-label col-md-3">{__("Chèques")} :</label>&nbsp;
-                            <span className="col-md-5">490 €</span>
+                            <span className="col-md-5">{this.state.cheques + " " + this.state.currency}</span>
                         </div>
                     </div>
                     <div className="row margin-top">
@@ -141,9 +149,23 @@ class CaisseEuro extends React.Component {
             </div>
         )
     }
-}
+})
 
-class CaisseEusko extends React.Component {
+var CaisseEusko = React.createClass({
+    getInitialState() {
+        return {
+            balance: '',
+            currency: '',
+        }
+    },
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.data) {
+            this.setState({balance: nextProps.data.balance,
+                           currency: nextProps.data.currency})
+        }
+    },
+
     render() {
         return (
             <div className="panel panel-info">
@@ -154,7 +176,7 @@ class CaisseEusko extends React.Component {
                     <div className="row">
                         <div className="col-md-8 col-sm-4">
                             <label className="control-label col-md-3">{__("Solde")} :</label>&nbsp;
-                            <span className="col-md-5">13 eusko</span>
+                            <span className="col-md-5">{this.state.balance + " " + this.state.currency}</span>
                         </div>
                         <div className="col-md-4">
                             <a className="btn btn-default">{__("Historique")}</a>
@@ -169,9 +191,23 @@ class CaisseEusko extends React.Component {
             </div>
         )
     }
-}
+})
 
-class RetourEusko extends React.Component {
+var RetourEusko = React.createClass({
+    getInitialState() {
+        return {
+            balance: '',
+            currency: '',
+        }
+    },
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.data) {
+            this.setState({balance: nextProps.data.balance,
+                           currency: nextProps.data.currency})
+        }
+    },
+
     render() {
         return (
             <div className="panel panel-info">
@@ -182,7 +218,7 @@ class RetourEusko extends React.Component {
                     <div className="row">
                         <div className="col-md-8 col-sm-4">
                             <label className="control-label col-md-3">{__("Solde")} :</label>&nbsp;
-                            <span className="col-md-5">128 eusko</span>
+                            <span className="col-md-5">{this.state.balance + " " + this.state.currency}</span>
                         </div>
                         <div className="col-md-4">
                             <a className="btn btn-default">{__("Historique")}</a>
@@ -197,7 +233,7 @@ class RetourEusko extends React.Component {
             </div>
         )
     }
-}
+})
 
 ReactDOM.render(
     <Manager />,
