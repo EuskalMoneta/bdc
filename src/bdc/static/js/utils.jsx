@@ -175,10 +175,12 @@ class NavbarItems extends React.Component {
                     </li>
                 )
             })
+            navbarData.push(<li key={navbarData.length + 1}>
+                                <a href={window.config.getLogoutURL}>{__("Déconnexion")}</a>
+                            </li>)
         }
         else
             var navbarData = null
-
         return (
             <ul className="nav navbar-nav" id="navbar-items">
                 {navbarData}
