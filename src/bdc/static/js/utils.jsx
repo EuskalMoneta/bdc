@@ -74,7 +74,6 @@ var fetchAuth = (url, method, promise, data=null, promiseError=null) => {
     var token = getToken()
     if (token) {
         // We have a token
-        console.log("We have a token")
         fetchCustom(url, method, promise, token, data, promiseError)
     }
     else {
@@ -156,7 +155,7 @@ class Flags extends React.Component {
 }
 
 class NavbarTitle extends React.Component {
-    render = () => {
+    render() {
         if (this.props.title) {
             return <a className="navbar-brand">{this.props.title}</a>
         }
@@ -166,17 +165,23 @@ class NavbarTitle extends React.Component {
     }
 }
 
-class SidebarNav extends React.Component {
-    render = () => {
+class NavbarItems extends React.Component {
+    render() {
+        if (window.config.userAuth) {
+            var navbarData = this.props.objects.map((item) => {
+                return (
+                    <li key={item.id}>
+                        <a href={item.href}>{item.label}</a>
+                    </li>
+                )
+            })
+        }
+        else
+            var navbarData = null
+
         return (
-            <ul className="sidebar-nav">
-                {this.props.objects.map((item) => {
-                    return (
-                        <li key={item.id}>
-                            <a href={item.href}>{item.label}</a>
-                        </li>
-                    )
-                })}
+            <ul className="nav navbar-nav" id="navbar-items">
+                {navbarData}
             </ul>
         )
     }
@@ -247,7 +252,7 @@ module.exports = {
     getCSRFToken: getCSRFToken,
     getAPIBaseURL: getAPIBaseURL,
     NavbarTitle: NavbarTitle,
-    SidebarNav: SidebarNav,
+    NavbarItems: NavbarItems,
     Flags: Flags,
     Flag: Flag,
     SelectizeUtils: SelectizeUtils

@@ -87,8 +87,6 @@ class MemberAddPage extends React.Component {
 
         // Get countries for the country selector
         var computeCountries = (countries) => {
-            console.log(countries)
-
             var france = _.findWhere(countries, {label: "France"})
             var france = {label: "France", value: france.id}
 

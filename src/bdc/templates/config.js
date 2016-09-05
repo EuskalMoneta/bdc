@@ -1,4 +1,5 @@
 var config = {};
+config.userAuth = {{ user_auth }};
 config.getCSRFToken = '{{ csrf_token }}';
 config.getAPIBaseURL = '{{ django_settings.API_PUBLIC_URL }}';
 config.getLoginRedirectURL = '{{ django_settings.LOGIN_REDIRECT_URL }}';

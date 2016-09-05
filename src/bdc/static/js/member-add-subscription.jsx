@@ -65,9 +65,9 @@ class MemberSubscriptionPage extends React.Component {
 
         // Get member data
         var computeMemberData = (member) => {
-            this.setState({member: json})
+            this.setState({member: member})
         }
-        fetchAuth(getAPIBaseURL + "members/" + this.state.memberID + "/", 'get', computePaymentModes)
+        fetchAuth(getAPIBaseURL + "members/" + this.state.memberID + "/", 'get', computeMemberData)
 
         // Get payment_modes
         var computePaymentModes = (paymentModes) => {
@@ -90,7 +90,6 @@ class MemberSubscriptionPage extends React.Component {
                 member_id: document.getElementById("member_id").value}
 
         var computeForm = (data) => {
-            console.log(data)
             this.setState({data: data})
             this.refs.container.success(
                 __("L'enregistrement de la cotisation s'est déroulée correctement."),
@@ -105,7 +104,7 @@ class MemberSubscriptionPage extends React.Component {
 
         var promiseError = (err) => {
             // Error during request, or parsing NOK :(
-            console.log(this.props.url, err)
+            console.error(this.props.url, err)
             this.refs.container.error(
                 __("Une erreur s'est produite lors de l'enregistrement de la cotisation !"),
                 "",

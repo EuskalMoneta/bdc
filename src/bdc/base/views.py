@@ -10,7 +10,7 @@ log = logging.getLogger('sentry')
 
 def config_js(request):
     # JavaScript config for this Django/React app
-    return render(request, 'config.js')
+    return render(request, 'config.js', {'user_auth': 'true' if request.user.is_authenticated() else 'false'})
 
 
 def setlang_custom(request):

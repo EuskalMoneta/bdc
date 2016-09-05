@@ -3,7 +3,7 @@
 // thus we can also setup JavaScript things ... all of those will be used everywhere in our app
 
 import { checkStatus, getCSRFToken, getCurrentLang,
-         Flags, NavbarTitle, SidebarNav } from 'Utils'
+         Flags, NavbarTitle, NavbarItems } from 'Utils'
 
 // Load the CSS stylesheets for our dependencies
 import '../css/bootstrap.min.css'
@@ -32,10 +32,10 @@ ReactDOM.render(
     document.getElementById('navbar-title')
 )
 
-const sidebarObjects = [{href: '/members/search', label: __("Adhérents"), id: 0},
+const navbarObjects = [{href: '/members/search', label: __("Adhérents"), id: 0},
                         {href: '/manager', label: __("Gestion"), id: 1}]
 
 ReactDOM.render(
-    <SidebarNav objects={sidebarObjects} />,
-    document.getElementById('sidebar-wrapper')
+    <NavbarItems objects={navbarObjects} />,
+    document.getElementById('navbar-content')
 )

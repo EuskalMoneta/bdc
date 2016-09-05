@@ -11,47 +11,31 @@
   <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
 </head>
 <body>
-  <div id="wrapper">
-    <!-- Sidebar -->
-    <div id="sidebar-wrapper">
-    </div>
-    <!-- /#sidebar-wrapper -->
-    <!-- Page Content -->
-    <div id="page-content-wrapper">
-      <div class="navbar navbar-default navbar-fixed-top">
-        <div class="container">
-          <div class="navbar-header" id="navbar-title">
-          </div>
-          <div class="navbar-collapse collapse" id="navbar-main">
-            <ul class="nav navbar-nav">
-              <li>
-                <a href="{% url 'member-search' %}">{% trans "Accueil" %}</a>
-              </li>
-              <li>
-                <a href="{% url 'logout' %}">{% trans "Déconnexion" %}</a>
-              </li>
-            </ul>
-            <div id="flags">
-            </div>
-          </div>
-        </div>
+  <div class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header" id="navbar-title">
       </div>
-      {% block container %}
-        <div class="alert alert-warning">
-          You extended the 'base.html' template without redefining the block 'container' !
+      <div class="navbar-collapse collapse" id="navbar-main">
+        <div id="navbar-content">
         </div>
-      {% endblock %}
-    </div>
-    <!-- /#page-content-wrapper -->
-    <div class="container-fluid footer">
-      <div class="row">
-        <div class="col-lg-12">
-          {% trans "Euskal Moneta" %}
+        <div id="flags">
         </div>
       </div>
     </div>
   </div>
-  <!-- /#wrapper -->
+
+  {% block container %}
+    <div class="alert alert-warning">
+      You extended the 'base.html' template without redefining the block 'container' !
+    </div>
+  {% endblock %}
+
+  <div class="container-fluid footer">
+    <div class="row">
+      <div class="col-lg-12">Euskal Moneta</div>
+    </div>
+  </div>
+
   <script src="{% url 'config_js' %}"></script>
   {% with 'bundles/js/'|add:CURRENT_LANG|add:'.Base.js' as base_js_static %}
     <script src="{% static base_js_static %}"></script>
