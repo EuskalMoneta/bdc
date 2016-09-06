@@ -318,7 +318,7 @@ class MemberSubscriptionPage extends React.Component {
                                 name="submit"
                                 data-eusko="memberaddsubscription-submit"
                                 type="submit"
-                                defaultValue="Enregistrer la cotisation"
+                                defaultValue={__("Enregistrer la cotisation")}
                                 className="btn btn-success"
                                 formNoValidate={true}
                                 disabled={!this.state.canSubmit}

@@ -32,8 +32,10 @@ ReactDOM.render(
     document.getElementById('navbar-title')
 )
 
+// The 'id' field is mandatory!
 const navbarObjects = [{href: '/members/search', label: __("Adhérents"), id: 0},
-                        {href: '/manager', label: __("Gestion"), id: 1}]
+                        {href: '/manager', label: __("Gestion"), id: 1},
+                        {href: '/entree-stock', label: __("Entrée Stock BDC"), id: 2}]
 
 ReactDOM.render(
     <NavbarItems objects={navbarObjects} />,

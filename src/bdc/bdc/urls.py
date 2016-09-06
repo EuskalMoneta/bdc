@@ -19,6 +19,7 @@ from django.contrib.auth.views import logout
 from django.core.urlresolvers import reverse_lazy
 
 from base import views as base_views
+from bdc import views as bdc_views
 from bdc.auth import login_view
 from manager import views as manager_views
 from members import views as members_views
@@ -45,6 +46,8 @@ urlpatterns = [
     url(r'^members/search$', members_views.search, name='member-search'),
 
     url(r'^manager/?$', manager_views.index, name='manager'),
+
+    url(r'^entree-stock/?$', bdc_views.entree_stock, name='entree_stock'),
 
     url(r'^admin/', admin.site.urls),
 ]

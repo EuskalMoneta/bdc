@@ -9,8 +9,18 @@ log = logging.getLogger('sentry')
 
 
 def config_js(request):
-    # JavaScript config for this Django/React app
-    return render(request, 'config.js', {'user_auth': 'true' if request.user.is_authenticated() else 'false'})
+    """
+    JavaScript config for this Django/React app.
+
+    I use 'true' and 'false' as string on purpose!
+    It will be converted in real bool objects on JavaScript-side
+    """
+    if request.user.is_authenticated():
+        response = {'user_auth': 'true', 'username': request.user}
+    else:
+        response = {'user_auth': 'false', 'username': ''}
+
+    return render(request, 'config.js', response)
 
 
 def setlang_custom(request):
