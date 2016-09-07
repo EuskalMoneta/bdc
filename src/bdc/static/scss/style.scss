@@ -70,12 +70,11 @@ body {
   }
 }
 
-.member-show-statut.btn-success {
-  cursor: default;
-  pointer-events: none;
-}
-
-.member-show-statut.btn-warning {
+.member-show-statut {
+  padding-top: 10px;
+  padding-right: 15px;
+  padding-bottom: 10px;
+  padding-left: 15px;
 }
 
 .member-show-div-margin-left {

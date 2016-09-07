@@ -26,21 +26,20 @@ const MemberShow = React.createClass({
             // Whether or not, we have a up-to-date member subscription
             if (moment.unix(this.state.member.datefin) > moment()) {
                 var memberStatus = (
-                    <a href={"/members/subscription/add/" + this.state.member.id}
-                       className="btn btn-success member-show-statut" data-eusko="member-show-statut">
+                    <span className="label label-success member-show-statut"
+                          data-eusko="member-show-statut">
                         {__("À jour")}
-                    </a>
+                    </span>
                 )
 
                 var memberStatusUpToDate = true
             }
             else {
                 var memberStatus = (
-                    <a href={"/members/subscription/add/" + this.state.member.id}
-                       className="btn btn-warning member-show-statut"
-                       data-eusko="member-show-statut">
+                    <span className="label label-warning member-show-statut"
+                          data-eusko="member-show-statut">
                         {__("Pas à jour")}
-                    </a>
+                    </span>
                 )
 
                 var memberStatusUpToDate = false
@@ -63,7 +62,7 @@ const MemberShow = React.createClass({
                     var memberActions = (
                         <div className="row member-show-div-margin-left">
                             <a className="btn btn-default">{__("Change")}</a>
-                            <a className="btn btn-info">{__("Reconversion")}</a>
+                            <a className="btn btn-info col-sm-offset-1">{__("Reconversion")}</a>
                         </div>
                     )
                 }
@@ -93,7 +92,8 @@ const MemberShow = React.createClass({
                     var memberActions = (
                         <div className="row member-show-div-margin-left">
                             <a className="btn btn-info">{__("Change")}</a>
-                            <a href={"/members/subscription/add/" + this.state.member.id} className="btn btn-info">
+                            <a href={"/members/subscription/add/" + this.state.member.id}
+                               className="btn btn-default col-sm-offset-1">
                                 {__("Cotisation")}
                             </a>
                         </div>
