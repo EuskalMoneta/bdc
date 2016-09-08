@@ -78,10 +78,10 @@ var StockBillets = React.createClass({
                     </div>
                     <div className="row margin-top">
                         <div className="col-md-offset-2 col-md-2 col-sm-4">
-                            <a className="btn btn-info">{__("Entrée")}</a>
+                            <a href="/entree-stock" className="btn btn-info">{__("Entrée")}</a>
                         </div>
                         <div className="col-md-offset-2 col-md-2 col-sm-4">
-                            <a className="btn btn-default">{__("Sortie")}</a>
+                            <a href="/sortie-stock" className="btn btn-default">{__("Sortie")}</a>
                         </div>
                     </div>
                 </div>
