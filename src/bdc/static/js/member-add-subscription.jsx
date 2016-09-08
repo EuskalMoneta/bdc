@@ -87,7 +87,8 @@ class MemberSubscriptionPage extends React.Component {
     submitForm = (data) => {
         data = {amount: this.state.amount.value,
                 payment_mode: this.state.paymentMode.value,
-                member_id: document.getElementById("member_id").value}
+                member_id: document.getElementById("member_id").value,
+                cyclos_id_payment_mode: this.state.paymentMode.cyclos_id}
 
         var computeForm = (data) => {
             this.setState({data: data})
