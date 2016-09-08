@@ -52,10 +52,9 @@ class MemberChangeEuroEuskoPage extends React.Component {
 
         // Default state
         this.state = {
+            canSubmit: false,
             validFields: false,
             validCustomFields: false,
-            canSubmit: false,
-            amount: undefined,
             memberID: document.getElementById("member_id").value,
             member: undefined,
             paymentMode: '',
@@ -82,31 +81,24 @@ class MemberChangeEuroEuskoPage extends React.Component {
         fetchAuth(getAPIBaseURL + "payment-modes/", 'get', computePaymentModes)
     }
 
+    // paymentMode
+    paymentModeOnValueChange = (item) => {
+        this.setState({paymentMode: item}, this.validateForm)
+    }
+
     enableButton = () => {
-        this.setState({canSubmit: true});
+        this.setState({canSubmit: true})
     }
 
     disableButton = () => {
-        this.setState({canSubmit: false, validFields: false});
-    }
-
-    // paymentMode
-    paymentModeOnValueChange = (item) => {
-        if (item)
-            this.setState({paymentMode: item}, this.validateForm)
-        else
-            this.setState({paymentMode: undefined}, this.validateForm)
+        this.setState({canSubmit: false})
     }
 
     validFields = () => {
-        this.setState({validFields: true});
-
-        if (this.state.validCustomFields)
-            this.validateForm()
+        this.setState({validFields: true}, this.validateForm)
     }
 
     validateForm = () => {
-        debugger
         if (this.state.paymentMode)
         {
             this.setState({validCustomFields: true})
@@ -121,15 +113,13 @@ class MemberChangeEuroEuskoPage extends React.Component {
     }
 
     submitForm = (data) => {
-        console.log(data)
-        data = {amount: data.amount,
-                payment_mode: data.paymentMode,
-                member_id: document.getElementById("member_id").value}
+        data.member_login = this.state.member.login
+        data.payment_mode = this.state.paymentMode.cyclos_id
 
         var computeForm = (data) => {
             this.setState({data: data})
             this.refs.container.success(
-                __("L'enregistrement de la cotisation s'est déroulée correctement."),
+                __("L'enregistrement s'est déroulée correctement."),
                 "",
                 {
                     timeOut: 5000,
@@ -143,7 +133,7 @@ class MemberChangeEuroEuskoPage extends React.Component {
             // Error during request, or parsing NOK :(
             console.error(this.props.url, err)
             this.refs.container.error(
-                __("Une erreur s'est produite lors de l'enregistrement de la cotisation !"),
+                __("Une erreur s'est produite lors de l'enregistrement !"),
                 "",
                 {
                     timeOut: 5000,
@@ -239,7 +229,7 @@ class MemberChangeEuroEuskoPage extends React.Component {
                                 name="submit"
                                 data-eusko="memberchangeeuroeusko-submit"
                                 type="submit"
-                                defaultValue={__("Enregistrer la cotisation")}
+                                defaultValue={__("Enregistrer le change")}
                                 className="btn btn-success"
                                 formNoValidate={true}
                                 disabled={!this.state.canSubmit}
@@ -257,7 +247,7 @@ class MemberChangeEuroEuskoPage extends React.Component {
 
 
 ReactDOM.render(
-    <MemberChangeEuroEuskoPage url={getAPIBaseURL + "change-euro-eusko-adherent/"} method="POST" />,
+    <MemberChangeEuroEuskoPage url={getAPIBaseURL + "change-euro-eusko/"} method="POST" />,
     document.getElementById('change-euro-eusko')
 )
 
