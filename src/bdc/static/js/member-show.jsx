@@ -61,7 +61,10 @@ const MemberShow = React.createClass({
                 if (memberStatusUpToDate) {
                     var memberActions = (
                         <div className="row member-show-div-margin-left">
-                            <a className="btn btn-default">{__("Change")}</a>
+                            <a href={"/members/change/euro-eusko/" + this.state.member.id}
+                               className="btn btn-default">
+                               {__("Change")}
+                            </a>
                             <a className="btn btn-info col-sm-offset-1">{__("Reconversion")}</a>
                         </div>
                     )
@@ -91,7 +94,10 @@ const MemberShow = React.createClass({
                 if (memberStatusUpToDate) {
                     var memberActions = (
                         <div className="row member-show-div-margin-left">
-                            <a className="btn btn-info">{__("Change")}</a>
+                            <a href={"/members/change/euro-eusko/" + this.state.member.id}
+                               className="btn btn-info">
+                               {__("Change")}
+                            </a>
                             <a href={"/members/subscription/add/" + this.state.member.id}
                                className="btn btn-default col-sm-offset-1">
                                 {__("Cotisation")}
