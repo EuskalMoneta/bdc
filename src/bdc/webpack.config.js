@@ -25,7 +25,7 @@ module.exports = Object.keys(languages).map(function(language) {
             MemberSearch: './static/js/member-search',
             MemberShow: './static/js/member-show',
             MemberChangeEuroEusko: './static/js/member-change-euro-eusko',
-            EntreeStock: './static/js/entree-stock',
+            IOStock: './static/js/io-stock',
             Manager: './static/js/manager',
             Login: './static/js/login',
         },

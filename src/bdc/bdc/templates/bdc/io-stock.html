@@ -5,13 +5,13 @@
 {% block container %}
     <div class="container container-eusko">
         <div class="row">
-            <div class="col-lg-12" id="entree-stock"></div>
+            <div class="col-lg-12" id="io-stock"></div>
         </div>
     </div>
 {% endblock %}
 
 {% block extra_js %}
-  {% with 'bundles/js/'|add:CURRENT_LANG|add:'.EntreeStock.js' as entree_stock_js_static %}
-    <script src="{% static entree_stock_js_static %}"></script>
+  {% with 'bundles/js/'|add:CURRENT_LANG|add:'.IOStock.js' as io_stock_js_static %}
+    <script src="{% static io_stock_js_static %}"></script>
   {% endwith %}
 {% endblock %}

@@ -49,7 +49,8 @@ urlpatterns = [
 
     url(r'^manager/?$', manager_views.index, name='manager'),
 
-    url(r'^entree-stock/?$', bdc_views.entree_stock, name='entree_stock'),
+    url(r'^entree-stock/?$', bdc_views.io_stock, name='entree_stock'),
+    url(r'^sortie-stock/?$', bdc_views.io_stock, name='sortie_stock'),
 
     url(r'^admin/', admin.site.urls),
 ]

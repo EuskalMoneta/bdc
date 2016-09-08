@@ -3,5 +3,5 @@ from django.shortcuts import render
 
 
 @login_required
-def entree_stock(request):
-    return render(request, 'bdc/entree_stock.html')
+def io_stock(request):
+    return render(request, 'bdc/io-stock.html')
