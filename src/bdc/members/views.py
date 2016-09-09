@@ -25,3 +25,8 @@ def add_subscription(request, member_id):
 @login_required
 def change_euro_eusko(request, member_id):
     return render(request, 'members/change_euro_eusko.html', {'member_id': member_id})
+
+
+@login_required
+def reconversion(request, member_id):
+    return render(request, 'members/reconversion.html', {'member_id': member_id})

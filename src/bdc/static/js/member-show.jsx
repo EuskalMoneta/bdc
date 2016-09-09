@@ -65,7 +65,10 @@ const MemberShow = React.createClass({
                                className="btn btn-default">
                                {__("Change")}
                             </a>
-                            <a className="btn btn-info col-sm-offset-1">{__("Reconversion")}</a>
+                            <a href={"/members/reconversion/" + this.state.member.id}
+                               className="btn btn-info col-sm-offset-1">
+                               {__("Reconversion")}
+                            </a>
                         </div>
                     )
                 }
