@@ -54,6 +54,7 @@ urlpatterns = [
         members_views.reconversion, name='member-reconversion'),
 
     url(r'^manager/?$', manager_views.index, name='manager'),
+    url(r'^manager/history/(?P<account_name>[\w\-]+)/?$', manager_views.history, name='manager-history'),
 
     url(r'^entree-stock/?$', bdc_views.io_stock, name='entree_stock'),
     url(r'^sortie-stock/?$', bdc_views.io_stock, name='sortie_stock'),

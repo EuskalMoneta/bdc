@@ -50,6 +50,10 @@ textarea {
   margin-top: 20px;
 }
 
+.margin-bottom {
+  margin-bottom: 20px;
+}
+
 .btn-default {
   background-color: #ffffff;
   color: #95a5a6;
@@ -198,6 +202,28 @@ textarea {
   td {
     cursor: pointer;
   }
+}
+
+/* manager/history */
+.history-form {
+  /* background-color: #f9f9f9;
+     border-right: 1px solid #CCCCCC;
+     overflow-y: auto;
+  */
+}
+
+.col-history-table {
+  padding-left: 0px;
+}
+
+.solde-history-label {
+  text-align: right;
+  margin-bottom: 0;
+  padding-top: 11px;
+}
+
+.react-selectize-manager-history {
+  background-color: white;
 }
 
 /* divers */
