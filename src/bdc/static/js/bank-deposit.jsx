@@ -42,7 +42,7 @@ const BankDepositForm = React.createClass({
             <Formsy.Form
                 className={this.getLayoutClassName()}
                 {...this.props}
-                ref="managerhistory"
+                ref="bank-deposit"
             >
                 {this.props.children}
             </Formsy.Form>
@@ -59,6 +59,7 @@ var BankDepositPage = React.createClass({
             validCustomFields: false,
             currentSoldeData: undefined,
             bankDepositList: undefined,
+            depositAmount: undefined,
         }
     },
 
@@ -77,32 +78,17 @@ var BankDepositPage = React.createClass({
         fetchAuth(getAPIBaseURL + "payment-modes/", 'get', computePaymentModes)
 
         var computeBankDepositList = (bankDepositList) => {
-            var res = _.map(bankDepositList.result.pageItems,
-                (item, index, list) => {
-                    var newItem = item
-
-                    // Input data are strings,
-                    // we need to cast it in a Number object to use the toFixed method.
-                    if (index === 0)
-                        newItem.solde = Number(this.state.currentSolde.balance)
-                    else
-                        newItem.solde = Number(list[index-1].solde) - Number(list[index-1].amount)
-
-                    newItem.solde = newItem.solde.toFixed(2)
-                    return newItem
-                }
-            );
-
-            this.setState({bankDepositList: res});
+            this.setState({bankDepositList: bankDepositList});
         };
 
-        // Get account history
-        fetchAuth(getAPIBaseURL + "accounts-history/?account_type=" + this.props.mode, 'get', computeBankDepositList)
+        // Get bankDepositList history
+        fetchAuth(getAPIBaseURL + "payments-available-deposit/", 'get', computeBankDepositList)
     },
 
     // paymentMode
     paymentModeOnValueChange (item) {
         this.setState({paymentMode: item}, this.validateForm)
+        // TODO update bankDepositList
     },
 
     enableButton() {
@@ -165,6 +151,17 @@ var BankDepositPage = React.createClass({
     },
 
     render() {
+        // Display current solde information
+        if (this.state.depositAmount) {
+            var depositAmountLabel = (
+                <span className="solde-deposit-span">
+                    {this.state.depositAmount}
+                </span>
+            )
+        }
+        else
+            var currentSoldeLabel = null
+
         var divAmountClass = classNames({
             'form-group row': true,
             'has-error has-feedback': this.state.amountInvalid,
@@ -186,7 +183,7 @@ var BankDepositPage = React.createClass({
 
         // History data table
         if (this.state.bankDepositList) {
-            var historyTable = (
+            var dataTable = (
                 <BootstrapTable
                  data={this.state.bankDepositList} striped={true} hover={true}
                  selectRow={selectRowProp} tableContainerClass="react-bs-table-account-history"
@@ -200,7 +197,7 @@ var BankDepositPage = React.createClass({
             )
         }
         else
-            var historyTable = null;
+            var dataTable = null;
 
         return (
             <div className="row">
@@ -210,15 +207,15 @@ var BankDepositPage = React.createClass({
                         onValidSubmit={this.submitForm}
                         onInvalid={this.disableButton}
                         onValid={this.validFields}
-                        ref="managerhistory">
+                        ref="bank-deposit">
                         <fieldset>
                             <Input
                                 name="amount"
-                                data-eusko="entreestock-amount"
+                                data-eusko="bank-deposit-amount"
                                 value=""
                                 label={__("Montant")}
                                 type="number"
-                                placeholder={__("Montant du change")}
+                                placeholder={__("Montant du dépôt")}
                                 validations="isPostiveNumeric"
                                 validationErrors={{
                                     isPostiveNumeric: __("Montant invalide.")
@@ -230,11 +227,11 @@ var BankDepositPage = React.createClass({
                                 <label
                                     className="control-label col-sm-3"
                                     data-required="true"
-                                    htmlFor="managerhistory-payment_mode">
+                                    htmlFor="bank-deposit-payment_mode">
                                     {__("Mode de paiement")}
                                     <span className="required-symbol">&nbsp;*</span>
                                 </label>
-                                <div className="col-sm-8 managerhistory" data-eusko="managerhistory-payment_mode">
+                                <div className="col-sm-8 bank-deposit" data-eusko="bank-deposit-payment_mode">
                                     <SimpleSelect
                                         className={reactSelectizeErrorClass}
                                         ref="select"
@@ -256,7 +253,7 @@ var BankDepositPage = React.createClass({
                             <Row layout="horizontal">
                                 <input
                                     name="submit"
-                                    data-eusko="managerhistory-submit"
+                                    data-eusko="bank-deposit-submit"
                                     type="submit"
                                     defaultValue={__("Enregistrer")}
                                     className="btn btn-success"
@@ -269,7 +266,7 @@ var BankDepositPage = React.createClass({
                 </div>
                 <div className="col-md-9 col-history-table">
                     <div className="row margin-right">
-                        {historyTable}
+                        {dataTable}
                     </div>
                 </div>
                 <ToastContainer ref="container"
