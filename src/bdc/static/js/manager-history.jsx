@@ -50,114 +50,82 @@ const ManagerHistoryForm = React.createClass({
     }
 });
 
-class ManagerHistoryPage extends React.Component {
+var ManagerHistoryPage = React.createClass({
 
-    constructor(props) {
-        super(props);
-
-        // Default state
-        this.state = {
-            canSubmit: false,
-            validFields: false,
-            validCustomFields: false,
+    getInitialState() {
+        return {
             accountName: document.getElementById("account_name").value,
             historyList: undefined,
+            currentSolde: undefined
         }
+    },
 
-        // Get payment_modes
-        var computeHistoryList = (historyList) => {
-            this.setState({historyList: historyList})
+    componentDidMount() {
+        // Get Accounts summaries
+        var computeHistoryData = (data) => {
+            this.setState(
+                { currentSolde: _.filter(data, (item) => { return item.type.id == this.props.mode })[0] },
+
+                // WARNING: This looks ugly at first, but this is essential !
+                // this function below is a callback function for setState() because it is asynchronous...
+                // setState() does not immediately mutate this.state but creates a pending state transition
+                // See Notes: https://facebook.github.io/react/docs/component-api.html#setstate
+                // We need to do this because we need the this.state.currentSolde to be set.
+                () => {
+                    var computeHistoryList = (historyList) => {
+                        var res = _.map(historyList.result.pageItems,
+                            (item, index, list) => {
+                                var newItem = item
+
+                                // Input data are strings,
+                                // we need to cast it in a Number object to use the toFixed method.
+                                if (index === 0)
+                                    newItem.solde = Number(this.state.currentSolde.balance)
+                                else
+                                    newItem.solde = Number(list[index-1].solde) - Number(list[index-1].amount)
+
+                                newItem.solde = newItem.solde.toFixed(2)
+                                return newItem
+                            }
+                        );
+
+                        this.setState({historyList: res});
+                    };
+
+                    // Get account history
+                    fetchAuth(getAPIBaseURL + "accounts-history/?account_type=" + this.props.mode, 'get', computeHistoryList)
+                });
         }
-        fetchAuth(getAPIBaseURL + "accounts-history/?account_type=" + this.props.mode, 'get', computeHistoryList)
-    }
+        fetchAuth(getAPIBaseURL + "accounts-summaries/", 'get', computeHistoryData)
+    },
 
-    // paymentMode
-    paymentModeOnValueChange = (item) => {
-        this.setState({paymentMode: item}, this.validateForm)
-    }
-
-    enableButton = () => {
-        this.setState({canSubmit: true})
-    }
-
-    disableButton = () => {
-        this.setState({canSubmit: false})
-    }
-
-    validFields = () => {
-        this.setState({validFields: true}, this.validateForm)
-    }
-
-    validateForm = () => {
-        if (this.state.paymentMode)
-        {
-            this.setState({validCustomFields: true})
-
-            if (this.state.validFields)
-                this.enableButton()
-            else
-                this.disableButton()
+    render() {
+        // Display current solde information
+        if (this.state.currentSolde) {
+            var currentSoldeLabel = (
+                <span className="solde-history-span">
+                    {this.state.currentSolde.balance + " " + this.state.currentSolde.currency}
+                </span>
+            )
         }
         else
-            this.disableButton()
-    }
-
-    submitForm = (data) => {
-        data.member_login = this.state.member.login
-        data.payment_mode = this.state.paymentMode.cyclos_id
-
-        var computeForm = (data) => {
-            this.setState({data: data})
-            this.refs.container.success(
-                __("L'enregistrement s'est déroulée correctement."),
-                "",
-                {
-                    timeOut: 5000,
-                    extendedTimeOut: 10000,
-                    closeButton:true
-                }
-            )
-        }
-
-        var promiseError = (err) => {
-            // Error during request, or parsing NOK :(
-            console.error(this.props.url, err)
-            this.refs.container.error(
-                __("Une erreur s'est produite lors de l'enregistrement !"),
-                "",
-                {
-                    timeOut: 5000,
-                    extendedTimeOut: 10000,
-                    closeButton:true
-                }
-            )
-        }
-        fetchAuth(this.props.url, this.props.method, computeForm, data, promiseError)
-    }
-
-    render = () => {
-        var divAmountClass = classNames({
-            'form-group row': true,
-            'has-error has-feedback': this.state.amountInvalid,
-        })
-
-        var reactSelectizeErrorClass = classNames({
-            'react-selectize-manager-history': true,
-            'has-error has-feedback': this.state.amountInvalid,
-        })
+            var currentSoldeLabel = null
 
         // Which buttons we need to display before the table
         if (this.props.mode == 'stock_de_billets_bdc') {
             var actionButtons = (
                 <div className="row margin-bottom">
-                    <div className="col-md-offset-1 col-md-2 col-sm-4">
+                    <div className="col-md-offset-2 col-md-2 col-sm-4">
                         <a href="/entree-stock" className="btn btn-info">{__("Entrée")}</a>
                     </div>
                     <div className="col-md-offset-1 col-md-2 col-sm-4">
                         <a href="/sortie-stock" className="btn btn-default">{__("Sortie")}</a>
                     </div>
                     <div className="col-md-offset-1 col-md-2 col-sm-4">
-                        <label className="control-label col-sm-3 solde-history-label">{__("Solde") + ": "}</label>
+                        <label className="control-label col-md-12 solde-history-label">
+                            {__("Solde") + ": "}
+                            {currentSoldeLabel}
+                        </label>
                     </div>
                 </div>
             )
@@ -165,14 +133,17 @@ class ManagerHistoryPage extends React.Component {
         else if (this.props.mode == 'caisse_euro_bdc') {
             var actionButtons = (
                 <div className="row margin-bottom">
-                    <div className="col-md-offset-1 col-md-2 col-sm-4">
+                    <div className="col-md-offset-2 col-md-2 col-sm-4">
                         <a className="btn btn-info">{__("Dépôt en banque")}</a>
                     </div>
                     <div className="col-md-offset-1 col-md-2 col-sm-4">
                         <a className="btn btn-default">{__("Remise d'espèces")}</a>
                     </div>
                     <div className="col-md-offset-1 col-md-2 col-sm-4">
-                        <label className="control-label col-sm-3 solde-history-label">{__("Solde") + ": "}</label>
+                        <label className="control-label col-md-12 solde-history-label">
+                            {__("Solde") + ": "}
+                            {currentSoldeLabel}
+                        </label>
                     </div>
                 </div>
             )
@@ -180,32 +151,43 @@ class ManagerHistoryPage extends React.Component {
         else if (this.props.mode == 'caisse_eusko_bdc' || this.props.mode == 'retours_d_eusko_bdc') {
             var actionButtons = (
                 <div className="row margin-bottom">
-                    <div className="col-md-offset-1 col-md-2 col-sm-4">
+                    <div className="col-md-offset-2 col-md-2 col-sm-4">
                         <a href="/sortie-stock" className="btn btn-info">{__("Sortie")}</a>
                     </div>
                     <div className="col-md-offset-1 col-md-2 col-sm-4">
-                        <label className="control-label col-sm-3 solde-history-label">{__("Solde") + ": "}</label>
+                        <label className="control-label col-md-12 solde-history-label">
+                            {__("Solde") + ": "}
+                            {currentSoldeLabel}
+                        </label>
                     </div>
                 </div>
             )
         }
 
-
-        const selectRowProp = {
-            mode: 'checkbox',
-            clickToSelect: true,
-            onSelect: (row, isSelected, event) => {
-                // window.location.assign("/members/" + row.id)
-            }
-        }
-
         // History data table
         if (this.state.historyList) {
+            var dateFormatter = (cell, row) => {
+                // !! Force moment to be french
+                moment.locale('fr')
+                return moment(cell).format('LLLL')
+            }
+
+            var amountFormatter = (cell, row) => {
+                // Cell is a string for now,
+                // we need to cast it in a Number object to use the toFixed method.
+                return Number(cell).toFixed(2)
+            }
+
             var historyTable = (
-                <BootstrapTable data={this.state.historyList} striped={true} hover={true} selectRow={selectRowProp}>
-                    <TableHeaderColumn dataField="date" isKey={true} width="100">{__("Date")}</TableHeaderColumn>
-                    <TableHeaderColumn dataField="label">{__("Libellé")}</TableHeaderColumn>
-                    <TableHeaderColumn dataField="amount">{__("Montant")}</TableHeaderColumn>
+                <BootstrapTable
+                 data={this.state.historyList} striped={true} hover={true} pagination={true}
+                 selectRow={{mode: 'none'}} tableContainerClass="react-bs-table-account-history"
+                 options={{noDataText: __("Pas d'historique à afficher."), hideSizePerPage: true, sizePerPage: 20}}
+                 >
+                    <TableHeaderColumn isKey={true} hidden={true} dataField="id">{__("ID")}</TableHeaderColumn>
+                    <TableHeaderColumn dataField="date" dataFormat={dateFormatter}>{__("Date")}</TableHeaderColumn>
+                    <TableHeaderColumn dataField="description">{__("Libellé")}</TableHeaderColumn>
+                    <TableHeaderColumn dataField="amount" dataFormat={amountFormatter}>{__("Montant")}</TableHeaderColumn>
                     <TableHeaderColumn dataField="solde">{__("Solde")}</TableHeaderColumn>
                 </BootstrapTable>
             )
@@ -215,73 +197,12 @@ class ManagerHistoryPage extends React.Component {
 
         return (
             <div className="row">
-                <div className="col-md-3 history-form">
-                    <div className="row"></div>
-                    <ManagerHistoryForm
-                        onValidSubmit={this.submitForm}
-                        onInvalid={this.disableButton}
-                        onValid={this.validFields}
-                        ref="managerhistory">
-                        <fieldset>
-                            <Input
-                                name="amount"
-                                data-eusko="entreestock-amount"
-                                value=""
-                                label={__("Montant")}
-                                type="number"
-                                placeholder={__("Montant du change")}
-                                validations="isPostiveNumeric"
-                                validationErrors={{
-                                    isPostiveNumeric: __("Montant invalide.")
-                                }}
-                                elementWrapperClassName={[{'col-sm-9': false}, 'col-sm-8']}
-                                required
-                            />
-                            <div className="form-group row">
-                                <label
-                                    className="control-label col-sm-3"
-                                    data-required="true"
-                                    htmlFor="managerhistory-payment_mode">
-                                    {__("Mode de paiement")}
-                                    <span className="required-symbol">&nbsp;*</span>
-                                </label>
-                                <div className="col-sm-8 managerhistory" data-eusko="managerhistory-payment_mode">
-                                    <SimpleSelect
-                                        className={reactSelectizeErrorClass}
-                                        ref="select"
-                                        value={this.state.paymentMode}
-                                        options={this.state.paymentModeList}
-                                        placeholder={__("Mode de paiement")}
-                                        theme="bootstrap3"
-                                        onValueChange={this.paymentModeOnValueChange}
-                                        renderOption={SelectizeUtils.selectizeRenderOption}
-                                        renderValue={SelectizeUtils.selectizeRenderValue}
-                                        onBlur={this.validateForm}
-                                        renderNoResultsFound={SelectizeUtils.selectizeNoResultsFound}
-                                        required
-                                    />
-                                </div>
-                            </div>
-                        </fieldset>
-                        <fieldset>
-                            <Row layout="horizontal">
-                                <input
-                                    name="submit"
-                                    data-eusko="managerhistory-submit"
-                                    type="submit"
-                                    defaultValue={__("Enregistrer le change")}
-                                    className="btn btn-success"
-                                    formNoValidate={true}
-                                    disabled={!this.state.canSubmit}
-                                />
-                            </Row>
-                        </fieldset>
-                    </ManagerHistoryForm>
-                </div>
-                <div className="col-md-9 col-history-table">
+                <div className="col-md-10">
                     {actionButtons}
-                    <div className="row">
-                        {historyTable}
+                    <div className="row margin-right">
+                        <div className="col-md-12 col-md-offset-1">
+                            {historyTable}
+                        </div>
                     </div>
                 </div>
                 <ToastContainer ref="container"
@@ -291,7 +212,7 @@ class ManagerHistoryPage extends React.Component {
             </div>
         );
     }
-}
+})
 
 if (window.location.pathname.toLowerCase().indexOf("stock-billets") != -1)
 {

@@ -1,7 +1,8 @@
-/* base.html */
+/* Base variable */
 
-/* Base variables */
 $font-stack: "Lato","Helvetica Neue",Helvetica,Arial,sans-serif;
+
+/* Custom styles */
 
 .lang-select {
   cursor: pointer;
@@ -48,6 +49,10 @@ textarea {
 
 .margin-top {
   margin-top: 20px;
+}
+
+.margin-right {
+  margin-right: 5px;
 }
 
 .margin-bottom {
@@ -142,7 +147,7 @@ textarea {
   }
 }
 
-/* login.html */
+/* login */
 
 .login-div {
   background-color: #eee;
@@ -205,25 +210,34 @@ textarea {
 }
 
 /* manager/history */
-.history-form {
-  /* background-color: #f9f9f9;
-     border-right: 1px solid #CCCCCC;
-     overflow-y: auto;
-  */
-}
-
-.col-history-table {
-  padding-left: 0px;
-}
 
 .solde-history-label {
   text-align: right;
   margin-bottom: 0;
   padding-top: 11px;
+  font-weight: bold;
+}
+
+
+.solde-history-span {
+  font-weight: normal;
 }
 
 .react-selectize-manager-history {
   background-color: white;
+}
+
+.react-bs-table-account-history {
+  margin-top: 0px !important;
+  margin-right: 10px !important;
+  margin-left: 0px !important;
+  margin-bottom: 0px !important;
+}
+
+.react-bs-table-account-history {
+  .react-bs-table-no-data {
+    font-style: oblique;
+  }
 }
 
 /* divers */

@@ -53,6 +53,7 @@ module.exports = Object.keys(languages).map(function(language) {
                 moment: 'moment',
                 "_": 'underscore'
             }),
+            new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /fr|eu/),
             new I18nPlugin(
                 languages[language]
             )
