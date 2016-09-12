@@ -6,49 +6,11 @@ import {
     SelectizeUtils
 } from 'Utils'
 
-const {
-    Input,
-    Row
-} = FRC
-
 import {
     BootstrapTable,
     TableHeaderColumn
 } from 'react-bootstrap-table'
 import 'node_modules/react-bootstrap-table/dist/react-bootstrap-table.min.css'
-
-import ReactSelectize from 'react-selectize'
-const SimpleSelect = ReactSelectize.SimpleSelect
-
-import classNames from 'classnames'
-
-const {
-    ToastContainer
-} = ReactToastr
-const ToastMessageFactory = React.createFactory(ReactToastr.ToastMessage.animation)
-
-Formsy.addValidationRule('isPostiveNumeric', isPostiveNumeric)
-
-const ManagerHistoryForm = React.createClass({
-
-    mixins: [FRC.ParentContextMixin],
-
-    propTypes: {
-        children: React.PropTypes.node
-    },
-
-    render() {
-        return (
-            <Formsy.Form
-                className={this.getLayoutClassName()}
-                {...this.props}
-                ref="managerhistory"
-            >
-                {this.props.children}
-            </Formsy.Form>
-        );
-    }
-});
 
 var ManagerHistoryPage = React.createClass({
 
@@ -205,10 +167,6 @@ var ManagerHistoryPage = React.createClass({
                         </div>
                     </div>
                 </div>
-                <ToastContainer ref="container"
-                                toastMessageFactory={ToastMessageFactory}
-                                className="toast-top-right toast-top-right-navbar"
-                />
             </div>
         );
     }
