@@ -57,9 +57,12 @@ var BankDepositPage = React.createClass({
             canSubmit: false,
             validFields: false,
             validCustomFields: false,
-            currentSoldeData: undefined,
-            bankDepositList: undefined,
-            depositAmount: undefined,
+            historyTableData: undefined,
+            paymentModeList: undefined,
+            depositBankList: undefined,
+            depositBank: undefined,
+            depositAmount: '0',
+            displayCustomAmount: false,
         }
     },
 
@@ -70,25 +73,44 @@ var BankDepositPage = React.createClass({
             // 'Euro-CHQ'
             // 'Eusko-LIQ' <- We don't want the eusko payment mode in this page.
             this.setState({paymentModeList:
-                           _.filter(paymentModes, (item) => {
+                           _.filter(paymentModes,
+                                    (item) => {
                                         return item.value.toLowerCase().indexOf("eusko") === -1
                                     })
-                          })
+                           })
         }
         fetchAuth(getAPIBaseURL + "payment-modes/", 'get', computePaymentModes)
 
-        var computeBankDepositList = (bankDepositList) => {
-            this.setState({bankDepositList: bankDepositList});
-        };
+        // Get depositBankList
+        var computeBankDepositList = (depositBankList) => {
+            this.setState({depositBankList: depositBankList})
+        }
+        fetchAuth(getAPIBaseURL + "deposit-banks/", 'get', computeBankDepositList)
 
-        // Get bankDepositList history
-        fetchAuth(getAPIBaseURL + "payments-available-deposit/", 'get', computeBankDepositList)
+        // Get historyTableData
+        var computeHistoryTableData = (historyTableData) => {
+            this.setState({historyTableData: historyTableData.result.pageItems})
+        }
+        fetchAuth(getAPIBaseURL + "payments-available-deposit/", 'get', computeHistoryTableData)
     },
 
     // paymentMode
     paymentModeOnValueChange (item) {
         this.setState({paymentMode: item}, this.validateForm)
-        // TODO update bankDepositList
+        // debugger
+
+        // Display custom amount field ?
+        if (item && item.value.toLowerCase() === 'euro-liq')
+            this.setState({displayCustomAmount: true})
+        else
+            this.setState({displayCustomAmount: false})
+
+        // TODO filter historyTableData
+    },
+
+    // depositBank
+    depositBankOnValueChange (item) {
+        this.setState({depositBank: item}, this.validateForm)
     },
 
     enableButton() {
@@ -151,48 +173,46 @@ var BankDepositPage = React.createClass({
     },
 
     render() {
-        // Display current solde information
-        if (this.state.depositAmount) {
-            var depositAmountLabel = (
-                <span className="solde-deposit-span">
-                    {this.state.depositAmount}
-                </span>
-            )
-        }
-        else
-            var currentSoldeLabel = null
 
-        var divAmountClass = classNames({
+        // Should we display customAmount field
+        var divCustomAmountClass = classNames({
             'form-group row': true,
-            'has-error has-feedback': this.state.amountInvalid,
+            'hidden': !this.state.displayCustomAmount,
         })
-
-        var reactSelectizeErrorClass = classNames({
-            'react-selectize-manager-history': true,
-            'has-error has-feedback': this.state.amountInvalid,
-        })
-
 
         const selectRowProp = {
             mode: 'checkbox',
             clickToSelect: true,
             onSelect: (row, isSelected, event) => {
-                // window.location.assign("/members/" + row.id)
+                debugger
+                this.setState({depositAmount: Number(this.state.depositAmount) + Number(row.amount)})
             }
         }
 
         // History data table
-        if (this.state.bankDepositList) {
+        if (this.state.historyTableData) {
+            var dateFormatter = (cell, row) => {
+                // !! Force moment to be french
+                moment.locale('fr')
+                return moment(cell).format('LLLL')
+            }
+
+            var amountFormatter = (cell, row) => {
+                // Cell is a string for now,
+                // we need to cast it in a Number object to use the toFixed method.
+                return Number(cell).toFixed(2)
+            }
+
             var dataTable = (
                 <BootstrapTable
-                 data={this.state.bankDepositList} striped={true} hover={true}
+                 data={this.state.historyTableData} striped={true} hover={true}
                  selectRow={selectRowProp} tableContainerClass="react-bs-table-account-history"
                  options={{noDataText: __("Rien à afficher.")}}
                  >
-                    <TableHeaderColumn dataField="date" isKey={true}>{__("Date")}</TableHeaderColumn>
-                    <TableHeaderColumn dataField="label">{__("Libellé")}</TableHeaderColumn>
-                    <TableHeaderColumn dataField="amount">{__("Montant")}</TableHeaderColumn>
-                    <TableHeaderColumn dataField="solde">{__("Solde")}</TableHeaderColumn>
+                    <TableHeaderColumn isKey={true} hidden={true} dataField="id">{__("ID")}</TableHeaderColumn>
+                    <TableHeaderColumn dataField="date" dataFormat={dateFormatter}>{__("Date")}</TableHeaderColumn>
+                    <TableHeaderColumn dataField="description">{__("Libellé")}</TableHeaderColumn>
+                    <TableHeaderColumn dataField="amount" dataFormat={amountFormatter}>{__("Montant")}</TableHeaderColumn>
                 </BootstrapTable>
             )
         }
@@ -209,6 +229,52 @@ var BankDepositPage = React.createClass({
                         onValid={this.validFields}
                         ref="bank-deposit">
                         <fieldset>
+                            <div className="form-group row">
+                                <label
+                                    className="control-label col-sm-3"
+                                    data-required="true"
+                                    htmlFor="bank-deposit-payment_mode">
+                                    {__("Paiement")}
+                                    <span className="required-symbol">&nbsp;*</span>
+                                </label>
+                                <div className="col-sm-8 bank-deposit" data-eusko="bank-deposit-payment_mode">
+                                    <SimpleSelect
+                                        ref="select"
+                                        value={this.state.paymentMode}
+                                        options={this.state.paymentModeList}
+                                        placeholder={__("Mode de paiement")}
+                                        theme="bootstrap3"
+                                        onValueChange={this.paymentModeOnValueChange}
+                                        renderOption={SelectizeUtils.selectizeRenderOption}
+                                        renderValue={SelectizeUtils.selectizeRenderValue}
+                                        onBlur={this.validateForm}
+                                        required
+                                    />
+                                </div>
+                            </div>
+                            <div className="form-group row">
+                                <label
+                                    className="control-label col-sm-3"
+                                    data-required="true"
+                                    htmlFor="bank-deposit-payment_mode">
+                                    {__("Banque")}
+                                    <span className="required-symbol">&nbsp;*</span>
+                                </label>
+                                <div className="col-sm-8 bank-deposit" data-eusko="bank-deposit-deposit_bank">
+                                    <SimpleSelect
+                                        ref="select"
+                                        value={this.state.depositBank}
+                                        options={this.state.depositBankList}
+                                        placeholder={__("Banque de dépôt")}
+                                        theme="bootstrap3"
+                                        onValueChange={this.depositBankOnValueChange}
+                                        renderOption={SelectizeUtils.selectizeRenderOption}
+                                        renderValue={SelectizeUtils.selectizeRenderValue}
+                                        onBlur={this.validateForm}
+                                        required
+                                    />
+                                </div>
+                            </div>
                             <Input
                                 name="amount"
                                 data-eusko="bank-deposit-amount"
@@ -220,32 +286,22 @@ var BankDepositPage = React.createClass({
                                 validationErrors={{
                                     isPostiveNumeric: __("Montant invalide.")
                                 }}
+                                rowClassName={divCustomAmountClass}
                                 elementWrapperClassName={[{'col-sm-9': false}, 'col-sm-8']}
                                 required
                             />
-                            <div className={divAmountClass}>
+                            <div className="form-group row">
                                 <label
                                     className="control-label col-sm-3"
                                     data-required="true"
-                                    htmlFor="bank-deposit-payment_mode">
-                                    {__("Mode de paiement")}
+                                    htmlFor="bank-deposit-deposit_amount">
+                                    {__("Montant calculé")}
                                     <span className="required-symbol">&nbsp;*</span>
                                 </label>
-                                <div className="col-sm-8 bank-deposit" data-eusko="bank-deposit-payment_mode">
-                                    <SimpleSelect
-                                        className={reactSelectizeErrorClass}
-                                        ref="select"
-                                        value={this.state.paymentMode}
-                                        options={this.state.paymentModeList}
-                                        placeholder={__("Mode de paiement")}
-                                        theme="bootstrap3"
-                                        onValueChange={this.paymentModeOnValueChange}
-                                        renderOption={SelectizeUtils.selectizeRenderOption}
-                                        renderValue={SelectizeUtils.selectizeRenderValue}
-                                        onBlur={this.validateForm}
-                                        renderNoResultsFound={SelectizeUtils.selectizeNoResultsFound}
-                                        required
-                                    />
+                                <div className="col-sm-8 bank-deposit" data-eusko="bank-deposit-deposit_bank">
+                                    <span className="deposit-amount-span">
+                                        {this.state.depositAmount}
+                                    </span>
                                 </div>
                             </div>
                         </fieldset>
