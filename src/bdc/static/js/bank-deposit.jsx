@@ -1,7 +1,7 @@
 import {
     fetchAuth,
     getAPIBaseURL,
-    isPostiveNumeric,
+    isPositiveNumeric,
     NavbarTitle,
     SelectizeUtils
 } from 'Utils'
@@ -27,7 +27,7 @@ const {
 } = ReactToastr
 const ToastMessageFactory = React.createFactory(ReactToastr.ToastMessage.animation)
 
-Formsy.addValidationRule('isPostiveNumeric', isPostiveNumeric)
+Formsy.addValidationRule('isPositiveNumeric', isPositiveNumeric)
 
 const BankDepositForm = React.createClass({
 
@@ -61,7 +61,12 @@ var BankDepositPage = React.createClass({
             paymentModeList: undefined,
             depositBankList: undefined,
             depositBank: undefined,
-            depositAmount: '0',
+            depositAmount: undefined,
+            depositCalculatedAmount: '—',
+            displayWarningPlusDifference: false,
+            displayWarningMinusDifference: false,
+            amountDifference: undefined,
+            bordereau: undefined,
             displayCustomAmount: false,
         }
     },
@@ -95,9 +100,8 @@ var BankDepositPage = React.createClass({
     },
 
     // paymentMode
-    paymentModeOnValueChange (item) {
+    paymentModeOnValueChange(item) {
         this.setState({paymentMode: item}, this.validateForm)
-        // debugger
 
         // Display custom amount field ?
         if (item && item.value.toLowerCase() === 'euro-liq')
@@ -109,8 +113,46 @@ var BankDepositPage = React.createClass({
     },
 
     // depositBank
-    depositBankOnValueChange (item) {
+    depositBankOnValueChange(item) {
         this.setState({depositBank: item}, this.validateForm)
+    },
+
+    depositAmountOnBlur() {
+        if (this.state.displayCustomAmount && this.state.depositCalculatedAmount != "—")
+        {
+            var numDepositAmount = Number(this.state.depositAmount)
+            var numDepositCalculatedAmount = Number(this.state.depositCalculatedAmount)
+            var diff = numDepositAmount - numDepositCalculatedAmount
+
+            if (numDepositAmount === numDepositCalculatedAmount || !isPositiveNumeric(null, this.state.depositAmount)) {
+                this.setState({displayWarningPlusDifference: false,
+                               displayWarningMinusDifference: false},
+                              this.validateForm)
+            }
+            else {
+                if (numDepositAmount > numDepositCalculatedAmount) {
+                    this.setState({displayWarningPlusDifference: true,
+                                   displayWarningMinusDifference: false,
+                                   amountDifference: diff},
+                                  this.validateForm)
+                }
+                else {
+                    this.setState({displayWarningPlusDifference: false,
+                                   displayWarningMinusDifference: true,
+                                   amountDifference: diff},
+                                  this.validateForm)
+                }
+            }
+        }
+        else {
+            this.setState({displayWarningPlusDifference: false,
+                           displayWarningMinusDifference: false},
+                          this.validateForm)
+        }
+    },
+
+    onFormChange(event, value) {
+        this.setState({[event]: value}, this.depositAmountOnBlur)
     },
 
     enableButton() {
@@ -126,7 +168,8 @@ var BankDepositPage = React.createClass({
     },
 
     validateForm() {
-        if (this.state.paymentMode)
+        this.setState({depositCalculatedAmount: '9'})
+        if (this.state.paymentMode && this.state.depositBank)
         {
             this.setState({validCustomFields: true})
 
@@ -173,7 +216,6 @@ var BankDepositPage = React.createClass({
     },
 
     render() {
-
         // Should we display customAmount field
         var divCustomAmountClass = classNames({
             'form-group row': true,
@@ -185,7 +227,7 @@ var BankDepositPage = React.createClass({
             clickToSelect: true,
             onSelect: (row, isSelected, event) => {
                 debugger
-                this.setState({depositAmount: Number(this.state.depositAmount) + Number(row.amount)})
+                this.setState({depositCalculatedAmount: Number(this.state.depositCalculatedAmount) + Number(row.amount)})
             }
         }
 
@@ -218,6 +260,38 @@ var BankDepositPage = React.createClass({
         }
         else
             var dataTable = null;
+
+        // Warning message amount difference
+        var warningCustomAmountDifference = null
+
+        if (this.state.displayWarningPlusDifference) {
+            var tmpMessage = __('Attention, il y a %%% € de trop dans le dépôt !')
+            var warningCustomAmountDifferenceMessage = (
+                tmpMessage.replace('%%%', this.state.amountDifference)
+            )
+
+            var warningCustomAmountDifference = (
+                <div className="form-group row">
+                    <div className="col-md-offset-2 col-md-8 alert alert-warning">
+                       {warningCustomAmountDifferenceMessage}
+                    </div>
+                </div>
+            )
+        }
+        else if (this.state.displayWarningMinusDifference) {
+            var tmpMessage = __('Attention, il manque %%% € dans le dépôt !')
+            var warningCustomAmountDifferenceMessage = (
+                tmpMessage.replace('%%%', String(this.state.amountDifference).substring(1))
+            )
+
+            var warningCustomAmountDifference = (
+                <div className="form-group row">
+                    <div className="col-md-offset-2 col-md-8 alert alert-warning">
+                       {warningCustomAmountDifferenceMessage}
+                    </div>
+                </div>
+            )
+        }
 
         return (
             <div className="row">
@@ -276,16 +350,18 @@ var BankDepositPage = React.createClass({
                                 </div>
                             </div>
                             <Input
-                                name="amount"
+                                name="depositAmount"
                                 data-eusko="bank-deposit-amount"
                                 value=""
                                 label={__("Montant")}
                                 type="number"
                                 placeholder={__("Montant du dépôt")}
-                                validations="isPostiveNumeric"
+                                validations="isPositiveNumeric"
                                 validationErrors={{
-                                    isPostiveNumeric: __("Montant invalide.")
+                                    isPositiveNumeric: __("Montant invalide.")
                                 }}
+                                onChange={this.onFormChange}
+                                onBlur={this.depositAmountOnBlur}
                                 rowClassName={divCustomAmountClass}
                                 elementWrapperClassName={[{'col-sm-9': false}, 'col-sm-8']}
                                 required
@@ -293,17 +369,16 @@ var BankDepositPage = React.createClass({
                             <div className="form-group row">
                                 <label
                                     className="control-label col-sm-3"
-                                    data-required="true"
                                     htmlFor="bank-deposit-deposit_amount">
                                     {__("Montant calculé")}
-                                    <span className="required-symbol">&nbsp;*</span>
                                 </label>
-                                <div className="col-sm-8 bank-deposit" data-eusko="bank-deposit-deposit_bank">
+                                <div className="col-sm-8 bank-deposit deposit-amount-div" data-eusko="bank-deposit-deposit_bank">
                                     <span className="deposit-amount-span">
-                                        {this.state.depositAmount}
+                                        {this.state.depositCalculatedAmount + " €"}
                                     </span>
                                 </div>
                             </div>
+                            {warningCustomAmountDifference}
                         </fieldset>
                         <fieldset>
                             <Row layout="horizontal">
