@@ -1,7 +1,7 @@
 import {
     fetchAuth,
     getAPIBaseURL,
-    isPostiveNumeric,
+    isPositiveNumeric,
     NavbarTitle,
     SelectizeUtils
 } from 'Utils'
@@ -22,7 +22,7 @@ const {
 } = ReactToastr
 const ToastMessageFactory = React.createFactory(ReactToastr.ToastMessage.animation)
 
-Formsy.addValidationRule('isPostiveNumeric', isPostiveNumeric)
+Formsy.addValidationRule('isPositiveNumeric', isPositiveNumeric)
 
 const MemberChangeEuroEuskoForm = React.createClass({
 
@@ -189,9 +189,9 @@ class MemberChangeEuroEuskoPage extends React.Component {
                             label={__("Montant")}
                             type="number"
                             placeholder={__("Montant du change")}
-                            validations="isPostiveNumeric"
+                            validations="isPositiveNumeric"
                             validationErrors={{
-                                isPostiveNumeric: __("Montant invalide.")
+                                isPositiveNumeric: __("Montant invalide.")
                             }}
                             elementWrapperClassName={[{'col-sm-9': false}, 'col-sm-5']}
                             required

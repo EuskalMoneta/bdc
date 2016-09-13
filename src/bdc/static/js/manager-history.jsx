@@ -1,7 +1,7 @@
 import {
     fetchAuth,
     getAPIBaseURL,
-    isPostiveNumeric,
+    isPositiveNumeric,
     NavbarTitle,
     SelectizeUtils
 } from 'Utils'

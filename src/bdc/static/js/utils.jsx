@@ -106,7 +106,7 @@ var isMemberIdEusko = (values, value) =>
     }
 }
 
-var isPostiveNumeric = (values, value) =>
+var isPositiveNumeric = (values, value) =>
 {
     if (!value || value == 0) {
         return false
@@ -260,7 +260,7 @@ module.exports = {
     fetchGetToken: fetchGetToken,
     getUrlParameter: getUrlParameter,
     isMemberIdEusko: isMemberIdEusko,
-    isPostiveNumeric: isPostiveNumeric,
+    isPositiveNumeric: isPositiveNumeric,
     titleCase: titleCase,
     getCurrentLang: getCurrentLang,
     getCSRFToken: getCSRFToken,

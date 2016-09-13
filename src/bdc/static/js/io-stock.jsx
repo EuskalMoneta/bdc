@@ -1,7 +1,7 @@
 import {
     fetchAuth,
     getAPIBaseURL,
-    isPostiveNumeric,
+    isPositiveNumeric,
     NavbarTitle,
     SelectizeUtils
 } from 'Utils'
@@ -22,7 +22,7 @@ const {
 } = ReactToastr
 const ToastMessageFactory = React.createFactory(ReactToastr.ToastMessage.animation)
 
-Formsy.addValidationRule('isPostiveNumeric', isPostiveNumeric)
+Formsy.addValidationRule('isPositiveNumeric', isPositiveNumeric)
 
 const IOStockForm = React.createClass({
 
@@ -156,9 +156,9 @@ class IOStockPage extends React.Component {
                             label={__("Montant")}
                             type="number"
                             placeholder={__("Montant de l'enregistrement")}
-                            validations="isPostiveNumeric"
+                            validations="isPositiveNumeric"
                             validationErrors={{
-                                isPostiveNumeric: __("Montant invalide.")
+                                isPositiveNumeric: __("Montant invalide.")
                             }}
                             elementWrapperClassName={[{'col-sm-9': false}, 'col-sm-6']}
                             required
