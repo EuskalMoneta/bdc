@@ -39,6 +39,7 @@
     "react-datepicker ": "^0.28.1",
     "react-dom": "^15.3.0",
     "react-selectize": "^2.0.3",
+    "react-spinjs": "^3.0.0",
     "react-toastr": "^2.8.0",
     "sass-loader": "^4.0.0",
     "style-loader": "^0.13.1",
