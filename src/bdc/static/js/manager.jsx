@@ -73,7 +73,7 @@ var StockBillets = React.createClass({
                             <span className="col-md-5">{this.state.balance + " " + this.state.currency}</span>
                         </div>
                         <div className="col-md-4">
-                            <a href={"/manager/history/stock-billets"} className="btn btn-default">{__("Historique")}</a>
+                            <a href="/manager/history/stock-billets" className="btn btn-default">{__("Historique")}</a>
                         </div>
                     </div>
                     <div className="row margin-top">
@@ -122,7 +122,7 @@ var CaisseEuro = React.createClass({
                             <span className="col-md-5">{this.state.balance + " " + this.state.currency}</span>
                         </div>
                         <div className="col-md-4">
-                            <a href={"/manager/history/caisse-euro"} className="btn btn-default">{__("Historique")}</a>
+                            <a href="/manager/history/caisse-euro" className="btn btn-default">{__("Historique")}</a>
                         </div>
                     </div>
                      <div className="row">
@@ -139,7 +139,7 @@ var CaisseEuro = React.createClass({
                     </div>
                     <div className="row margin-top">
                         <div className="col-md-offset-2 col-md-2 col-sm-4">
-                            <a className="btn btn-info">{__("Dépôt en banque")}</a>
+                            <a href="/bank-deposit" className="btn btn-info">{__("Dépôt en banque")}</a>
                         </div>
                         <div className="col-md-offset-2 col-md-2 col-sm-4">
                             <a className="btn btn-default">{__("Remise d'espèces")}</a>
@@ -179,7 +179,7 @@ var CaisseEusko = React.createClass({
                             <span className="col-md-5">{this.state.balance + " " + this.state.currency}</span>
                         </div>
                         <div className="col-md-4">
-                            <a href={"/manager/history/caisse-eusko"} className="btn btn-default">{__("Historique")}</a>
+                            <a href="/manager/history/caisse-eusko" className="btn btn-default">{__("Historique")}</a>
                         </div>
                     </div>
                     <div className="row margin-top">
@@ -221,7 +221,7 @@ var RetourEusko = React.createClass({
                             <span className="col-md-5">{this.state.balance + " " + this.state.currency}</span>
                         </div>
                         <div className="col-md-4">
-                            <a href={"/manager/history/retour-eusko"} className="btn btn-default">{__("Historique")}</a>
+                            <a href="/manager/history/retour-eusko" className="btn btn-default">{__("Historique")}</a>
                         </div>
                     </div>
                     <div className="row margin-top">
