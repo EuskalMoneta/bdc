@@ -8,6 +8,7 @@ import {
 
 const {
     Input,
+    Checkbox,
     Row
 } = FRC
 
@@ -67,6 +68,7 @@ var BankDepositPage = React.createClass({
             displayWarningMinusDifference: false,
             amountDifference: undefined,
             bordereau: undefined,
+            disableBordereau: false,
             displayCustomAmount: false,
         }
     },
@@ -101,14 +103,16 @@ var BankDepositPage = React.createClass({
 
     // paymentMode
     paymentModeOnValueChange(item) {
-        this.setState({paymentMode: item}, this.validateForm)
+        this.setState({paymentMode: item, depositAmount: undefined}, this.validateForm)
 
         // Display custom amount field ?
         if (item && item.value.toLowerCase() === 'euro-liq')
             this.setState({displayCustomAmount: true})
         else
-            this.setState({displayCustomAmount: false})
-
+            this.setState({displayCustomAmount: false,
+                           depositAmount: undefined,
+                           displayWarningPlusDifference: false,
+                           displayWarningMinusDifference: false})
         // TODO filter historyTableData
     },
 
@@ -124,7 +128,7 @@ var BankDepositPage = React.createClass({
             var numDepositCalculatedAmount = Number(this.state.depositCalculatedAmount)
             var diff = numDepositAmount - numDepositCalculatedAmount
 
-            if (numDepositAmount === numDepositCalculatedAmount || !isPositiveNumeric(null, this.state.depositAmount)) {
+            if ((numDepositAmount === numDepositCalculatedAmount) || !isPositiveNumeric(null, this.state.depositAmount)) {
                 this.setState({displayWarningPlusDifference: false,
                                displayWarningMinusDifference: false},
                               this.validateForm)
@@ -169,14 +173,13 @@ var BankDepositPage = React.createClass({
 
     validateForm() {
         this.setState({depositCalculatedAmount: '9'})
-        if (this.state.paymentMode && this.state.depositBank)
-        {
-            this.setState({validCustomFields: true})
+        if (this.state.paymentMode && this.state.depositBank) {
+                this.setState({validCustomFields: true})
 
-            if (this.state.validFields)
-                this.enableButton()
-            else
-                this.disableButton()
+                if (this.state.validFields)
+                    this.enableButton()
+                else
+                    this.disableButton()
         }
         else
             this.disableButton()
@@ -272,7 +275,7 @@ var BankDepositPage = React.createClass({
 
             var warningCustomAmountDifference = (
                 <div className="form-group row">
-                    <div className="col-md-offset-2 col-md-8 alert alert-warning">
+                    <div className="col-md-offset-2 col-md-8 alert alert-warning alert-deposit-amount-difference">
                        {warningCustomAmountDifferenceMessage}
                     </div>
                 </div>
@@ -286,7 +289,7 @@ var BankDepositPage = React.createClass({
 
             var warningCustomAmountDifference = (
                 <div className="form-group row">
-                    <div className="col-md-offset-2 col-md-8 alert alert-warning">
+                    <div className="col-md-offset-2 col-md-8 alert alert-warning alert-deposit-amount-difference">
                        {warningCustomAmountDifferenceMessage}
                     </div>
                 </div>
@@ -322,6 +325,7 @@ var BankDepositPage = React.createClass({
                                         renderOption={SelectizeUtils.selectizeRenderOption}
                                         renderValue={SelectizeUtils.selectizeRenderValue}
                                         onBlur={this.validateForm}
+                                        renderNoResultsFound={SelectizeUtils.selectizeNoResultsFound}
                                         required
                                     />
                                 </div>
@@ -345,14 +349,15 @@ var BankDepositPage = React.createClass({
                                         renderOption={SelectizeUtils.selectizeRenderOption}
                                         renderValue={SelectizeUtils.selectizeRenderValue}
                                         onBlur={this.validateForm}
+                                        renderNoResultsFound={SelectizeUtils.selectizeNoResultsFound}
                                         required
                                     />
                                 </div>
                             </div>
                             <Input
                                 name="depositAmount"
-                                data-eusko="bank-deposit-amount"
-                                value=""
+                                data-eusko="bank-deposit-depositAmount"
+                                value={this.state.depositAmount ? this.state.depositAmount : ""}
                                 label={__("Montant")}
                                 type="number"
                                 placeholder={__("Montant du dépôt")}
@@ -364,7 +369,7 @@ var BankDepositPage = React.createClass({
                                 onBlur={this.depositAmountOnBlur}
                                 rowClassName={divCustomAmountClass}
                                 elementWrapperClassName={[{'col-sm-9': false}, 'col-sm-8']}
-                                required
+                                required={this.state.displayCustomAmount}
                             />
                             <div className="form-group row">
                                 <label
@@ -379,6 +384,30 @@ var BankDepositPage = React.createClass({
                                 </div>
                             </div>
                             {warningCustomAmountDifference}
+                            <Input
+                                name="bordereau"
+                                data-eusko="bank-deposit-bordereau"
+                                value=""
+                                label={__("Bordereau")}
+                                type="text"
+                                placeholder={__("N° du bordereau de remise")}
+                                validations="isExisty"
+                                validationErrors={{
+                                    isExisty: __("N° bordereau invalide.")
+                                }}
+                                disabled={this.state.disableBordereau}
+                                required={!this.state.disableBordereau}
+                                onChange={this.onFormChange}
+                                elementWrapperClassName={[{'col-sm-9': false}, 'col-sm-8']}
+                            />
+                            <Checkbox
+                                name="disableBordereau"
+                                data-eusko="bank-deposit-noBordereau"
+                                value=""
+                                label={__("Je ne connais pas le n° bordereau")}
+                                onChange={this.onFormChange}
+                                rowLabel=""
+                            />
                         </fieldset>
                         <fieldset>
                             <Row layout="horizontal">
