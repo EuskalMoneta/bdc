@@ -63,7 +63,7 @@ var BankDepositPage = React.createClass({
             depositBankList: undefined,
             depositBank: undefined,
             depositAmount: undefined,
-            depositCalculatedAmount: '—',
+            depositCalculatedAmount: Number(0),
             displayWarningPlusDifference: false,
             displayWarningMinusDifference: false,
             amountDifference: undefined,
@@ -96,7 +96,15 @@ var BankDepositPage = React.createClass({
 
         // Get historyTableData
         var computeHistoryTableData = (historyTableData) => {
-            this.setState({historyTableData: historyTableData.result.pageItems})
+            // I only want to display items which status is "A remettre à Euskal Moneta"
+            this.setState({historyTableData: _.filter(
+                historyTableData.result.pageItems,
+                (item) => {
+                    if (_.findWhere(item.statuses, {name: "A remettre à Euskal Moneta"})) {
+                        return item
+                    }
+                })
+            })
         }
         fetchAuth(getAPIBaseURL + "payments-available-deposit/", 'get', computeHistoryTableData)
     },
@@ -122,7 +130,7 @@ var BankDepositPage = React.createClass({
     },
 
     depositAmountOnBlur() {
-        if (this.state.displayCustomAmount && this.state.depositCalculatedAmount != "—")
+        if (this.state.displayCustomAmount && this.state.depositCalculatedAmount != Number(0))
         {
             var numDepositAmount = Number(this.state.depositAmount)
             var numDepositCalculatedAmount = Number(this.state.depositCalculatedAmount)
@@ -159,6 +167,31 @@ var BankDepositPage = React.createClass({
         this.setState({[event]: value}, this.depositAmountOnBlur)
     },
 
+    onSelectTableRow(row, isSelected, event) {
+        var baseNumber = Number(this.state.depositCalculatedAmount)
+        if (Number.isNaN(baseNumber))
+            var baseNumber = Number(0)
+
+        if (isSelected) {
+            this.setState({depositCalculatedAmount: baseNumber + Number(row.amount)}, this.depositAmountOnBlur)
+        }
+        else {
+            this.setState({depositCalculatedAmount: baseNumber - Number(row.amount)}, this.depositAmountOnBlur)
+        }
+    },
+
+    onSelectTableAll(isSelected, rows) {
+        var newDepositCalculatedAmount = Number(0)
+
+        if (isSelected) {
+            var newDepositCalculatedAmount =_.reduce(rows, (memo, row) => {
+                return memo + Number(row.amount)
+            }, Number(0))
+        }
+
+        this.setState({depositCalculatedAmount: newDepositCalculatedAmount}, this.depositAmountOnBlur)
+    },
+
     enableButton() {
         this.setState({canSubmit: true})
     },
@@ -172,7 +205,6 @@ var BankDepositPage = React.createClass({
     },
 
     validateForm() {
-        this.setState({depositCalculatedAmount: '9'})
         if (this.state.paymentMode && this.state.depositBank) {
                 this.setState({validCustomFields: true})
 
@@ -200,6 +232,9 @@ var BankDepositPage = React.createClass({
                     closeButton:true
                 }
             )
+
+            console.log("redirect to: /manager/history/caisse-euro")
+            window.location.assign("/manager/history/caisse-euro")
         }
 
         var promiseError = (err) => {
@@ -228,10 +263,8 @@ var BankDepositPage = React.createClass({
         const selectRowProp = {
             mode: 'checkbox',
             clickToSelect: true,
-            onSelect: (row, isSelected, event) => {
-                debugger
-                this.setState({depositCalculatedAmount: Number(this.state.depositCalculatedAmount) + Number(row.amount)})
-            }
+            onSelect: this.onSelectTableRow,
+            onSelectAll: this.onSelectTableAll,
         }
 
         // History data table
@@ -404,7 +437,7 @@ var BankDepositPage = React.createClass({
                                 name="disableBordereau"
                                 data-eusko="bank-deposit-noBordereau"
                                 value=""
-                                label={__("Je ne connais pas le n° bordereau")}
+                                label={__("Je ne connais pas le n° du bordereau")}
                                 onChange={this.onFormChange}
                                 rowLabel=""
                             />
