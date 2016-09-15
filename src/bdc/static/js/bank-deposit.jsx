@@ -56,9 +56,8 @@ var BankDepositPage = React.createClass({
     getInitialState() {
         return {
             canSubmit: false,
-            validFields: false,
-            validCustomFields: false,
             historyTableData: undefined,
+            historyTableSelectedRows: Array(),
             paymentModeList: undefined,
             depositBankList: undefined,
             depositBank: undefined,
@@ -79,18 +78,17 @@ var BankDepositPage = React.createClass({
             // 'Euro-LIQ'
             // 'Euro-CHQ'
             // 'Eusko-LIQ' <- We don't want the eusko payment mode in this page.
-            this.setState({paymentModeList:
-                           _.filter(paymentModes,
-                                    (item) => {
-                                        return item.value.toLowerCase().indexOf("eusko") === -1
-                                    })
+            this.setState({paymentModeList: _.chain(paymentModes)
+                           .filter((item) => { return item.value.toLowerCase().indexOf("eusko") === -1 })
+                           .sortBy((item) => { return item.label })
+                           .value()
                            })
         }
         fetchAuth(getAPIBaseURL + "payment-modes/", 'get', computePaymentModes)
 
         // Get depositBankList
         var computeBankDepositList = (depositBankList) => {
-            this.setState({depositBankList: depositBankList})
+            this.setState({depositBankList: _.sortBy(depositBankList, (item) => { return item.label })})
         }
         fetchAuth(getAPIBaseURL + "deposit-banks/", 'get', computeBankDepositList)
 
@@ -169,27 +167,42 @@ var BankDepositPage = React.createClass({
 
     onSelectTableRow(row, isSelected, event) {
         var baseNumber = Number(this.state.depositCalculatedAmount)
+        var historyTableSelectedRows = this.state.historyTableSelectedRows
+
         if (Number.isNaN(baseNumber))
             var baseNumber = Number(0)
 
         if (isSelected) {
-            this.setState({depositCalculatedAmount: baseNumber + Number(row.amount)}, this.depositAmountOnBlur)
+            historyTableSelectedRows.push(row)
+            this.setState({depositCalculatedAmount: baseNumber + Number(row.amount),
+                           historyTableSelectedRows: historyTableSelectedRows},
+                          this.depositAmountOnBlur)
         }
         else {
-            this.setState({depositCalculatedAmount: baseNumber - Number(row.amount)}, this.depositAmountOnBlur)
+            this.setState({depositCalculatedAmount: baseNumber - Number(row.amount),
+                           historyTableSelectedRows: _.filter(historyTableSelectedRows,
+                            (item) => {
+                                if (row != item)
+                                    return item
+                            })
+                          }, this.depositAmountOnBlur)
         }
     },
 
     onSelectTableAll(isSelected, rows) {
-        var newDepositCalculatedAmount = Number(0)
-
         if (isSelected) {
-            var newDepositCalculatedAmount =_.reduce(rows, (memo, row) => {
-                return memo + Number(row.amount)
-            }, Number(0))
+            this.setState({depositCalculatedAmount: _.reduce(rows,
+                                (memo, row) => {
+                                    return memo + Number(row.amount)
+                                }, Number(0)),
+                           historyTableSelectedRows: rows},
+                          this.depositAmountOnBlur)
         }
-
-        this.setState({depositCalculatedAmount: newDepositCalculatedAmount}, this.depositAmountOnBlur)
+        else {
+            this.setState({depositCalculatedAmount: Number(0),
+                           historyTableSelectedRows: Array()},
+                          this.depositAmountOnBlur)
+        }
     },
 
     enableButton() {
@@ -200,29 +213,33 @@ var BankDepositPage = React.createClass({
         this.setState({canSubmit: false})
     },
 
-    validFields() {
-        this.setState({validFields: true}, this.validateForm)
-    },
-
     validateForm() {
-        if (this.state.paymentMode && this.state.depositBank) {
-                this.setState({validCustomFields: true})
-
-                if (this.state.validFields)
-                    this.enableButton()
-                else
-                    this.disableButton()
+        if (this.state.paymentMode &&
+            this.state.depositBank &&
+            this.state.depositCalculatedAmount != Number(0) &&
+            (!this.state.displayCustomAmount ||
+                this.state.displayCustomAmount &&
+                isPositiveNumeric(null, this.state.depositAmount)) &&
+            (this.state.disableBordereau ||
+                !this.state.disableBordereau &&
+                this.state.bordereau)
+        ) {
+            this.enableButton()
         }
         else
             this.disableButton()
     },
 
     submitForm(data) {
-        data.member_login = this.state.member.login
-        data.payment_mode = this.state.paymentMode.cyclos_id
+        data.paymentMode = this.state.paymentMode.cyclos_id
+        data.depositBank = this.state.depositBank.value
+        data.depositCalculatedAmount = this.state.depositCalculatedAmount
+        data.depositAmount = this.state.depositAmount
+        data.disableBordereau = this.state.disableBordereau
+        data.bordereau = this.state.bordereau
+        data.historyTableSelectedRows = this.state.historyTableSelectedRows
 
         var computeForm = (data) => {
-            this.setState({data: data})
             this.refs.container.success(
                 __("L'enregistrement s'est déroulée correctement."),
                 "",
@@ -234,7 +251,7 @@ var BankDepositPage = React.createClass({
             )
 
             console.log("redirect to: /manager/history/caisse-euro")
-            window.location.assign("/manager/history/caisse-euro")
+            // window.location.assign("/manager/history/caisse-euro")
         }
 
         var promiseError = (err) => {
@@ -335,8 +352,7 @@ var BankDepositPage = React.createClass({
                     <div className="row"></div>
                     <BankDepositForm
                         onValidSubmit={this.submitForm}
-                        onInvalid={this.disableButton}
-                        onValid={this.validFields}
+                        onInvalidSubmit={this.submitForm}
                         ref="bank-deposit">
                         <fieldset>
                             <div className="form-group row">
@@ -403,6 +419,7 @@ var BankDepositPage = React.createClass({
                                 rowClassName={divCustomAmountClass}
                                 elementWrapperClassName={[{'col-sm-9': false}, 'col-sm-8']}
                                 required={this.state.displayCustomAmount}
+                                disabled={!this.state.displayCustomAmount}
                             />
                             <div className="form-group row">
                                 <label
@@ -473,7 +490,7 @@ var BankDepositPage = React.createClass({
 
 
 ReactDOM.render(
-    <BankDepositPage />,
+    <BankDepositPage url={getAPIBaseURL + "bank-deposit/"} method="POST" />,
     document.getElementById('bank-deposit')
 )
 
