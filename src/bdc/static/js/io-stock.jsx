@@ -105,7 +105,7 @@ class IOStockPage extends React.Component {
         var computeForm = (response) => {
             this.setState({response: response})
             this.refs.container.success(
-                __("L'enregistrement s'est déroulée correctement."),
+                __("L'enregistrement s'est déroulé correctement."),
                 "",
                 {
                     timeOut: 5000,
