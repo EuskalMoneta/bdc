@@ -61,7 +61,7 @@ var BankDepositPage = React.createClass({
             paymentModeList: undefined,
             depositBankList: undefined,
             depositBank: undefined,
-            depositAmount: undefined,
+            depositAmount: "",
             depositCalculatedAmount: Number(0),
             displayWarningPlusDifference: false,
             displayWarningMinusDifference: false,
@@ -109,17 +109,18 @@ var BankDepositPage = React.createClass({
 
     // paymentMode
     paymentModeOnValueChange(item) {
-        this.setState({paymentMode: item, depositAmount: undefined}, this.validateForm)
+        this.setState({paymentMode: item, depositAmount: ""}, this.validateForm)
 
         // Display custom amount field ?
         if (item && item.value.toLowerCase() === 'euro-liq')
             this.setState({displayCustomAmount: true})
         else
             this.setState({displayCustomAmount: false,
-                           depositAmount: undefined,
+                           depositAmount: "",
                            displayWarningPlusDifference: false,
                            displayWarningMinusDifference: false})
-        // TODO filter historyTableData
+
+        // TODO filter historyTableData ?
     },
 
     // depositBank
@@ -231,17 +232,21 @@ var BankDepositPage = React.createClass({
     },
 
     submitForm(data) {
-        data.paymentMode = this.state.paymentMode.cyclos_id
-        data.depositBank = this.state.depositBank.value
-        data.depositCalculatedAmount = this.state.depositCalculatedAmount
-        data.depositAmount = this.state.depositAmount
-        data.disableBordereau = this.state.disableBordereau
-        data.bordereau = this.state.bordereau
-        data.historyTableSelectedRows = this.state.historyTableSelectedRows
+        var postData = {}
+        postData.login_bdc = window.config.userName
+        postData.payment_mode = this.state.paymentMode.cyclos_id
+        postData.deposit_bank = this.state.depositBank.value
+        postData.deposit_calculated_amount = this.state.depositCalculatedAmount
+        postData.deposit_amount = this.state.depositAmount
+        postData.disable_bordereau = this.state.disableBordereau
+        postData.bordereau = this.state.bordereau
+        postData.selected_payments = this.state.historyTableSelectedRows
+        postData.amount_plus_difference = this.state.displayWarningPlusDifference
+        postData.amount_minus_difference = this.state.displayWarningMinusDifference
 
         var computeForm = (data) => {
             this.refs.container.success(
-                __("L'enregistrement s'est déroulée correctement."),
+                __("L'enregistrement s'est déroulé correctement."),
                 "",
                 {
                     timeOut: 5000,
@@ -250,6 +255,7 @@ var BankDepositPage = React.createClass({
                 }
             )
 
+            console.log(data)
             console.log("redirect to: /manager/history/caisse-euro")
             // window.location.assign("/manager/history/caisse-euro")
         }
@@ -267,7 +273,7 @@ var BankDepositPage = React.createClass({
                 }
             )
         }
-        fetchAuth(this.props.url, this.props.method, computeForm, data, promiseError)
+        fetchAuth(this.props.url, this.props.method, computeForm, postData, promiseError)
     },
 
     render() {
