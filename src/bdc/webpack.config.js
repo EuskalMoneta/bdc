@@ -19,13 +19,18 @@ module.exports = Object.keys(languages).map(function(language) {
         // devtool: 'source-map',
 
         entry: {
-            Base : './static/js/base', // Your global app's entry point
-            MemberAdd : './static/js/member-add',
-            MemberAddSubscription : './static/js/member-add-subscription',
-            MemberSearch : './static/js/member-search',
-            MemberShow : './static/js/member-show',
-            Manager : './static/js/manager',
-            Login : './static/js/login',
+            Base: './static/js/base', // Your global app's entry point
+            MemberAdd: './static/js/member-add',
+            MemberAddSubscription: './static/js/member-add-subscription',
+            MemberSearch: './static/js/member-search',
+            MemberShow: './static/js/member-show',
+            MemberChangeEuroEusko: './static/js/member-change-euro-eusko',
+            MemberReconversion: './static/js/member-reconversion',
+            IOStock: './static/js/io-stock',
+            BankDeposit: './static/js/bank-deposit',
+            Manager: './static/js/manager',
+            ManagerHistory: './static/js/manager-history',
+            Login: './static/js/login',
         },
 
         output: {
@@ -49,6 +54,7 @@ module.exports = Object.keys(languages).map(function(language) {
                 moment: 'moment',
                 "_": 'underscore'
             }),
+            new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /fr|eu/),
             new I18nPlugin(
                 languages[language]
             )

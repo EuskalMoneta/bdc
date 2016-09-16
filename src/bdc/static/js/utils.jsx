@@ -95,24 +95,35 @@ var getUrlParameter = (name) => {
 var isMemberIdEusko = (values, value) =>
 {
     if (!value) {
-        return false;
+        return false
     }
 
     if ((value.startsWith("E", 0) || value.startsWith("Z", 0)) && value.length === 6) {
-        return true;
+        return true
     }
     else {
-        return false;
+        return false
     }
 }
 
-var titleCase = (str) => {
-  if ((str===null) || (str===''))
-       return false;
-  else
-   str = str.toString();
+var isPositiveNumeric = (values, value) =>
+{
+    if (!value || value == 0) {
+        return false
+    }
+    if (value.match(/^\+?(?:\d*[.])?\d+$/))
+        return true
+    else
+        return false
+}
 
- return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+var titleCase = (str) => {
+    if ((str===null) || (str===''))
+       return false;
+    else
+        str = str.toString();
+
+    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 }
 
 var getCurrentLang = document.documentElement.lang
@@ -249,6 +260,7 @@ module.exports = {
     fetchGetToken: fetchGetToken,
     getUrlParameter: getUrlParameter,
     isMemberIdEusko: isMemberIdEusko,
+    isPositiveNumeric: isPositiveNumeric,
     titleCase: titleCase,
     getCurrentLang: getCurrentLang,
     getCSRFToken: getCSRFToken,

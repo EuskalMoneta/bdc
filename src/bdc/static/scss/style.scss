@@ -1,7 +1,8 @@
-/* base.html */
+/* Base variable */
 
-/* Base variables */
 $font-stack: "Lato","Helvetica Neue",Helvetica,Arial,sans-serif;
+
+/* Custom styles */
 
 .lang-select {
   cursor: pointer;
@@ -14,6 +15,10 @@ $font-stack: "Lato","Helvetica Neue",Helvetica,Arial,sans-serif;
 
 body {
   overflow-x: hidden;
+}
+
+textarea {
+  resize: none;
 }
 
 .container-eusko {
@@ -46,6 +51,14 @@ body {
   margin-top: 20px;
 }
 
+.margin-right {
+  margin-right: 5px;
+}
+
+.margin-bottom {
+  margin-bottom: 20px;
+}
+
 .btn-default {
   background-color: #ffffff;
   color: #95a5a6;
@@ -70,12 +83,11 @@ body {
   }
 }
 
-.member-show-statut.btn-success {
-  cursor: default;
-  pointer-events: none;
-}
-
-.member-show-statut.btn-warning {
+.member-show-statut {
+  padding-top: 10px;
+  padding-right: 15px;
+  padding-bottom: 10px;
+  padding-left: 15px;
 }
 
 .member-show-div-margin-left {
@@ -135,7 +147,7 @@ body {
   }
 }
 
-/* login.html */
+/* login */
 
 .login-div {
   background-color: #eee;
@@ -195,6 +207,46 @@ body {
   td {
     cursor: pointer;
   }
+}
+
+/* manager/history */
+
+.solde-history-label {
+  text-align: right;
+  margin-bottom: 0;
+  padding-top: 11px;
+  font-weight: bold;
+}
+
+.solde-history-span {
+  font-weight: normal;
+}
+
+.react-selectize-manager-history {
+  background-color: white;
+}
+
+.react-bs-table-account-history {
+  margin-top: 0px !important;
+  margin-right: 10px !important;
+  margin-left: 0px !important;
+  margin-bottom: 0px !important;
+}
+
+.react-bs-table-account-history {
+  .react-bs-table-no-data {
+    font-style: oblique;
+  }
+}
+
+/* bank-deposit  */
+
+.deposit-amount-div {
+  padding-top: 20px;
+}
+
+.alert-deposit-amount-difference {
+  margin-bottom: 0px;
 }
 
 /* divers */

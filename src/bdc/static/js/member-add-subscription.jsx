@@ -87,7 +87,8 @@ class MemberSubscriptionPage extends React.Component {
     submitForm = (data) => {
         data = {amount: this.state.amount.value,
                 payment_mode: this.state.paymentMode.value,
-                member_id: document.getElementById("member_id").value}
+                member_id: document.getElementById("member_id").value,
+                cyclos_id_payment_mode: this.state.paymentMode.cyclos_id}
 
         var computeForm = (data) => {
             this.setState({data: data})
@@ -318,7 +319,7 @@ class MemberSubscriptionPage extends React.Component {
                                 name="submit"
                                 data-eusko="memberaddsubscription-submit"
                                 type="submit"
-                                defaultValue="Enregistrer la cotisation"
+                                defaultValue={__("Enregistrer la cotisation")}
                                 className="btn btn-success"
                                 formNoValidate={true}
                                 disabled={!this.state.canSubmit}

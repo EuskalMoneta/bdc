@@ -19,6 +19,7 @@ from django.contrib.auth.views import logout
 from django.core.urlresolvers import reverse_lazy
 
 from base import views as base_views
+from bdc import views as bdc_views
 from bdc.auth import login_view
 from manager import views as manager_views
 from members import views as members_views
@@ -36,15 +37,29 @@ urlpatterns = [
     # logout
     url(r'^logout/?$', logout, {'next_page': reverse_lazy('member-search')}, name='logout'),
 
-    # our bureau de change Django apps
+    # home - member search page
+    url(r'^$', members_views.search, name='home'),
+
+    # basic operations
+    url(r'^members/search$', members_views.search, name='member-search'),
     url(r'^members/(?P<member_id>\d+)/?$', members_views.index, name='member-show'),
     url(r'^members/add$', members_views.add, name='member-add'),
+
+    # operations métiers for members
     url(r'^members/subscription/add/(?P<member_id>\d+)/?$',
         members_views.add_subscription, name='member-subscription-add'),
-    url(r'^$', members_views.search, name='home'),
-    url(r'^members/search$', members_views.search, name='member-search'),
+    url(r'^members/change/euro-eusko/(?P<member_id>\d+)/?$',
+        members_views.change_euro_eusko, name='member-change-euro-eusko'),
+    url(r'^members/reconversion/(?P<member_id>\d+)/?$',
+        members_views.reconversion, name='member-reconversion'),
 
     url(r'^manager/?$', manager_views.index, name='manager'),
+    url(r'^manager/history/(?P<account_name>[\w\-]+)/?$', manager_views.history, name='manager-history'),
+
+    url(r'^entree-stock/?$', bdc_views.io_stock, name='entree_stock'),
+    url(r'^sortie-stock/?$', bdc_views.io_stock, name='sortie_stock'),
+
+    url(r'^bank-deposit/?$', bdc_views.bank_deposit, name='bank_deposit'),
 
     url(r'^admin/', admin.site.urls),
 ]
