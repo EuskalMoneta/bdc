@@ -277,6 +277,13 @@ else if (window.location.pathname.toLowerCase().indexOf("sortie-caisse-eusko") !
     var propNextURL =  "/manager/history/caisse-eusko"
     var propTranslateTitle = __("Sortie caisse eusko")
 }
+else if (window.location.pathname.toLowerCase().indexOf("sortie-retour-eusko") != -1)
+{
+    // URL = sortie-caisse-eusko
+    var propMode =  "sortie-retour-eusko"
+    var propNextURL =  "/manager/history/retour-eusko"
+    var propTranslateTitle = __("Sortie retours d'eusko")
+}
 else
     window.location.assign("/manager");
 
