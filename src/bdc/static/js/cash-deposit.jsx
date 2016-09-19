@@ -3,7 +3,8 @@ import {
     getAPIBaseURL,
     isPositiveNumeric,
     NavbarTitle,
-    SelectizeUtils
+    SelectizeUtils,
+    getCurrentLang
 } from 'Utils'
 
 const {
@@ -135,10 +136,12 @@ var CashDepositPage = React.createClass({
 
     submitForm(data) {
         var postData = {}
+        postData.mode = this.props.mode
         postData.login_bdc = window.config.userName
         postData.deposit_amount = this.state.depositCalculatedAmount
         postData.selected_payments = this.state.historyTableSelectedRows
 
+        debugger
         var computeForm = (data) => {
             this.refs.container.success(
                 __("L'enregistrement s'est déroulé correctement."),
@@ -151,8 +154,8 @@ var CashDepositPage = React.createClass({
             )
 
             console.log(data)
-            console.log("redirect to: /manager/history/caisse-euro")
-            window.location.assign("/manager/history/caisse-euro")
+            console.log("redirect to: " + this.props.nextURL)
+            // window.location.assign(this.props.nextURL)
         }
 
         var promiseError = (err) => {
@@ -182,8 +185,8 @@ var CashDepositPage = React.createClass({
         // History data table
         if (this.state.historyTableData) {
             var dateFormatter = (cell, row) => {
-                // !! Force moment to be french
-                moment.locale('fr')
+                // Force moment i18n
+                moment.locale(getCurrentLang)
                 return moment(cell).format('LLLL')
             }
 
@@ -260,13 +263,36 @@ var CashDepositPage = React.createClass({
     }
 })
 
+if (window.location.pathname.toLowerCase().indexOf("cash-deposit") != -1)
+{
+    // URL = cash-deposit
+    var propMode = "cash-deposit"
+    var propNextURL =  "/manager/history/caisse-euro"
+    var propTranslateTitle = __("Remise d'espèces")
+}
+else if (window.location.pathname.toLowerCase().indexOf("sortie-caisse-eusko") != -1)
+{
+    // URL = sortie-caisse-eusko
+    var propMode =  "sortie-caisse-eusko"
+    var propNextURL =  "/manager/history/caisse-eusko"
+    var propTranslateTitle = __("Sortie caisse eusko")
+}
+else if (window.location.pathname.toLowerCase().indexOf("sortie-retour-eusko") != -1)
+{
+    // URL = sortie-caisse-eusko
+    var propMode =  "sortie-retour-eusko"
+    var propNextURL =  "/manager/history/retour-eusko"
+    var propTranslateTitle = __("Sortie retours d'eusko")
+}
+else
+    window.location.assign("/manager");
 
 ReactDOM.render(
-    <CashDepositPage url={getAPIBaseURL + "cash-deposit/"} method="POST" />,
+    <CashDepositPage url={getAPIBaseURL + propMode + "/"} method="POST" mode={propMode} nextURL={propNextURL}/>,
     document.getElementById('cash-deposit')
 )
 
 ReactDOM.render(
-    <NavbarTitle title={__("Dépot en banque")} />,
+    <NavbarTitle title={propTranslateTitle} />,
     document.getElementById('navbar-title')
 )

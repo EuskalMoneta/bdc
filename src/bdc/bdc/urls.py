@@ -19,7 +19,6 @@ from django.contrib.auth.views import logout
 from django.core.urlresolvers import reverse_lazy
 
 from base import views as base_views
-from bdc import views as bdc_views
 from bdc.auth import login_view
 from manager import views as manager_views
 from members import views as members_views
@@ -56,11 +55,13 @@ urlpatterns = [
     url(r'^manager/?$', manager_views.index, name='manager'),
     url(r'^manager/history/(?P<account_name>[\w\-]+)/?$', manager_views.history, name='manager-history'),
 
-    url(r'^entree-stock/?$', bdc_views.io_stock, name='entree_stock'),
-    url(r'^sortie-stock/?$', bdc_views.io_stock, name='sortie_stock'),
+    url(r'^manager/entree-stock/?$', manager_views.io_stock, name='entree-stock'),
+    url(r'^manager/sortie-stock/?$', manager_views.io_stock, name='sortie-stock'),
 
-    url(r'^bank-deposit/?$', bdc_views.bank_deposit, name='bank_deposit'),
-    url(r'^cash-deposit/?$', bdc_views.cash_deposit, name='cash_deposit'),
+    url(r'^manager/bank-deposit/?$', manager_views.bank_deposit, name='bank-deposit'),
+    url(r'^manager/cash-deposit/?$', manager_views.cash_deposit, name='cash-deposit'),
+    url(r'^manager/sortie-caisse-eusko/?$', manager_views.cash_deposit, name='sortie-caisse-eusko'),
+    url(r'^manager/sortie-retour-eusko/?$', manager_views.cash_deposit, name='sortie-retour-eusko'),
 
     url(r'^admin/', admin.site.urls),
 ]
