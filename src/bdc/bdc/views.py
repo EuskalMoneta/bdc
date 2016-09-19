@@ -10,3 +10,8 @@ def io_stock(request):
 @login_required
 def bank_deposit(request):
     return render(request, 'bdc/bank-deposit.html')
+
+
+@login_required
+def cash_deposit(request):
+    return render(request, 'bdc/cash-deposit.html')

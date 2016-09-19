@@ -60,6 +60,7 @@ urlpatterns = [
     url(r'^sortie-stock/?$', bdc_views.io_stock, name='sortie_stock'),
 
     url(r'^bank-deposit/?$', bdc_views.bank_deposit, name='bank_deposit'),
+    url(r'^cash-deposit/?$', bdc_views.cash_deposit, name='cash_deposit'),
 
     url(r'^admin/', admin.site.urls),
 ]
