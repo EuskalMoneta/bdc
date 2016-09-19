@@ -56,11 +56,12 @@ urlpatterns = [
     url(r'^manager/?$', manager_views.index, name='manager'),
     url(r'^manager/history/(?P<account_name>[\w\-]+)/?$', manager_views.history, name='manager-history'),
 
-    url(r'^entree-stock/?$', bdc_views.io_stock, name='entree_stock'),
-    url(r'^sortie-stock/?$', bdc_views.io_stock, name='sortie_stock'),
+    url(r'^entree-stock/?$', bdc_views.io_stock, name='entree-stock'),
+    url(r'^sortie-stock/?$', bdc_views.io_stock, name='sortie-stock'),
 
-    url(r'^bank-deposit/?$', bdc_views.bank_deposit, name='bank_deposit'),
-    url(r'^cash-deposit/?$', bdc_views.cash_deposit, name='cash_deposit'),
+    url(r'^bank-deposit/?$', bdc_views.bank_deposit, name='bank-deposit'),
+    url(r'^cash-deposit/?$', bdc_views.cash_deposit, name='cash-deposit'),
+    url(r'^sortie-caisse-eusko/?$', bdc_views.cash_deposit, name='sortie-caisse-eusko'),
 
     url(r'^admin/', admin.site.urls),
 ]
