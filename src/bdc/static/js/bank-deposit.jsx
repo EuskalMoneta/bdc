@@ -3,7 +3,8 @@ import {
     getAPIBaseURL,
     isPositiveNumeric,
     NavbarTitle,
-    SelectizeUtils
+    SelectizeUtils,
+    getCurrentLang
 } from 'Utils'
 
 const {
@@ -257,7 +258,7 @@ var BankDepositPage = React.createClass({
 
             console.log(data)
             console.log("redirect to: /manager/history/caisse-euro")
-            // window.location.assign("/manager/history/caisse-euro")
+            window.location.assign("/manager/history/caisse-euro")
         }
 
         var promiseError = (err) => {
@@ -293,8 +294,8 @@ var BankDepositPage = React.createClass({
         // History data table
         if (this.state.historyTableData) {
             var dateFormatter = (cell, row) => {
-                // !! Force moment to be french
-                moment.locale('fr')
+                // Force moment i18n
+                moment.locale(getCurrentLang)
                 return moment(cell).format('LLLL')
             }
 

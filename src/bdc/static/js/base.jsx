@@ -2,8 +2,11 @@
 // We can load our Sass stylesheets which will be included in the bundle using Webpack,
 // thus we can also setup JavaScript things ... all of those will be used everywhere in our app
 
-import { checkStatus, getCSRFToken, getCurrentLang,
-         Flags, NavbarTitle, NavbarItems } from 'Utils'
+import {
+    Flags,
+    NavbarTitle,
+    NavbarItems
+} from 'Utils'
 
 // Load the CSS stylesheets for our dependencies
 import '../css/bootstrap.min.css'
@@ -14,8 +17,8 @@ import 'node_modules/react-selectize/themes/index.css'
 // Load our base Sass stylesheet
 import '../scss/style.scss'
 
-// Setup momentjs to be french :)
-moment.locale('fr')
+// Setup momentjs
+moment.locale(document.documentElement.lang)
 moment().utcOffset("+01:00")
 
 // Setup raven (Sentry client)

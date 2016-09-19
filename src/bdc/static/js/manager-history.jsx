@@ -3,7 +3,8 @@ import {
     getAPIBaseURL,
     isPositiveNumeric,
     NavbarTitle,
-    SelectizeUtils
+    SelectizeUtils,
+    getCurrentLang
 } from 'Utils'
 
 import {
@@ -129,8 +130,8 @@ var ManagerHistoryPage = React.createClass({
         // History data table
         if (this.state.historyList) {
             var dateFormatter = (cell, row) => {
-                // !! Force moment to be french
-                moment.locale('fr')
+                // Force moment i18n
+                moment.locale(getCurrentLang)
                 return moment(cell).format('LLLL')
             }
 
