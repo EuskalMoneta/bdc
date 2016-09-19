@@ -78,10 +78,10 @@ var StockBillets = React.createClass({
                     </div>
                     <div className="row margin-top">
                         <div className="col-md-offset-2 col-md-2 col-sm-4">
-                            <a href="/entree-stock" className="btn btn-info">{__("Entrée")}</a>
+                            <a href="/manager/entree-stock" className="btn btn-info">{__("Entrée")}</a>
                         </div>
                         <div className="col-md-offset-2 col-md-2 col-sm-4">
-                            <a href="/sortie-stock" className="btn btn-default">{__("Sortie")}</a>
+                            <a href="/manager/sortie-stock" className="btn btn-default">{__("Sortie")}</a>
                         </div>
                     </div>
                 </div>
@@ -139,10 +139,10 @@ var CaisseEuro = React.createClass({
                     </div>
                     <div className="row margin-top">
                         <div className="col-md-offset-2 col-md-2 col-sm-4">
-                            <a href="/bank-deposit" className="btn btn-info">{__("Dépôt en banque")}</a>
+                            <a href="/manager/bank-deposit" className="btn btn-info">{__("Dépôt en banque")}</a>
                         </div>
                         <div className="col-md-offset-2 col-md-2 col-sm-4">
-                            <a className="btn btn-default">{__("Remise d'espèces")}</a>
+                            <a href="/manager/cash-deposit" className="btn btn-default">{__("Remise d'espèces")}</a>
                         </div>
                     </div>
                 </div>
@@ -184,7 +184,7 @@ var CaisseEusko = React.createClass({
                     </div>
                     <div className="row margin-top">
                         <div className="col-md-offset-2 col-md-2 col-sm-4">
-                            <a href="/sortie-stock" className="btn btn-info">{__("Sortie")}</a>
+                            <a href="/manager/sortie-caisse-eusko" className="btn btn-info">{__("Sortie")}</a>
                         </div>
                     </div>
                 </div>
@@ -226,7 +226,7 @@ var RetourEusko = React.createClass({
                     </div>
                     <div className="row margin-top">
                         <div className="col-md-offset-2 col-md-2 col-sm-4">
-                            <a href="/sortie-stock" className="btn btn-info">{__("Sortie")}</a>
+                            <a href="/manager/sortie-retour-eusko" className="btn btn-info">{__("Sortie")}</a>
                         </div>
                     </div>
                 </div>
