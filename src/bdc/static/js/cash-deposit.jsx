@@ -66,15 +66,7 @@ var CashDepositPage = React.createClass({
     componentDidMount() {
         // Get historyTableData
         var computeHistoryTableData = (historyTableData) => {
-            // I only want to display items which status is "A remettre à Euskal Moneta"
-            this.setState({historyTableData: _.filter(
-                historyTableData.result.pageItems,
-                (item) => {
-                    if (_.findWhere(item.statuses, {name: "A remettre à Euskal Moneta"})) {
-                        return item
-                    }
-                })
-            })
+            this.setState({historyTableData: historyTableData.result.pageItems})
         }
         fetchAuth(getAPIBaseURL + "payments-available-deposit/", 'get', computeHistoryTableData)
     },
