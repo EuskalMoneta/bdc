@@ -95,7 +95,6 @@ var BankDepositPage = React.createClass({
 
         // Get historyTableData
         var computeHistoryTableData = (historyTableData) => {
-            debugger
             // I only want to display items which status is "A remettre à Euskal Moneta"
             this.setState({historyTableData: _.filter(
                 historyTableData.result.pageItems,

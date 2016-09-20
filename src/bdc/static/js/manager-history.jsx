@@ -79,10 +79,10 @@ var ManagerHistoryPage = React.createClass({
             var actionButtons = (
                 <div className="row margin-bottom">
                     <div className="col-md-offset-2 col-md-2 col-sm-4">
-                        <a href="/entree-stock" className="btn btn-info">{__("Entrée")}</a>
+                        <a href="/manager/entree-stock" className="btn btn-info">{__("Entrée")}</a>
                     </div>
                     <div className="col-md-offset-1 col-md-2 col-sm-4">
-                        <a href="/sortie-stock" className="btn btn-default">{__("Sortie")}</a>
+                        <a href="/manager/sortie-stock" className="btn btn-default">{__("Sortie")}</a>
                     </div>
                     <div className="col-md-offset-1 col-md-2 col-sm-4">
                         <label className="control-label col-md-12 solde-history-label">
@@ -97,10 +97,10 @@ var ManagerHistoryPage = React.createClass({
             var actionButtons = (
                 <div className="row margin-bottom">
                     <div className="col-md-offset-2 col-md-2 col-sm-4">
-                        <a className="btn btn-info">{__("Dépôt en banque")}</a>
+                        <a href="/manager/bank-deposit" className="btn btn-info">{__("Dépôt en banque")}</a>
                     </div>
                     <div className="col-md-offset-1 col-md-2 col-sm-4">
-                        <a className="btn btn-default">{__("Remise d'espèces")}</a>
+                        <a href="/manager/cash-deposit" className="btn btn-default">{__("Remise d'espèces")}</a>
                     </div>
                     <div className="col-md-offset-1 col-md-2 col-sm-4">
                         <label className="control-label col-md-12 solde-history-label">
@@ -111,11 +111,26 @@ var ManagerHistoryPage = React.createClass({
                 </div>
             )
         }
-        else if (this.props.mode == 'caisse_eusko_bdc' || this.props.mode == 'retours_d_eusko_bdc') {
+        else if (this.props.mode == 'caisse_eusko_bdc') {
             var actionButtons = (
                 <div className="row margin-bottom">
                     <div className="col-md-offset-2 col-md-2 col-sm-4">
-                        <a href="/sortie-stock" className="btn btn-info">{__("Sortie")}</a>
+                        <a href="/manager/sortie-caisse-eusko" className="btn btn-info">{__("Sortie")}</a>
+                    </div>
+                    <div className="col-md-offset-1 col-md-2 col-sm-4">
+                        <label className="control-label col-md-12 solde-history-label">
+                            {__("Solde") + ": "}
+                            {currentSoldeLabel}
+                        </label>
+                    </div>
+                </div>
+            )
+        }
+        else if (this.props.mode == 'retours_d_eusko_bdc') {
+            var actionButtons = (
+                <div className="row margin-bottom">
+                    <div className="col-md-offset-2 col-md-2 col-sm-4">
+                        <a href="/manager/sortie-retour-eusko" className="btn btn-info">{__("Sortie")}</a>
                     </div>
                     <div className="col-md-offset-1 col-md-2 col-sm-4">
                         <label className="control-label col-md-12 solde-history-label">
