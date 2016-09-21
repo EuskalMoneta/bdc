@@ -200,6 +200,7 @@ var EntreeStockPage = React.createClass({
                             defaultValue={__("Enregistrer")}
                             className="btn btn-success"
                             formNoValidate={true}
+                            onClick={this.submitForm}
                             disabled={!this.state.canSubmit}
                         />
                     </div>
