@@ -24,7 +24,7 @@ const ToastMessageFactory = React.createFactory(ReactToastr.ToastMessage.animati
 
 Formsy.addValidationRule('isPositiveNumeric', isPositiveNumeric)
 
-const IOStockForm = React.createClass({
+const SortieStockForm = React.createClass({
 
     mixins: [FRC.ParentContextMixin],
 
@@ -37,7 +37,7 @@ const IOStockForm = React.createClass({
             <Formsy.Form
                 className={this.getLayoutClassName()}
                 {...this.props}
-                ref="iostock"
+                ref="sortiestock"
             >
                 {this.props.children}
             </Formsy.Form>
@@ -45,7 +45,7 @@ const IOStockForm = React.createClass({
     }
 });
 
-class IOStockPage extends React.Component {
+class SortieStockPage extends React.Component {
 
     constructor(props) {
         super(props);
@@ -143,15 +143,15 @@ class IOStockPage extends React.Component {
 
         return (
             <div className="row">
-                <IOStockForm
+                <SortieStockForm
                     onValidSubmit={this.submitForm}
                     onInvalid={this.disableButton}
                     onValid={this.validFields}
-                    ref="iostock">
+                    ref="sortiestock">
                     <fieldset>
                         <Input
                             name="amount"
-                            data-eusko="iostock-amount"
+                            data-eusko="sortiestock-amount"
                             value=""
                             label={__("Montant")}
                             type="number"
@@ -167,11 +167,11 @@ class IOStockPage extends React.Component {
                             <label
                                 className="control-label col-sm-3"
                                 data-required="true"
-                                htmlFor="iostock-porteur">
+                                htmlFor="sortiestock-porteur">
                                 {__("Porteur")}
                                 <span className="required-symbol">&nbsp;*</span>
                             </label>
-                            <div className="col-sm-6 iostock" data-eusko="iostock-porteur">
+                            <div className="col-sm-6 sortiestock" data-eusko="sortiestock-porteur">
                                 <SimpleSelect
                                     className={reactSelectizeErrorClass}
                                     ref="select"
@@ -192,7 +192,7 @@ class IOStockPage extends React.Component {
                         <Textarea
                             name="description"
                             value={this.props.textarea_description}
-                            data-eusko="iostock-description"
+                            data-eusko="sortiestock-description"
                             rows={3}
                             elementWrapperClassName={[{'col-sm-9': false}, 'col-sm-6']}
                             label={__("Description")}
@@ -204,7 +204,7 @@ class IOStockPage extends React.Component {
                         <Row layout="horizontal">
                             <input
                                 name="submit"
-                                data-eusko="iostock-submit"
+                                data-eusko="sortiestock-submit"
                                 type="submit"
                                 defaultValue={propTranslateButton}
                                 className="btn btn-success"
@@ -213,7 +213,7 @@ class IOStockPage extends React.Component {
                             />
                         </Row>
                     </fieldset>
-                </IOStockForm>
+                </SortieStockForm>
                 <ToastContainer ref="container"
                                 toastMessageFactory={ToastMessageFactory}
                                 className="toast-top-right toast-top-right-navbar" />
@@ -222,25 +222,14 @@ class IOStockPage extends React.Component {
     }
 }
 
-if (window.location.pathname.toLowerCase().indexOf("entree-stock") != -1)
-{
-    // URL = entree-stock
-    var propURL = getAPIBaseURL + "entree-stock/"
-    var propTitle = "Entrée stock BDC"
-    var propTranslateTitle = __("Entrée stock BDC")
-    var propTranslateButton = __("Enregistrer l'entrée stock")
-}
-else {
-    // URL = sortie-stock
-    var propURL = getAPIBaseURL + "sortie-stock/"
-    var propTitle = "Sortie stock BDC"
-    var propTranslateTitle = __("Sortie stock BDC")
-    var propTranslateButton = __("Enregistrer la sortie stock")
-}
+var propURL = getAPIBaseURL + "sortie-stock/"
+var propTitle = "Sortie stock BDC"
+var propTranslateTitle = __("Sortie stock BDC")
+var propTranslateButton = __("Enregistrer la sortie stock")
 
 ReactDOM.render(
-    <IOStockPage url={propURL} textarea_description={propTitle} validate_button={propTranslateButton} />,
-    document.getElementById('io-stock')
+    <SortieStockPage url={propURL} textarea_description={propTitle} validate_button={propTranslateButton} />,
+    document.getElementById('sortie-stock')
 )
 
 ReactDOM.render(

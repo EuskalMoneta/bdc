@@ -31,7 +31,7 @@ const ToastMessageFactory = React.createFactory(ReactToastr.ToastMessage.animati
 
 Formsy.addValidationRule('isPositiveNumeric', isPositiveNumeric)
 
-const CashDepositForm = React.createClass({
+const EntreeStockForm = React.createClass({
 
     mixins: [FRC.ParentContextMixin],
 
@@ -44,7 +44,7 @@ const CashDepositForm = React.createClass({
             <Formsy.Form
                 className={this.getLayoutClassName()}
                 {...this.props}
-                ref="cash-deposit"
+                ref="entree-stock"
             >
                 {this.props.children}
             </Formsy.Form>
@@ -52,14 +52,13 @@ const CashDepositForm = React.createClass({
     }
 });
 
-var CashDepositPage = React.createClass({
+var EntreeStockPage = React.createClass({
 
     getInitialState() {
         return {
             canSubmit: false,
             historyTableData: undefined,
             historyTableSelectedRows: Array(),
-            depositCalculatedAmount: Number(0),
         }
     },
 
@@ -68,25 +67,18 @@ var CashDepositPage = React.createClass({
         var computeHistoryTableData = (historyTableData) => {
             this.setState({historyTableData: historyTableData.result.pageItems})
         }
-        fetchAuth(getAPIBaseURL + "payments-available-deposit/", 'get', computeHistoryTableData)
+        fetchAuth(this.props.historyURL, 'get', computeHistoryTableData)
     },
 
     onSelectTableRow(row, isSelected, event) {
-        var baseNumber = Number(this.state.depositCalculatedAmount)
         var historyTableSelectedRows = this.state.historyTableSelectedRows
-
-        if (Number.isNaN(baseNumber))
-            var baseNumber = Number(0)
 
         if (isSelected) {
             historyTableSelectedRows.push(row)
-            this.setState({depositCalculatedAmount: baseNumber + Number(row.amount),
-                           historyTableSelectedRows: historyTableSelectedRows},
-                          this.validateForm)
+            this.setState({historyTableSelectedRows: historyTableSelectedRows}, this.validateForm)
         }
         else {
-            this.setState({depositCalculatedAmount: baseNumber - Number(row.amount),
-                           historyTableSelectedRows: _.filter(historyTableSelectedRows,
+            this.setState({historyTableSelectedRows: _.filter(historyTableSelectedRows,
                             (item) => {
                                 if (row != item)
                                     return item
@@ -96,19 +88,10 @@ var CashDepositPage = React.createClass({
     },
 
     onSelectTableAll(isSelected, rows) {
-        if (isSelected) {
-            this.setState({depositCalculatedAmount: _.reduce(rows,
-                                (memo, row) => {
-                                    return memo + Number(row.amount)
-                                }, Number(0)),
-                           historyTableSelectedRows: rows},
-                          this.validateForm)
-        }
-        else {
-            this.setState({depositCalculatedAmount: Number(0),
-                           historyTableSelectedRows: Array()},
-                          this.validateForm)
-        }
+        if (isSelected)
+            this.setState({historyTableSelectedRows: rows}, this.validateForm)
+        else
+            this.setState({historyTableSelectedRows: Array()}, this.validateForm)
     },
 
     enableButton() {
@@ -120,7 +103,7 @@ var CashDepositPage = React.createClass({
     },
 
     validateForm() {
-        if (this.state.depositCalculatedAmount == Number(0))
+        if (this.state.historyTableSelectedRows == Array())
             this.disableButton()
         else
             this.enableButton()
@@ -128,9 +111,7 @@ var CashDepositPage = React.createClass({
 
     submitForm(data) {
         var postData = {}
-        postData.mode = this.props.mode
         postData.login_bdc = window.config.userName
-        postData.deposit_amount = this.state.depositCalculatedAmount
         postData.selected_payments = this.state.historyTableSelectedRows
 
         var computeForm = (data) => {
@@ -162,7 +143,7 @@ var CashDepositPage = React.createClass({
                 }
             )
         }
-        fetchAuth(this.props.url, this.props.method, computeForm, postData, promiseError)
+        fetchAuth(this.props.saveURL, this.props.method, computeForm, postData, promiseError)
     },
 
     render() {
@@ -204,45 +185,23 @@ var CashDepositPage = React.createClass({
             var dataTable = null;
 
         return (
-            <div className="row">
-                <div className="col-md-3 history-form">
-                    <div className="row"></div>
-                    <CashDepositForm
-                        onValidSubmit={this.submitForm}
-                        onInvalidSubmit={this.submitForm}
-                        ref="cash-deposit">
-                        <fieldset>
-                            <div className="form-group row">
-                                <label
-                                    className="control-label col-sm-4"
-                                    htmlFor="cash-deposit-deposit_amount">
-                                    {__("Montant calculé")}
-                                </label>
-                                <div className="col-sm-8 cash-deposit cash-deposit-amount-div" data-eusko="cash-deposit-deposit_cash">
-                                    <span className="deposit-amount-span">
-                                        {this.state.depositCalculatedAmount + " €"}
-                                    </span>
-                                </div>
-                            </div>
-                        </fieldset>
-                        <fieldset>
-                            <Row layout="horizontal">
-                                <input
-                                    name="submit"
-                                    data-eusko="cash-deposit-submit"
-                                    type="submit"
-                                    defaultValue={__("Enregistrer")}
-                                    className="btn btn-success"
-                                    formNoValidate={true}
-                                    disabled={!this.state.canSubmit}
-                                />
-                            </Row>
-                        </fieldset>
-                    </CashDepositForm>
-                </div>
-                <div className="col-md-9 col-history-table">
-                    <div className="row margin-right">
+            <div className="row-fluid">
+                <div className="row-fluid">
+                    <div className="col-md-12">
                         {dataTable}
+                    </div>
+                </div>
+                <div className="row-fluid">
+                    <div className="col-md-12 margin-top">
+                        <input
+                            name="submit"
+                            data-eusko="entree-stock-submit"
+                            type="submit"
+                            defaultValue={__("Enregistrer")}
+                            className="btn btn-success"
+                            formNoValidate={true}
+                            disabled={!this.state.canSubmit}
+                        />
                     </div>
                 </div>
                 <ToastContainer ref="container"
@@ -254,36 +213,12 @@ var CashDepositPage = React.createClass({
     }
 })
 
-if (window.location.pathname.toLowerCase().indexOf("cash-deposit") != -1)
-{
-    // URL = cash-deposit
-    var propMode = "cash-deposit"
-    var propNextURL =  "/manager/history/caisse-euro"
-    var propTranslateTitle = __("Remise d'espèces")
-}
-else if (window.location.pathname.toLowerCase().indexOf("sortie-caisse-eusko") != -1)
-{
-    // URL = sortie-caisse-eusko
-    var propMode =  "sortie-caisse-eusko"
-    var propNextURL =  "/manager/history/caisse-eusko"
-    var propTranslateTitle = __("Sortie caisse eusko")
-}
-else if (window.location.pathname.toLowerCase().indexOf("sortie-retour-eusko") != -1)
-{
-    // URL = sortie-caisse-eusko
-    var propMode =  "sortie-retour-eusko"
-    var propNextURL =  "/manager/history/retour-eusko"
-    var propTranslateTitle = __("Sortie retours d'eusko")
-}
-else
-    window.location.assign("/manager");
-
 ReactDOM.render(
-    <CashDepositPage url={getAPIBaseURL + propMode + "/"} method="POST" mode={propMode} nextURL={propNextURL}/>,
-    document.getElementById('cash-deposit')
+    <EntreeStockPage historyURL={getAPIBaseURL + "payments-available-entree-stock/"} saveURL={getAPIBaseURL + "entree-stock/"} />,
+    document.getElementById('entree-stock')
 )
 
 ReactDOM.render(
-    <NavbarTitle title={propTranslateTitle} />,
+    <NavbarTitle title={__("Entrée stock BDC")} />,
     document.getElementById('navbar-title')
 )

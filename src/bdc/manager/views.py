@@ -13,8 +13,13 @@ def history(request, account_name):
 
 
 @login_required
-def io_stock(request):
-    return render(request, 'manager/io-stock.html')
+def entree_stock(request):
+    return render(request, 'manager/entree-stock.html')
+
+
+@login_required
+def sortie_stock(request):
+    return render(request, 'manager/sortie-stock.html')
 
 
 @login_required
