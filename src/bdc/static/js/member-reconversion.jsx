@@ -113,7 +113,11 @@ class MemberReconversionPage extends React.Component {
 
     render = () => {
         if (this.state.member) {
-            var memberName = this.state.member.firstname + " " + this.state.member.lastname
+            if (this.state.member.societe)
+                var memberName = (this.state.member.societe + " – " +
+                                  this.state.member.firstname + " " + this.state.member.lastname)
+            else
+                var memberName = this.state.member.firstname + " " + this.state.member.lastname
         }
         else
             var memberName = null
