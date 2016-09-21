@@ -52,6 +52,8 @@ class MemberReconversionPage extends React.Component {
             canSubmit: false,
             memberID: document.getElementById("member_id").value,
             member: undefined,
+            commisionAmount: undefined,
+            prestataireAmount: undefined,
         }
 
         // Get member data
@@ -62,11 +64,18 @@ class MemberReconversionPage extends React.Component {
     }
 
     enableButton = () => {
-        this.setState({canSubmit: true});
+        this.setState({canSubmit: true})
     }
 
     disableButton = () => {
-        this.setState({canSubmit: false});
+        this.setState({canSubmit: false})
+    }
+
+    onChangeAmount = (field, value) => {
+        // Frais de commission (5%)
+        // Euros versés au prestataire (95%)
+        this.setState({commisionAmount: String(Number(Number(value) * 0.05).toFixed(2)).replace(".", ","),
+                       prestataireAmount: String(Number(Number(value) * 0.95).toFixed(2)).replace(".", ",")})
     }
 
     submitForm = (data) => {
@@ -106,9 +115,18 @@ class MemberReconversionPage extends React.Component {
         if (this.state.member) {
             var memberName = this.state.member.firstname + " " + this.state.member.lastname
         }
-        else {
+        else
             var memberName = null
-        }
+
+        if (this.state.commisionAmount)
+            var commisionAmount = this.state.commisionAmount + " €"
+        else
+            var commisionAmount = "– €"
+
+        if (this.state.prestataireAmount)
+            var prestataireAmount = this.state.prestataireAmount + " €"
+        else
+            var prestataireAmount = "– €"
 
         return (
             <div className="row">
@@ -138,6 +156,7 @@ class MemberReconversionPage extends React.Component {
                             type="number"
                             placeholder={__("Montant de la reconversion")}
                             validations="isPositiveNumeric"
+                            onChange={this.onChangeAmount}
                             validationErrors={{
                                 isPositiveNumeric: __("Montant invalide.")
                             }}
@@ -158,6 +177,30 @@ class MemberReconversionPage extends React.Component {
                             elementWrapperClassName={[{'col-sm-9': false}, 'col-sm-5']}
                             required
                         />
+                        <div className="form-group row">
+                            <label
+                                className="control-label col-sm-3"
+                                htmlFor="memberreconversion-frais">
+                                {__("Frais de commission (5%)")}
+                            </label>
+                            <div className="col-sm-6 memberreconversion control-label text-align-left"
+                                 data-eusko="memberreconversion-frais">
+                                {commisionAmount}
+                            </div>
+                            <div className="col-sm-3"></div>
+                        </div>
+                        <div className="form-group row">
+                            <label
+                                className="control-label col-sm-3"
+                                htmlFor="memberreconversion-prestataire">
+                                {__("Euros versés au prestataire (95%)")}
+                            </label>
+                            <div className="col-sm-6 memberreconversion control-label text-align-left"
+                                 data-eusko="memberreconversion-prestataire">
+                                {prestataireAmount}
+                            </div>
+                            <div className="col-sm-3"></div>
+                        </div>
                     </fieldset>
                     <fieldset>
                         <Row layout="horizontal">
