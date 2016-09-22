@@ -46,19 +46,33 @@ const MemberShow = React.createClass({
             }
 
             // Whether or not, we have a business member or a individual
-            if (this.state.member.login.startsWith("Z", 0)) {
+            if (this.state.member.type.toLowerCase() != 'particulier') {
                 // We have a business member
 
                 var memberName = (
                     <div className="col-sm-4">
-                        <span className="member-show-societe">{this.state.member.societe}</span>
+                        <span className="member-show-societe">
+                            {this.state.member.societe + " – " +
+                             this.state.member.firstname + " " + this.state.member.lastname}
+                        </span>
                     </div>
                 )
 
                 // Whether or not, we have a up-to-date member subscription
                 // "Change"
                 // "Reconversion" (bouton primaire)
+                // "Dépôt sur le compte"
                 if (memberStatusUpToDate) {
+                    if (window.config.userName.toLowerCase() == 'b001')
+                        var memberActionDepotCompte = (
+                            <a href={"/members/depot-eusko-numerique/" + this.state.member.id}
+                               className="btn btn-default col-sm-offset-1">
+                                {__("Dépôt sur le compte")}
+                            </a>
+                        );
+                    else
+                        var memberActionDepotCompte = null;
+
                     var memberActions = (
                         <div className="row member-show-div-margin-left">
                             <a href={"/members/change/euro-eusko/" + this.state.member.id}
@@ -69,6 +83,7 @@ const MemberShow = React.createClass({
                                className="btn btn-info col-sm-offset-1">
                                {__("Reconversion")}
                             </a>
+                            {memberActionDepotCompte}
                         </div>
                     )
                 }
