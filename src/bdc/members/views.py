@@ -35,3 +35,8 @@ def reconversion(request, member_id):
 @login_required
 def depot_eusko_numerique(request, member_id):
     return render(request, 'members/depot_eusko_numerique.html', {'member_id': member_id})
+
+
+@login_required
+def retrait_eusko_numerique(request, member_id):
+    return render(request, 'members/retrait_eusko_numerique.html', {'member_id': member_id})

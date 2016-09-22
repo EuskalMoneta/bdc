@@ -27,6 +27,7 @@ module.exports = Object.keys(languages).map(function(language) {
             MemberChangeEuroEusko: './static/js/member-change-euro-eusko',
             MemberReconversion: './static/js/member-reconversion',
             MemberDepotEuskoNumerique: './static/js/member-depot-eusko-numerique',
+            MemberRetraitEuskoNumerique: './static/js/member-retrait-eusko-numerique',
             IOStock: './static/js/io-stock',
             BankDeposit: './static/js/bank-deposit',
             CashDeposit: './static/js/cash-deposit',

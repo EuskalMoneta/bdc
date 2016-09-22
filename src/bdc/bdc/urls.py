@@ -53,6 +53,8 @@ urlpatterns = [
         members_views.reconversion, name='member-reconversion'),
     url(r'^members/depot-eusko-numerique/(?P<member_id>\d+)/?$',
         members_views.depot_eusko_numerique, name='depot-eusko-numerique'),
+    url(r'^members/retrait-eusko-numerique/(?P<member_id>\d+)/?$',
+        members_views.retrait_eusko_numerique, name='retrait-eusko-numerique'),
 
     url(r'^manager/?$', manager_views.index, name='manager'),
     url(r'^manager/history/(?P<account_name>[\w\-]+)/?$', manager_views.history, name='manager-history'),
