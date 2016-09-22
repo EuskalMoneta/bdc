@@ -95,17 +95,10 @@ var BankDepositPage = React.createClass({
 
         // Get historyTableData
         var computeHistoryTableData = (historyTableData) => {
-            // I only want to display items which status is "A remettre à Euskal Moneta"
-            this.setState({historyTableData: _.filter(
-                historyTableData.result.pageItems,
-                (item) => {
-                    if (_.findWhere(item.statuses, {name: "A remettre à Euskal Moneta"})) {
-                        return item
-                    }
-                })
-            })
+            this.setState({historyTableData: historyTableData.result.pageItems})
         }
-        fetchAuth(getAPIBaseURL + "payments-available-deposit/", 'get', computeHistoryTableData)
+        fetchAuth(getAPIBaseURL + "accounts-history/?account_type=caisse_euro_bdc&filter=a_remettre_a_euskal_moneta",
+                  'get', computeHistoryTableData)
     },
 
     // paymentMode

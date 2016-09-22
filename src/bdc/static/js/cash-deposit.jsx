@@ -68,7 +68,7 @@ var CashDepositPage = React.createClass({
         var computeHistoryTableData = (historyTableData) => {
             this.setState({historyTableData: historyTableData.result.pageItems})
         }
-        fetchAuth(getAPIBaseURL + "payments-available-deposit/", 'get', computeHistoryTableData)
+        fetchAuth(this.props.getHistory, 'get', computeHistoryTableData)
     },
 
     onSelectTableRow(row, isSelected, event) {
@@ -174,7 +174,7 @@ var CashDepositPage = React.createClass({
         }
 
         // History data table
-        if (this.state.historyTableData) {
+        if (this.state.historyTableData != undefined) {
             var dateFormatter = (cell, row) => {
                 // Force moment i18n
                 moment.locale(getCurrentLang)
@@ -220,7 +220,7 @@ var CashDepositPage = React.createClass({
                                 </label>
                                 <div className="col-sm-8 cash-deposit cash-deposit-amount-div" data-eusko="cash-deposit-deposit_cash">
                                     <span className="deposit-amount-span">
-                                        {this.state.depositCalculatedAmount + " €"}
+                                        {this.state.depositCalculatedAmount + " " + this.props.currency}
                                     </span>
                                 </div>
                             </div>
@@ -258,28 +258,40 @@ if (window.location.pathname.toLowerCase().indexOf("cash-deposit") != -1)
 {
     // URL = cash-deposit
     var propMode = "cash-deposit"
+    var propGetHistoryURL =  "accounts-history/?account_type=caisse_euro_bdc&filter=a_remettre_a_euskal_moneta"
     var propNextURL =  "/manager/history/caisse-euro"
     var propTranslateTitle = __("Remise d'espèces")
+    var propCurrency = '€'
 }
 else if (window.location.pathname.toLowerCase().indexOf("sortie-caisse-eusko") != -1)
 {
     // URL = sortie-caisse-eusko
     var propMode =  "sortie-caisse-eusko"
+    var propGetHistoryURL =  "accounts-history/?account_type=caisse_eusko_bdc&filter=a_remettre_a_euskal_moneta"
     var propNextURL =  "/manager/history/caisse-eusko"
     var propTranslateTitle = __("Sortie caisse eusko")
+    var propCurrency = 'EUS'
 }
 else if (window.location.pathname.toLowerCase().indexOf("sortie-retour-eusko") != -1)
 {
     // URL = sortie-caisse-eusko
     var propMode =  "sortie-retour-eusko"
+    var propGetHistoryURL =  "accounts-history/?account_type=retours_d_eusko_bdc&filter=a_remettre_a_euskal_moneta"
     var propNextURL =  "/manager/history/retour-eusko"
     var propTranslateTitle = __("Sortie retours d'eusko")
+    var propCurrency = 'EUS'
 }
 else
     window.location.assign("/manager");
 
 ReactDOM.render(
-    <CashDepositPage url={getAPIBaseURL + propMode + "/"} method="POST" mode={propMode} nextURL={propNextURL}/>,
+    <CashDepositPage url={getAPIBaseURL + propMode + "/"}
+                     method="POST"
+                     mode={propMode}
+                     getHistory={getAPIBaseURL + propGetHistoryURL}
+                     nextURL={propNextURL}
+                     currency={propCurrency}
+    />,
     document.getElementById('cash-deposit')
 )
 
