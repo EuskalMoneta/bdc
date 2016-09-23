@@ -79,6 +79,8 @@ class MemberAddPage extends React.Component {
             town: undefined,
             townList: undefined,
             birth: undefined,
+            phone: undefined,
+            email: undefined,
             assoSaisieLibre: false,
             fkAsso: undefined,
             fkAsso2: undefined,
@@ -140,6 +142,10 @@ class MemberAddPage extends React.Component {
             this.setState({fkAssoApprovedList: res})
         }
         fetchAuth(getAPIBaseURL + "associations/?approved=yes", 'get', computeApprovedAssociations)
+    }
+
+    onFormChange = (event, value) => {
+        this.setState({[event]: value}, this.validateFormOnBlur)
     }
 
     handleBirthChange = (date) => {
@@ -212,7 +218,6 @@ class MemberAddPage extends React.Component {
 
     zipOnBlur = () => {
         this.setState({zipList: undefined, townList: undefined})
-        this.validateFormOnBlur()
     }
 
     // town
@@ -505,7 +510,8 @@ class MemberAddPage extends React.Component {
                                 isValidPhoneNumber: __("Ceci n'est pas un N° téléphone valide. Evitez les points et les espaces.")
                             }}
                             elementWrapperClassName={[{'col-sm-9': false}, 'col-sm-6']}
-                            required
+                            onChange={this.onFormChange}
+                            required={!this.state.email}
                         />
                         <Input
                             name="email"
@@ -519,7 +525,8 @@ class MemberAddPage extends React.Component {
                                 isEmail: __("Adresse email non valide")
                             }}
                             elementWrapperClassName={[{'col-sm-9': false}, 'col-sm-6']}
-                            required
+                            onChange={this.onFormChange}
+                            required={!this.state.phone}
                         />
                         <RadioGroup
                             name="options_recevoir_actus"
