@@ -77,7 +77,7 @@ class MemberAddPage extends React.Component {
             zipList: undefined,
             town: undefined,
             townList: undefined,
-            birth: moment().set({'year': 1980, 'month': 0, 'date': 1}),  // !! month 0 = January
+            birth: undefined,
             assoSaisieLibre: false,
             fkAsso: undefined,
             fkAsso2: undefined,
