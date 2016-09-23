@@ -105,7 +105,15 @@ class MemberAddPage extends React.Component {
         // Get all associations (no filter): fkAssoAllList
         var computeAllAssociations = (associations) => {
             var res = _.chain(associations)
-                .map(function(item){ return {label: item.nom, value: item.id} })
+                .map(function(item){
+                    if (item.nb_parrains == "0")
+                        var label = item.nom + " – " + __(" Aucun parrain")
+                    else if (item.nb_parrains == "1")
+                        var label = item.nom + " – " + item.nb_parrains + " " + __("parrain")
+                    else
+                        var label = item.nom + " – " + item.nb_parrains + " " + __("parrains")
+                    return {label: label, value: item.id}
+                })
                 .sortBy(function(item){ return item.label })
                 .value()
 
@@ -116,7 +124,15 @@ class MemberAddPage extends React.Component {
         // Get only approved associations: fkAssoApprovedList
         var computeApprovedAssociations = (associations) => {
             var res = _.chain(associations)
-                .map(function(item){ return {label: item.nom, value: item.id} })
+                .map(function(item){
+                    if (item.nb_parrains == "0")
+                        var label = item.nom + " – " + __(" Aucun parrain")
+                    else if (item.nb_parrains == "1")
+                        var label = item.nom + " – " + item.nb_parrains + " " + __("parrain")
+                    else
+                        var label = item.nom + " – " + item.nb_parrains + " " + __("parrains")
+                    return {label: label, value: item.id}
+                })
                 .sortBy(function(item){ return item.label })
                 .value()
 
@@ -529,7 +545,6 @@ class MemberAddPage extends React.Component {
                                     options={this.state.fkAssoAllList}
                                     placeholder={__("Choix Association 3% #1")}
                                     theme="bootstrap3"
-                                    help={__("Blabla")}
                                     createFromSearch={SelectizeUtils.selectizeCreateFromSearch}
                                     onValueChange={this.fkAssoOnValueChange}
                                     renderValue={SelectizeUtils.selectizeRenderValue}
@@ -553,7 +568,6 @@ class MemberAddPage extends React.Component {
                                     options={this.state.fkAssoApprovedList}
                                     placeholder={__("Choix Association 3% #2")}
                                     theme="bootstrap3"
-                                    help={__("Blabla")}
                                     onValueChange={this.fkAsso2OnValueChange}
                                     renderOption={SelectizeUtils.selectizeRenderOption}
                                     renderValue={SelectizeUtils.selectizeRenderValue}
