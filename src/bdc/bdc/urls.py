@@ -1,7 +1,7 @@
 """bureaudechange URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/1.9/topics/http/urls/
+    https://docs.djangoproject.com/en/1.10/topics/http/urls/
 Examples:
 Function views
     1. Add an import:  from my_app import views
@@ -13,8 +13,8 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+
 from django.conf.urls import url
-from django.contrib import admin
 from django.contrib.auth.views import logout
 from django.core.urlresolvers import reverse_lazy
 
@@ -66,6 +66,4 @@ urlpatterns = [
     url(r'^manager/cash-deposit/?$', manager_views.cash_deposit, name='cash-deposit'),
     url(r'^manager/sortie-caisse-eusko/?$', manager_views.cash_deposit, name='sortie-caisse-eusko'),
     url(r'^manager/sortie-retour-eusko/?$', manager_views.cash_deposit, name='sortie-retour-eusko'),
-
-    url(r'^admin/', admin.site.urls),
 ]
