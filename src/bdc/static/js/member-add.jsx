@@ -3,13 +3,14 @@ import {
     isMemberIdEusko,
     getAPIBaseURL,
     NavbarTitle,
-    SelectizeUtils
+    SelectizeUtils,
 } from 'Utils'
 
 const {
     Input,
     RadioGroup,
-    Row
+    Row,
+    Textarea,
 } = FRC
 
 import DatePicker from 'react-datepicker'
@@ -403,7 +404,7 @@ class MemberAddPage extends React.Component {
                                 />
                             </div>
                         </div>
-                        <Input
+                        <Textarea
                             name="address"
                             data-eusko="memberaddform-address"
                             value=""
@@ -411,6 +412,7 @@ class MemberAddPage extends React.Component {
                             type="text"
                             placeholder={__("Adresse postale")}
                             elementWrapperClassName={[{'col-sm-9': false}, 'col-sm-6']}
+                            rows={3}
                             required
                         />
                         <div className="form-group row">
