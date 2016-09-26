@@ -46,29 +46,59 @@ const MemberShow = React.createClass({
             }
 
             // Whether or not, we have a business member or a individual
-            if (this.state.member.login.startsWith("Z", 0)) {
+            if (this.state.member.type.toLowerCase() != 'particulier') {
                 // We have a business member
 
                 var memberName = (
                     <div className="col-sm-4">
-                        <span className="member-show-societe">{this.state.member.societe}</span>
+                        <span className="member-show-societe">
+                            {this.state.member.societe + " – " +
+                             this.state.member.firstname + " " + this.state.member.lastname}
+                        </span>
                     </div>
                 )
 
                 // Whether or not, we have a up-to-date member subscription
                 // "Change"
                 // "Reconversion" (bouton primaire)
+                // "Dépôt sur le compte"
                 if (memberStatusUpToDate) {
-                    var memberActions = (
-                        <div className="row member-show-div-margin-left">
-                            <a href={"/members/change/euro-eusko/" + this.state.member.id}
+                    if (window.config.userName.toLowerCase() == 'b001') {
+                        var memberActionDepotCompte = (
+                            <a href={"/members/depot-eusko-numerique/" + this.state.member.id}
                                className="btn btn-default">
-                               {__("Change")}
+                                {__("Dépôt sur le compte")}
                             </a>
-                            <a href={"/members/reconversion/" + this.state.member.id}
-                               className="btn btn-info col-sm-offset-1">
-                               {__("Reconversion")}
+                        )
+
+                        var memberActionRetraitCompte = (
+                            <a href={"/members/retrait-eusko-numerique/" + this.state.member.id}
+                               className="btn btn-default col-sm-offset-1">
+                                {__("Retrait du compte")}
                             </a>
+                        )
+                    }
+                    else {
+                        var memberActionDepotCompte = null;
+                        var memberActionRetraitCompte = null;
+                    }
+
+                    var memberActions = (
+                        <div>
+                            <div className="row member-show-div-margin-left">
+                                <a href={"/members/change/euro-eusko/" + this.state.member.id}
+                                   className="btn btn-default">
+                                   {__("Change")}
+                                </a>
+                                <a href={"/members/reconversion/" + this.state.member.id}
+                                   className="btn btn-info col-sm-offset-1">
+                                   {__("Reconversion")}
+                                </a>
+                            </div>
+                            <div className="row member-show-div-margin-left margin-top">
+                                {memberActionDepotCompte}
+                                {memberActionRetraitCompte}
+                            </div>
                         </div>
                     )
                 }
@@ -95,16 +125,33 @@ const MemberShow = React.createClass({
                 // "Change" (bouton primaire)
                 // "Cotisation"
                 if (memberStatusUpToDate) {
+                    if (window.config.userName.toLowerCase() == 'b001') {
+                        var memberActionRetraitCompte = (
+                            <a href={"/members/retrait-eusko-numerique/" + this.state.member.id}
+                               className="btn btn-default">
+                                {__("Retrait du compte")}
+                            </a>
+                        )
+                    }
+                    else {
+                        var memberActionRetraitCompte = null;
+                    }
+
                     var memberActions = (
-                        <div className="row member-show-div-margin-left">
-                            <a href={"/members/change/euro-eusko/" + this.state.member.id}
-                               className="btn btn-info">
-                               {__("Change")}
-                            </a>
-                            <a href={"/members/subscription/add/" + this.state.member.id}
-                               className="btn btn-default col-sm-offset-1">
-                                {__("Cotisation")}
-                            </a>
+                        <div>
+                            <div className="row member-show-div-margin-left">
+                                <a href={"/members/change/euro-eusko/" + this.state.member.id}
+                                   className="btn btn-info">
+                                   {__("Change")}
+                                </a>
+                                <a href={"/members/subscription/add/" + this.state.member.id}
+                                   className="btn btn-default col-sm-offset-1">
+                                    {__("Cotisation")}
+                                </a>
+                            </div>
+                            <div className="row member-show-div-margin-left margin-top">
+                                {memberActionRetraitCompte}
+                            </div>
                         </div>
                     )
                 }

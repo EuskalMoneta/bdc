@@ -3,13 +3,14 @@ import {
     isMemberIdEusko,
     getAPIBaseURL,
     NavbarTitle,
-    SelectizeUtils
+    SelectizeUtils,
 } from 'Utils'
 
 const {
     Input,
     RadioGroup,
-    Row
+    Row,
+    Textarea,
 } = FRC
 
 import DatePicker from 'react-datepicker'
@@ -77,7 +78,9 @@ class MemberAddPage extends React.Component {
             zipList: undefined,
             town: undefined,
             townList: undefined,
-            birth: moment().set({'year': 1980, 'month': 0, 'date': 1}),  // !! month 0 = January
+            birth: undefined,
+            phone: undefined,
+            email: undefined,
             assoSaisieLibre: false,
             fkAsso: undefined,
             fkAsso2: undefined,
@@ -105,7 +108,15 @@ class MemberAddPage extends React.Component {
         // Get all associations (no filter): fkAssoAllList
         var computeAllAssociations = (associations) => {
             var res = _.chain(associations)
-                .map(function(item){ return {label: item.nom, value: item.id} })
+                .map(function(item){
+                    if (item.nb_parrains == "0")
+                        var label = item.nom + " – " + __(" Aucun parrain")
+                    else if (item.nb_parrains == "1")
+                        var label = item.nom + " – " + item.nb_parrains + " " + __("parrain")
+                    else
+                        var label = item.nom + " – " + item.nb_parrains + " " + __("parrains")
+                    return {label: label, value: item.id}
+                })
                 .sortBy(function(item){ return item.label })
                 .value()
 
@@ -116,13 +127,25 @@ class MemberAddPage extends React.Component {
         // Get only approved associations: fkAssoApprovedList
         var computeApprovedAssociations = (associations) => {
             var res = _.chain(associations)
-                .map(function(item){ return {label: item.nom, value: item.id} })
+                .map(function(item){
+                    if (item.nb_parrains == "0")
+                        var label = item.nom + " – " + __(" Aucun parrain")
+                    else if (item.nb_parrains == "1")
+                        var label = item.nom + " – " + item.nb_parrains + " " + __("parrain")
+                    else
+                        var label = item.nom + " – " + item.nb_parrains + " " + __("parrains")
+                    return {label: label, value: item.id}
+                })
                 .sortBy(function(item){ return item.label })
                 .value()
 
             this.setState({fkAssoApprovedList: res})
         }
         fetchAuth(getAPIBaseURL + "associations/?approved=yes", 'get', computeApprovedAssociations)
+    }
+
+    onFormChange = (event, value) => {
+        this.setState({[event]: value}, this.validateFormOnBlur)
     }
 
     handleBirthChange = (date) => {
@@ -195,7 +218,6 @@ class MemberAddPage extends React.Component {
 
     zipOnBlur = () => {
         this.setState({zipList: undefined, townList: undefined})
-        this.validateFormOnBlur()
     }
 
     // town
@@ -387,7 +409,7 @@ class MemberAddPage extends React.Component {
                                 />
                             </div>
                         </div>
-                        <Input
+                        <Textarea
                             name="address"
                             data-eusko="memberaddform-address"
                             value=""
@@ -395,6 +417,7 @@ class MemberAddPage extends React.Component {
                             type="text"
                             placeholder={__("Adresse postale")}
                             elementWrapperClassName={[{'col-sm-9': false}, 'col-sm-6']}
+                            rows={3}
                             required
                         />
                         <div className="form-group row">
@@ -487,7 +510,8 @@ class MemberAddPage extends React.Component {
                                 isValidPhoneNumber: __("Ceci n'est pas un N° téléphone valide. Evitez les points et les espaces.")
                             }}
                             elementWrapperClassName={[{'col-sm-9': false}, 'col-sm-6']}
-                            required
+                            onChange={this.onFormChange}
+                            required={!this.state.email}
                         />
                         <Input
                             name="email"
@@ -501,7 +525,8 @@ class MemberAddPage extends React.Component {
                                 isEmail: __("Adresse email non valide")
                             }}
                             elementWrapperClassName={[{'col-sm-9': false}, 'col-sm-6']}
-                            required
+                            onChange={this.onFormChange}
+                            required={!this.state.phone}
                         />
                         <RadioGroup
                             name="options_recevoir_actus"
@@ -529,7 +554,6 @@ class MemberAddPage extends React.Component {
                                     options={this.state.fkAssoAllList}
                                     placeholder={__("Choix Association 3% #1")}
                                     theme="bootstrap3"
-                                    help={__("Blabla")}
                                     createFromSearch={SelectizeUtils.selectizeCreateFromSearch}
                                     onValueChange={this.fkAssoOnValueChange}
                                     renderValue={SelectizeUtils.selectizeRenderValue}
@@ -553,7 +577,6 @@ class MemberAddPage extends React.Component {
                                     options={this.state.fkAssoApprovedList}
                                     placeholder={__("Choix Association 3% #2")}
                                     theme="bootstrap3"
-                                    help={__("Blabla")}
                                     onValueChange={this.fkAsso2OnValueChange}
                                     renderOption={SelectizeUtils.selectizeRenderOption}
                                     renderValue={SelectizeUtils.selectizeRenderValue}

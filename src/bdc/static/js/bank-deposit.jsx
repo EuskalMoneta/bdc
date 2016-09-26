@@ -95,17 +95,10 @@ var BankDepositPage = React.createClass({
 
         // Get historyTableData
         var computeHistoryTableData = (historyTableData) => {
-            // I only want to display items which status is "A remettre à Euskal Moneta"
-            this.setState({historyTableData: _.filter(
-                historyTableData.result.pageItems,
-                (item) => {
-                    if (_.findWhere(item.statuses, {name: "A remettre à Euskal Moneta"})) {
-                        return item
-                    }
-                })
-            })
+            this.setState({historyTableData: historyTableData.result.pageItems})
         }
-        fetchAuth(getAPIBaseURL + "payments-available-deposit/", 'get', computeHistoryTableData)
+        fetchAuth(getAPIBaseURL + "accounts-history/?account_type=caisse_euro_bdc&filter=a_remettre_a_euskal_moneta",
+                  'get', computeHistoryTableData)
     },
 
     // paymentMode
@@ -236,14 +229,14 @@ var BankDepositPage = React.createClass({
         var postData = {}
         postData.login_bdc = window.config.userName
         postData.payment_mode = this.state.paymentMode.cyclos_id
+        postData.payment_mode_name = this.state.paymentMode.label
         postData.deposit_bank = this.state.depositBank.value
+        postData.deposit_bank_name = this.state.depositBank.label
         postData.deposit_calculated_amount = this.state.depositCalculatedAmount
         postData.deposit_amount = this.state.depositAmount
         postData.disable_bordereau = this.state.disableBordereau
         postData.bordereau = this.state.bordereau
         postData.selected_payments = this.state.historyTableSelectedRows
-        postData.amount_plus_difference = this.state.displayWarningPlusDifference
-        postData.amount_minus_difference = this.state.displayWarningMinusDifference
 
         var computeForm = (data) => {
             this.refs.container.success(

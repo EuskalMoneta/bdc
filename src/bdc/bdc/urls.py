@@ -1,7 +1,7 @@
 """bureaudechange URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/1.9/topics/http/urls/
+    https://docs.djangoproject.com/en/1.10/topics/http/urls/
 Examples:
 Function views
     1. Add an import:  from my_app import views
@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+
 from django.conf.urls import url
 from django.contrib.auth.views import logout
 from django.core.urlresolvers import reverse_lazy
@@ -50,6 +51,10 @@ urlpatterns = [
         members_views.change_euro_eusko, name='member-change-euro-eusko'),
     url(r'^members/reconversion/(?P<member_id>\d+)/?$',
         members_views.reconversion, name='member-reconversion'),
+    url(r'^members/depot-eusko-numerique/(?P<member_id>\d+)/?$',
+        members_views.depot_eusko_numerique, name='depot-eusko-numerique'),
+    url(r'^members/retrait-eusko-numerique/(?P<member_id>\d+)/?$',
+        members_views.retrait_eusko_numerique, name='retrait-eusko-numerique'),
 
     url(r'^manager/?$', manager_views.index, name='manager'),
     url(r'^manager/history/(?P<account_name>[\w\-]+)/?$', manager_views.history, name='manager-history'),
