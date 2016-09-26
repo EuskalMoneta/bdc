@@ -18,11 +18,11 @@ class BDCAuthBackend(object):
     def authenticate(self, username, password):
         user = None
         try:
-            r = requests.post('{}{}'.format(settings.API_INTERNAL_URL, 'login/'),
-                              json={'username': username, 'password': password})
+            r_login = requests.post('{}{}'.format(settings.API_INTERNAL_URL, 'login/'),
+                                    json={'username': username, 'password': password})
 
-            if not r.status_code == requests.codes.ok:
-                log.critical('r.status_code: {} - r.content: {}'.format(r.status_code, r.content))
+            if not r_login.status_code == requests.codes.ok:
+                log.critical('status_code: {} - content: {}'.format(r_login.status_code, r_login.content))
                 log.critical('Identifiant Bureau de Change ou Mot de passe invalide.')
                 raise PermissionDenied()
         except requests.exceptions.RequestException as e:
@@ -30,14 +30,25 @@ class BDCAuthBackend(object):
             log.critical('Identifiant Bureau de Change ou Mot de passe invalide. Réessayez.')
             raise PermissionDenied()
 
-        json_response = r.json()
+        json_response = r_login.json()
         try:
-            # We don't need/use this token in Django:
-            # But this way I make sure that the provided credentials are valid.
-            # Otherwise this auth_token field is not be provided by the API.
             auth_token = json_response['auth_token']
             log.debug(auth_token)
         except KeyError:
+            log.critical('Identifiant Bureau de Change ou Mot de passe invalide. Réessayez.')
+            raise PermissionDenied()
+
+        try:
+            r_groups = requests.get('{}{}'.format(settings.API_INTERNAL_URL,
+                                                  'verify-usergroup/?api_key={}&username={}&usergroup=operatdeurs_bdc'
+                                                  .format(auth_token, username)))
+
+            if not r_groups.status_code == requests.codes.ok:
+                log.critical('status_code: {} - content: {}'.format(r_groups.status_code, r_groups.content))
+                log.critical('Identifiant Bureau de Change ou Mot de passe invalide.')
+                raise PermissionDenied()
+        except requests.exceptions.RequestException as e:
+            log.critical('BDCAuthBackend - RequestException: {}'.format(e))
             log.critical('Identifiant Bureau de Change ou Mot de passe invalide. Réessayez.')
             raise PermissionDenied()
 
@@ -67,12 +78,15 @@ def login_view(request, **kwargs):
             HttpResponseBadRequest({'error': 'Username must not be empty!'})
         if not password:
             HttpResponseBadRequest({'error': 'Password must not be empty!'})
+        try:
+            user = authenticate(username=username, password=password)
+        except PermissionDenied:
+            return JsonResponse(status=401)
 
-        user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
             return JsonResponse({'connected': True})
         else:
-            return JsonResponse({'connected': False})
+            return JsonResponse({'connected': False}, status=401)
 
     return render(request, 'login.html')
