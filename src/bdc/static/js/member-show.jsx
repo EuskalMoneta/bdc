@@ -52,8 +52,7 @@ const MemberShow = React.createClass({
                 var memberName = (
                     <div className="col-sm-4">
                         <span className="member-show-societe">
-                            {this.state.member.societe + " – " +
-                             this.state.member.firstname + " " + this.state.member.lastname}
+                            {this.state.member.company}
                         </span>
                     </div>
                 )

@@ -74,7 +74,7 @@ class MemberSearchPage extends React.Component {
                                     id: item.id, login: item.login}
 
                         else if (item.login.startsWith("Z", 0))
-                            return {name: item.societe, id: item.id, login: item.login}
+                            return {name: item.company, id: item.id, login: item.login}
                     })
                     .sortBy(function(item){ return item.name })
                     .value()
@@ -86,8 +86,8 @@ class MemberSearchPage extends React.Component {
     }
 
     render = () => {
-        if (this.state.searchResults) {
-
+        if (this.state.searchResults)
+        {
             const selectRowProp = {
                 mode: 'radio',
                 clickToSelect: true,

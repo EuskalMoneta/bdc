@@ -114,9 +114,8 @@ class MemberReconversionPage extends React.Component {
 
     render = () => {
         if (this.state.member) {
-            if (this.state.member.societe)
-                var memberName = (this.state.member.societe + " – " +
-                                  this.state.member.firstname + " " + this.state.member.lastname)
+            if (this.state.member.company)
+                var memberName = (this.state.member.company)
             else
                 var memberName = this.state.member.firstname + " " + this.state.member.lastname
         }
