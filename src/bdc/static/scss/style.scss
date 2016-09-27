@@ -59,6 +59,10 @@ textarea {
   margin-bottom: 20px;
 }
 
+.font-weight-normal {
+  font-weight: normal;
+}
+
 .btn-default {
   background-color: #ffffff;
   color: #95a5a6;
@@ -210,6 +214,12 @@ textarea {
 }
 
 /* manager/history */
+
+.amount-history-label {
+  margin-bottom: 0;
+  padding-top: 11px;
+  font-weight: bold;
+}
 
 .solde-history-label {
   text-align: right;

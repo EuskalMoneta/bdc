@@ -60,6 +60,8 @@ var BankDepositPage = React.createClass({
             historyTableInitData: undefined,
             historyTableData: undefined,
             historyTableSelectedRows: Array(),
+            currentAmount: undefined,
+            currentNumberCheques: undefined,
             paymentModeList: undefined,
             depositBankList: undefined,
             depositBank: undefined,
@@ -97,7 +99,7 @@ var BankDepositPage = React.createClass({
         // Get historyTableData
         var computeHistoryTableData = (historyTableData) => {
             this.setState({historyTableData: historyTableData.result.pageItems,
-                           historyTableInitData: historyTableData.result.pageItems})
+                           historyTableInitData: historyTableData.result.pageItems}, this.computeAmount)
         }
         fetchAuth(getAPIBaseURL +
                   "accounts-history/?account_type=caisse_euro_bdc&" +
@@ -138,18 +140,38 @@ var BankDepositPage = React.createClass({
                                     return false
                             }
                     )
-                    if (_.isEmpty(res))  {
+                    if (_.isEmpty(res)) {
                         return false
                     }
                     else {
                         return true
                     }
                 })
-            this.setState({historyTableData: historyTableData})
+
+            this.setState({historyTableData: historyTableData}, this.computeAmount)
         }
         else {
-            this.setState({historyTableData: this.state.historyTableInitData})
+            this.setState({historyTableData: this.state.historyTableInitData}, this.computeAmount)
         }
+    },
+
+    computeAmount() {
+        var currentAmount = {balance: Number(0), currency: '€'}
+
+        currentAmount.balance = _.reduce(
+            this.state.historyTableData,
+            (memo, row) => {
+                return memo + Number(row.amount)
+            }, Number(0))
+
+        if (this.state.paymentMode &&
+            this.state.paymentMode.value.toLowerCase() === 'euro-chq' &&
+            this.state.historyTableData)
+            this.setState({currentNumberCheques: this.state.historyTableData.length})
+        else
+            this.setState({currentNumberCheques: undefined})
+
+        this.setState({currentAmount: currentAmount})
     },
 
     // depositBank
@@ -311,6 +333,43 @@ var BankDepositPage = React.createClass({
             'form-group row': true,
             'hidden': !this.state.displayCustomAmount,
         })
+
+
+        // Display current amount information
+        if (this.state.currentAmount) {
+            var currentAmountLabel = this.state.currentAmount.balance + " " + this.state.currentAmount.currency
+        }
+        else
+            var currentAmountLabel = null
+
+        if (this.state.currentNumberCheques != undefined) {
+            var divNumberCheques = (
+                <div className="col-md-2 col-sm-4">
+                    <span className="col-md-12 amount-history-label">
+                        {__("Nombre de chèques") + ": "}
+                        <span className="font-weight-normal">
+                            {this.state.currentNumberCheques}
+                        </span>
+                    </span>
+                </div>
+            )
+        }
+        else
+            var divNumberCheques = null
+
+        var statusRow = (
+            <div className="row margin-bottom">
+                {divNumberCheques}
+                <div className="col-md-2 col-sm-4">
+                    <span className="col-md-12 amount-history-label">
+                        {__("Montant total") + ": "}
+                        <span className="font-weight-normal">
+                            {currentAmountLabel}
+                        </span>
+                    </span>
+                </div>
+            </div>
+        )
 
         const selectRowProp = {
             mode: 'checkbox',
@@ -510,6 +569,7 @@ var BankDepositPage = React.createClass({
                     </BankDepositForm>
                 </div>
                 <div className="col-md-9 col-history-table">
+                    {statusRow}
                     <div className="row margin-right">
                         {dataTable}
                     </div>
