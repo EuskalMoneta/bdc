@@ -57,6 +57,7 @@ var BankDepositPage = React.createClass({
     getInitialState() {
         return {
             canSubmit: false,
+            historyTableInitData: undefined,
             historyTableData: undefined,
             historyTableSelectedRows: Array(),
             paymentModeList: undefined,
@@ -95,9 +96,13 @@ var BankDepositPage = React.createClass({
 
         // Get historyTableData
         var computeHistoryTableData = (historyTableData) => {
-            this.setState({historyTableData: historyTableData.result.pageItems})
+            this.setState({historyTableData: historyTableData.result.pageItems,
+                           historyTableInitData: historyTableData.result.pageItems})
         }
-        fetchAuth(getAPIBaseURL + "accounts-history/?account_type=caisse_euro_bdc&filter=a_remettre_a_euskal_moneta",
+        fetchAuth(getAPIBaseURL +
+                  "accounts-history/?account_type=caisse_euro_bdc&" +
+                  "filter=a_remettre_a_euskal_moneta&" +
+                  "direction=CREDIT",
                   'get', computeHistoryTableData)
     },
 
@@ -114,7 +119,37 @@ var BankDepositPage = React.createClass({
                            displayWarningPlusDifference: false,
                            displayWarningMinusDifference: false})
 
-        // TODO filter historyTableData ?
+        // Filter historyTableData according to new payment mode
+        if (item)
+        {
+            var historyTableData = _.filter(this.state.historyTableInitData,
+                (i) => {
+                    // Firstly, I need to verify if i.customValues.field.internalName == "mode_de_paiement"
+                    // If this is true, I have to verify that the field id == item.cyclos_id (which is the payment mode cyclos id)
+
+                    // This item_cyclos_id var is needed because the function inside _.filter only knows parent scope
+                    var item_cyclos_id = item.cyclos_id
+                    var res = _.filter(
+                        i.customValues,
+                            (j) => {
+                                if (j.field.internalName == 'mode_de_paiement')
+                                    return j.enumeratedValues[0].id == item_cyclos_id
+                                else
+                                    return false
+                            }
+                    )
+                    if (_.isEmpty(res))  {
+                        return false
+                    }
+                    else {
+                        return true
+                    }
+                })
+            this.setState({historyTableData: historyTableData})
+        }
+        else {
+            this.setState({historyTableData: this.state.historyTableInitData})
+        }
     },
 
     // depositBank
