@@ -126,8 +126,8 @@ var EntreeStockPage = React.createClass({
             )
 
             console.log(data)
-            console.log("redirect to: " + this.props.nextURL)
-            window.location.assign(this.props.nextURL)
+            console.log("redirect to: /manager/history/stock-billets")
+            window.location.assign('/manager/history/stock-billets')
         }
 
         var promiseError = (err) => {
@@ -143,7 +143,7 @@ var EntreeStockPage = React.createClass({
                 }
             )
         }
-        fetchAuth(this.props.saveURL, this.props.method, computeForm, postData, promiseError)
+        fetchAuth(this.props.saveURL, 'POST', computeForm, postData, promiseError)
     },
 
     render() {
