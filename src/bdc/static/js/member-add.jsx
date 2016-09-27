@@ -294,7 +294,6 @@ class MemberAddPage extends React.Component {
             data.fk_asso2 = this.state.fkAsso2.value
 
         var computeForm = (data) => {
-            console.log(data)
             this.refs.container.success(
                 __("La création de l'adhérent s'est déroulée correctement."),
                 "",
@@ -304,6 +303,7 @@ class MemberAddPage extends React.Component {
                     closeButton:true
                 }
             )
+
             // redirect to create subscription page in 3 seconds
             setTimeout(() => window.location.assign("/members/subscription/add/" + data), 3000)
         }

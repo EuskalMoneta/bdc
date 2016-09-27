@@ -117,7 +117,6 @@ class MemberChangeEuroEuskoPage extends React.Component {
         data.payment_mode = this.state.paymentMode.cyclos_id
 
         var computeForm = (data) => {
-            this.setState({data: data})
             this.refs.container.success(
                 __("L'enregistrement s'est déroulé correctement."),
                 "",
@@ -127,6 +126,8 @@ class MemberChangeEuroEuskoPage extends React.Component {
                     closeButton:true
                 }
             )
+
+            setTimeout(() => window.location.assign("/members/" + document.getElementById("member_id").value), 3000)
         }
 
         var promiseError = (err) => {

@@ -125,9 +125,7 @@ var EntreeStockPage = React.createClass({
                 }
             )
 
-            console.log(data)
-            console.log("redirect to: /manager/history/stock-billets")
-            window.location.assign('/manager/history/stock-billets')
+            setTimeout(() => window.location.assign('/manager/history/stock-billets'), 3000)
         }
 
         var promiseError = (err) => {

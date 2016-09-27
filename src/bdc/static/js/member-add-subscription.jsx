@@ -91,7 +91,6 @@ class MemberSubscriptionPage extends React.Component {
                 cyclos_id_payment_mode: this.state.paymentMode.cyclos_id}
 
         var computeForm = (data) => {
-            this.setState({data: data})
             this.refs.container.success(
                 __("L'enregistrement de la cotisation s'est déroulée correctement."),
                 "",
@@ -101,6 +100,8 @@ class MemberSubscriptionPage extends React.Component {
                     closeButton:true
                 }
             )
+
+            setTimeout(() => window.location.assign("/members/" + document.getElementById("member_id").value), 3000)
         }
 
         var promiseError = (err) => {

@@ -55,7 +55,6 @@ class SortieStockPage extends React.Component {
             canSubmit: false,
             validFields: false,
             validCustomFields: false,
-            response: undefined,
             porteur: '',
             porteurList: ''
         }
@@ -103,7 +102,6 @@ class SortieStockPage extends React.Component {
         console.log(data)
 
         var computeForm = (response) => {
-            this.setState({response: response})
             this.refs.container.success(
                 __("L'enregistrement s'est déroulé correctement."),
                 "",
@@ -113,6 +111,8 @@ class SortieStockPage extends React.Component {
                     closeButton:true
                 }
             )
+
+            setTimeout(() => window.location.assign('/manager/history/stock-billets'), 3000)
         }
 
         var promiseError = (err) => {

@@ -78,7 +78,6 @@ class MemberRetraitEuskoNumeriquePage extends React.Component {
         data.login_bdc = window.config.userName
 
         var computeForm = (data) => {
-            debugger
             this.refs.container.success(
                 __("L'enregistrement s'est déroulé correctement."),
                 "",
@@ -88,6 +87,8 @@ class MemberRetraitEuskoNumeriquePage extends React.Component {
                     closeButton:true
                 }
             )
+
+            setTimeout(() => window.location.assign("/members/" + document.getElementById("member_id").value), 3000)
         }
 
         var promiseError = (err) => {

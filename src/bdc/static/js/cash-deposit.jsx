@@ -144,9 +144,7 @@ var CashDepositPage = React.createClass({
                 }
             )
 
-            console.log(data)
-            console.log("redirect to: " + this.props.nextURL)
-            window.location.assign(this.props.nextURL)
+            setTimeout(() => window.location.assign(this.props.nextURL), 3000)
         }
 
         var promiseError = (err) => {

@@ -80,7 +80,6 @@ class MemberReconversionPage extends React.Component {
 
     submitForm = (data) => {
         data.member_login = this.state.member.login
-        console.log(data)
 
         var computeForm = (data) => {
             this.setState({data: data})
@@ -93,6 +92,8 @@ class MemberReconversionPage extends React.Component {
                     closeButton:true
                 }
             )
+
+            setTimeout(() => window.location.assign("/members/" + document.getElementById("member_id").value), 3000)
         }
 
         var promiseError = (err) => {

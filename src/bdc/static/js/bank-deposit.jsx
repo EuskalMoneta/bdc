@@ -306,9 +306,7 @@ var BankDepositPage = React.createClass({
                 }
             )
 
-            console.log(data)
-            console.log("redirect to: /manager/history/caisse-euro")
-            window.location.assign("/manager/history/caisse-euro")
+            setTimeout(() => window.location.assign("/manager/history/caisse-euro"), 3000)
         }
 
         var promiseError = (err) => {
