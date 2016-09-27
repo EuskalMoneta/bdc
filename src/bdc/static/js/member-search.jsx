@@ -55,7 +55,8 @@ class MemberSearchPage extends React.Component {
         // Search for members, using ?login= OR ?name=
         var searchString = null;
 
-        if (!search || search.length < 4) {
+        if (!search || search.length < 3) {
+            this.setState({searchResults: undefined})
             return false;
         }
         else if (search) {
