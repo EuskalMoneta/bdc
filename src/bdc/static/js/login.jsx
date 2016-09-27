@@ -115,7 +115,7 @@ class LoginPage extends React.Component {
                     }
                 })
                 .then(checkStatus)
-                .then(() => {
+                .then((response) => {
                     var next = getUrlParameter('next')
                     if (!next)
                         next = window.config.getLoginRedirectURL
