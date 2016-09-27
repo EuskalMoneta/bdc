@@ -215,7 +215,10 @@ var EntreeStockPage = React.createClass({
 })
 
 ReactDOM.render(
-    <EntreeStockPage historyURL={getAPIBaseURL + "payments-available-entree-stock/"} saveURL={getAPIBaseURL + "entree-stock/"} />,
+    <EntreeStockPage
+            historyURL={getAPIBaseURL + "payments-available-entree-stock/?login_bdc=" + window.config.userName}
+            saveURL={getAPIBaseURL + "entree-stock/"}
+    />,
     document.getElementById('entree-stock')
 )
 
