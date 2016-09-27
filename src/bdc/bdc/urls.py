@@ -59,8 +59,8 @@ urlpatterns = [
     url(r'^manager/?$', manager_views.index, name='manager'),
     url(r'^manager/history/(?P<account_name>[\w\-]+)/?$', manager_views.history, name='manager-history'),
 
-    url(r'^manager/entree-stock/?$', manager_views.io_stock, name='entree-stock'),
-    url(r'^manager/sortie-stock/?$', manager_views.io_stock, name='sortie-stock'),
+    url(r'^manager/entree-stock/?$', manager_views.entree_stock, name='entree-stock'),
+    url(r'^manager/sortie-stock/?$', manager_views.sortie_stock, name='sortie-stock'),
 
     url(r'^manager/bank-deposit/?$', manager_views.bank_deposit, name='bank-deposit'),
     url(r'^manager/cash-deposit/?$', manager_views.cash_deposit, name='cash-deposit'),
