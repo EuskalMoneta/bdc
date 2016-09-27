@@ -65,7 +65,7 @@ var EntreeStockPage = React.createClass({
     componentDidMount() {
         // Get historyTableData
         var computeHistoryTableData = (historyTableData) => {
-            this.setState({historyTableData: historyTableData.result.pageItems})
+            this.setState({historyTableData: historyTableData})
         }
         fetchAuth(this.props.historyURL, 'get', computeHistoryTableData)
     },
