@@ -2,7 +2,8 @@ import {
     fetchAuth,
     titleCase,
     getAPIBaseURL,
-    NavbarTitle
+    NavbarTitle,
+    getCurrentLang,
 } from 'Utils'
 
 
@@ -23,23 +24,32 @@ const MemberShow = React.createClass({
 
     render() {
         if (this.state.member) {
-            // Whether or not, we have a up-to-date member subscription
+            moment.locale(getCurrentLang)
+            var dateEndSub = moment.unix(this.state.member.datefin).format('DD MMMM YYYY');
+
+            // Whether or not, we have an up-to-date member subscription
             if (moment.unix(this.state.member.datefin) > moment()) {
                 var memberStatus = (
-                    <span className="label label-success member-show-statut"
-                          data-eusko="member-show-statut">
-                        {__("À jour")}
-                    </span>
+                    <div className="font-member-status">
+                        <span className="glyphicon glyphicon-ok member-status-ok"></span>
+                        <span className="member-status-text" data-eusko="member-show-status">
+                            {__("À jour")}
+                        </span>
+                        <span className="member-status-date">({dateEndSub})</span>
+                    </div>
                 )
 
                 var memberStatusUpToDate = true
             }
             else {
                 var memberStatus = (
-                    <span className="label label-warning member-show-statut"
-                          data-eusko="member-show-statut">
-                        {__("Pas à jour")}
-                    </span>
+                    <div className="font-member-status">
+                        <span className="glyphicon glyphicon-remove member-status-nok"></span>
+                        <span className="member-status-text" data-eusko="member-show-status">
+                            {__("Pas à jour")}
+                        </span>
+                        <span className="member-status-date">({dateEndSub})</span>
+                    </div>
                 )
 
                 var memberStatusUpToDate = false

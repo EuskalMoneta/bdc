@@ -87,11 +87,37 @@ textarea {
   }
 }
 
-.member-show-statut {
+.member-status-text {
+  margin-right: 5px;
+}
+
+.member-status-date {
+  font-size: 15px;
+}
+
+.font-member-status {
+  font-size: 20px;
+  vertical-align: middle;
+}
+
+.member-status-ok {
+  color: #128f76;
+  vertical-align: -1px;
+  margin-right: 5px;
+}
+
+.member-status-nok {
+  color: #e74c3c;
+  vertical-align: -2px;
+  margin-right: 5px;
+}
+
+.member-show-status {
   padding-top: 10px;
   padding-right: 15px;
   padding-bottom: 10px;
   padding-left: 15px;
+  vertical-align: middle;
 }
 
 .member-show-div-margin-left {
