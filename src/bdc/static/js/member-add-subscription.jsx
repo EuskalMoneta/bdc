@@ -1,12 +1,14 @@
 import {
     fetchAuth,
     getAPIBaseURL,
+    isPositiveNumeric,
     NavbarTitle,
-    SelectizeUtils
+    SelectizeUtils,
 } from 'Utils'
 
 const {
-    Row
+    Input,
+    Row,
 } = FRC
 
 import ReactSelectize from 'react-selectize'
@@ -18,6 +20,8 @@ const {
     ToastContainer
 } = ReactToastr
 const ToastMessageFactory = React.createFactory(ReactToastr.ToastMessage.animation)
+
+Formsy.addValidationRule('isPositiveNumeric', isPositiveNumeric)
 
 
 const MemberSubscriptionForm = React.createClass({
@@ -49,18 +53,17 @@ class MemberSubscriptionPage extends React.Component {
         // Default state
         this.state = {
             canSubmit: false,
+            buttonBasRevenusActivated: false,
+            buttonClassiqueActivated: false,
+            buttonSoutienActivated: false,
             amount: undefined,
-            amountCustom: false,
+            customAmount: undefined,
             amountInvalid: false,
-            amountSearch: '',
-            amountList: [{value: '5', label: '5 (bas revenus)'},
-                         {value: '10', label: '10 (cotisation classique)'},
-                         {value: '20', label: '20 (cotisation de soutien)'},
-                         {value: '21 ou +', label: 'ou +'}],
             memberID: document.getElementById("member_id").value,
             member: undefined,
             paymentMode: '',
-            paymentModeList: undefined
+            paymentModeList: undefined,
+            displayCustomAmount: false,
         }
 
         // Get member data
@@ -84,13 +87,16 @@ class MemberSubscriptionPage extends React.Component {
         this.setState({canSubmit: false});
     }
 
-    submitForm = (data) => {
+    submitForm = () => {
         this.disableButton()
 
-        data = {amount: this.state.amount.value,
-                payment_mode: this.state.paymentMode.value,
-                member_id: document.getElementById("member_id").value,
-                cyclos_id_payment_mode: this.state.paymentMode.cyclos_id}
+        var data = {amount: this.state.amount,
+                    payment_mode: this.state.paymentMode.value,
+                    member_id: document.getElementById("member_id").value,
+                    cyclos_id_payment_mode: this.state.paymentMode.cyclos_id}
+
+        if (this.state.customAmount)
+            data.amount = this.state.customAmount
 
         var computeForm = (data) => {
             this.refs.container.success(
@@ -125,68 +131,36 @@ class MemberSubscriptionPage extends React.Component {
     }
 
     validateForm = () => {
-        if (this.state.amount && this.state.paymentMode && !this.state.amountInvalid)
+        if (Boolean(this.state.paymentMode) &&
+            (Boolean(!this.state.customAmount && this.state.amount) ||
+                Boolean(this.state.customAmount && !this.state.amountInvalid)))
+        {
             this.enableButton()
-        else
+        }
+        else {
             this.disableButton()
+        }
     }
 
     // amount
-    amountCreateFromSearch = (options, search) => {
-        // Pretty much self explanatory:
-        // this function is called when we start typing inside the select
-        if (search)
-            return {label: search, value: search}
-        else
-            return null
-    }
-
-    amountOnSearchChange = (search) => {
-        this.setState({amountSearch: search})
-    }
-
-    amountRenderOption = (item) => {
-        // This is how the list itself is displayed
-        return  <div className="simple-option" style={{display: "flex", alignItems: "center"}}>
-                    <div className="memberaddform" style={{marginLeft: 10}}>
-                        {item.label}
-                    </div>
-                </div>
-    }
-
-    amountRenderValue = (item) => {
-        // When we select a value, this is how we display it
-        var divClass = classNames({
-            'memberaddform': true,
-            'has-error-value': this.state.amountInvalid,
-        })
-
-        return  <div className="simple-value">
-                    <span className={divClass} style={{marginLeft: 10, verticalAlign: "middle"}}>
-                        {item.value}
-                    </span>
-                </div>
-    }
-
-    amountOnValueChange = (item) => {
-        if (item) {
-            this.setState({amount: item, amountCustom: false})
-
-            if (item.newOption) {
-                this.setState({amountCustom: true})
-
-                const re = new RegExp('^[0-9]+$')
-                if (item.value < 20 || !re.test(item.value))
-                    this.setState({amountInvalid: true})
-                else
-                    this.setState({amountInvalid: false})
-            }
+    validateAmount = (field, value) => {
+        if (isPositiveNumeric(null, value)) {
+            this.setState({customAmount: value}, this.validateForm)
         }
         else {
-            this.setState({amount: undefined, amountInvalid: false})
+            this.setState({customAmount: undefined}, this.validateForm)
         }
 
-        this.validateForm()
+        if (Number(value) >= Number(20)) {
+            this.setState({amountInvalid: false}, this.validateForm)
+        }
+        else {
+            this.setState({amountInvalid: true}, this.validateForm)
+        }
+    }
+
+    setAmount = (value) => {
+        this.setState(value, this.validateForm)
     }
 
     // paymentMode
@@ -218,12 +192,27 @@ class MemberSubscriptionPage extends React.Component {
     }
 
     render = () => {
-        var divAmountClass = classNames({
-            'form-group row': true,
-            'has-error has-feedback': this.state.amountInvalid,
+        var buttonBasRevenusClass = classNames({
+            "btn": true,
+            "btn-default": !this.state.buttonBasRevenusActivated,
+            "btn-info-inverse": this.state.buttonBasRevenusActivated,
         })
 
-        var reactSelectizeErrorClass = classNames({
+        var buttonClassiqueClass = classNames({
+            "btn": true,
+            "btn-default": !this.state.buttonClassiqueActivated,
+            "btn-info-inverse": this.state.buttonClassiqueActivated,
+        })
+
+        var buttonSoutienClass = classNames({
+            "btn": true,
+            "btn-default": !this.state.buttonSoutienActivated,
+            "btn-info-inverse": this.state.buttonSoutienActivated,
+        })
+
+        var divCustomAmountClass = classNames({
+            'form-group row': true,
+            'hidden': !this.state.displayCustomAmount,
             'has-error has-feedback': this.state.amountInvalid,
         })
 
@@ -245,9 +234,8 @@ class MemberSubscriptionPage extends React.Component {
         return (
             <div className="row">
                 <MemberSubscriptionForm
-                    onValidSubmit={this.submitForm}
-                    onInvalid={this.disableButton}
-                    onValid={this.enableButton}
+                    onInvalid={this.validateForm}
+                    onValid={this.validateForm}
                     ref="memberaddsubscription">
                     <fieldset>
                         <div className="form-group row">
@@ -262,7 +250,7 @@ class MemberSubscriptionPage extends React.Component {
                             </div>
                             <div className="col-sm-3"></div>
                         </div>
-                        <div className={divAmountClass}>
+                        <div className="form-group row">
                             <label
                                 className="control-label col-sm-3"
                                 data-required="true"
@@ -270,27 +258,46 @@ class MemberSubscriptionPage extends React.Component {
                                 {__("Montant")}
                                 <span className="required-symbol">&nbsp;*</span>
                             </label>
-                            <div className="col-sm-6 memberaddsubscription" data-eusko="memberaddsubscription-amount">
-                                <SimpleSelect
-                                    className={reactSelectizeErrorClass}
-                                    ref="select"
-                                    value={this.state.amount}
-                                    search={this.state.amountSearch}
-                                    options={this.state.amountList}
-                                    placeholder={__("Montant de la cotisation")}
-                                    theme="bootstrap3"
-                                    createFromSearch={this.amountCreateFromSearch}
-                                    onSearchChange={this.amountOnSearchChange}
-                                    onValueChange={this.amountOnValueChange}
-                                    renderOption={this.amountRenderOption}
-                                    renderValue={this.amountRenderValue}
-                                    onBlur={this.validateForm}
-                                    required
-                                />
-                                { spanInvalidAmount }
+                            <div className="col-sm-7 memberaddsubscription" data-eusko="memberaddsubscription-amount">
+                            <button
+                                className={buttonBasRevenusClass}
+                                onClick={() => this.setAmount({amount: '5', customAmount: undefined, displayCustomAmount: false,
+                                            buttonBasRevenusActivated: true, buttonClassiqueActivated: false, buttonSoutienActivated: false})}>
+                                {__('5 (bas revenus)')}
+                            </button>
+                            {' '}
+                            <button
+                                className={buttonClassiqueClass}
+                                onClick={() => this.setAmount({amount: '10', customAmount: undefined, displayCustomAmount: false,
+                                           buttonBasRevenusActivated: false, buttonClassiqueActivated: true, buttonSoutienActivated: false})}>
+                                {__('10 (cotisation classique)')}
+                            </button>
+                            {' '}
+                            <button
+                                className={buttonSoutienClass}
+                                onClick={() => this.setAmount({amount: undefined, customAmount: '20', displayCustomAmount: true,
+                                            buttonBasRevenusActivated: false, buttonClassiqueActivated: false, buttonSoutienActivated: true})}>
+                                {__('20 ou plus (cotisation de soutien)')}
+                            </button>
                             </div>
-                            <div className="col-sm-3"></div>
                         </div>
+                        <Input
+                            name="customAmount"
+                            data-eusko="bank-deposit-customAmount"
+                            value={this.state.customAmount ? this.state.customAmount : ""}
+                            type="number"
+                            placeholder={__("Montant de la cotisation")}
+                            validations="isPositiveNumeric"
+                            validationErrors={{
+                               isPositiveNumeric: __("Montant invalide.")
+                            }}
+                            label={__("Montant personnalisé")}
+                            onChange={this.validateAmount}
+                            rowClassName={divCustomAmountClass}
+                            elementWrapperClassName={[{'col-sm-9': false}, 'col-sm-6']}
+                            required={this.state.displayCustomAmount}
+                            disabled={!this.state.displayCustomAmount}
+                        />
                         <div className="form-group row">
                             <label
                                 className="control-label col-sm-3"
@@ -301,7 +308,6 @@ class MemberSubscriptionPage extends React.Component {
                             </label>
                             <div className="col-sm-6 memberaddsubscription" data-eusko="memberaddsubscription-payment_mode">
                                 <SimpleSelect
-                                    className={reactSelectizeErrorClass}
                                     ref="select"
                                     value={this.state.paymentMode}
                                     options={this.state.paymentModeList}
@@ -327,6 +333,7 @@ class MemberSubscriptionPage extends React.Component {
                                 defaultValue={__("Enregistrer la cotisation")}
                                 className="btn btn-success"
                                 formNoValidate={true}
+                                onClick={() => this.submitForm()}
                                 disabled={!this.state.canSubmit}
                             />
                         </Row>

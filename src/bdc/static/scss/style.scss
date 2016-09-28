@@ -75,8 +75,14 @@ textarea {
   border-color: #95a5a6;
 }
 
-.btn-danger-inverse {
+.btn-inverse {
   color: red;
+  background-color: white;
+}
+
+.btn-info-inverse, .btn-info-inverse:hover, .btn-info-inverse:active,  .btn-info-inverse:focus {
+  color: #3498db;
+  border-color: #3498db;
   background-color: white;
 }
 
