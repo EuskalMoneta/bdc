@@ -113,6 +113,8 @@ class MemberChangeEuroEuskoPage extends React.Component {
     }
 
     submitForm = (data) => {
+        this.disableButton()
+
         data.member_login = this.state.member.login
         data.payment_mode = this.state.paymentMode.cyclos_id
 
@@ -132,6 +134,8 @@ class MemberChangeEuroEuskoPage extends React.Component {
 
         var promiseError = (err) => {
             // Error during request, or parsing NOK :(
+            this.enableButton()
+
             console.error(this.props.url, err)
             this.refs.container.error(
                 __("Une erreur s'est produite lors de l'enregistrement !"),

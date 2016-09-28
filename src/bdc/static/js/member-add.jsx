@@ -110,7 +110,7 @@ class MemberAddPage extends React.Component {
             var res = _.chain(associations)
                 .map(function(item){
                     if (item.nb_parrains == "0")
-                        var label = item.nom + " – " + __(" Aucun parrain")
+                        var label = item.nom + " – " + __("Aucun parrain")
                     else if (item.nb_parrains == "1")
                         var label = item.nom + " – " + item.nb_parrains + " " + __("parrain")
                     else
@@ -129,7 +129,7 @@ class MemberAddPage extends React.Component {
             var res = _.chain(associations)
                 .map(function(item){
                     if (item.nb_parrains == "0")
-                        var label = item.nom + " – " + __(" Aucun parrain")
+                        var label = item.nom + " – " + __("Aucun parrain")
                     else if (item.nb_parrains == "1")
                         var label = item.nom + " – " + item.nb_parrains + " " + __("parrain")
                     else
@@ -276,6 +276,8 @@ class MemberAddPage extends React.Component {
     }
 
     submitForm = (data) => {
+        this.disableButton()
+
         // We push custom fields (like DatePickers, Selectize, ...) into the data passed to the server
         data.birth = this.state.birth.format('DD/MM/YYYY')
         data.country_id = this.state.country.value
@@ -310,6 +312,8 @@ class MemberAddPage extends React.Component {
 
         var promiseError = (err) => {
             // Error during request, or parsing NOK :(
+            this.enableButton()
+
             console.log(this.props.url, err)
             this.refs.container.error(
                 __("Une erreur s'est produite lors de la création de l'adhérent !"),

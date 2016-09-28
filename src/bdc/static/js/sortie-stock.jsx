@@ -98,6 +98,8 @@ class SortieStockPage extends React.Component {
     }
 
     submitForm = (data) => {
+        this.disableButton()
+
         data.porteur = this.state.porteur.value
         console.log(data)
 
@@ -117,6 +119,8 @@ class SortieStockPage extends React.Component {
 
         var promiseError = (err) => {
             // Error during request, or parsing NOK :(
+            this.enableButton()
+
             console.error(this.props.url, err)
             this.refs.container.error(
                 __("Une erreur s'est produite lors de l'enregistrement !"),

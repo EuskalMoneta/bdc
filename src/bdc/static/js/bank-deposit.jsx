@@ -283,6 +283,8 @@ var BankDepositPage = React.createClass({
     },
 
     submitForm(data) {
+        this.disableButton()
+
         var postData = {}
         postData.login_bdc = window.config.userName
         postData.payment_mode = this.state.paymentMode.cyclos_id
@@ -311,6 +313,8 @@ var BankDepositPage = React.createClass({
 
         var promiseError = (err) => {
             // Error during request, or parsing NOK :(
+            this.enableButton()
+
             console.error(this.props.url, err)
             this.refs.container.error(
                 __("Une erreur s'est produite lors de l'enregistrement !"),

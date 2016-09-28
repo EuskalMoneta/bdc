@@ -85,6 +85,8 @@ class MemberSubscriptionPage extends React.Component {
     }
 
     submitForm = (data) => {
+        this.disableButton()
+
         data = {amount: this.state.amount.value,
                 payment_mode: this.state.paymentMode.value,
                 member_id: document.getElementById("member_id").value,
@@ -106,6 +108,8 @@ class MemberSubscriptionPage extends React.Component {
 
         var promiseError = (err) => {
             // Error during request, or parsing NOK :(
+            this.enableButton()
+
             console.error(this.props.url, err)
             this.refs.container.error(
                 __("Une erreur s'est produite lors de l'enregistrement de la cotisation !"),

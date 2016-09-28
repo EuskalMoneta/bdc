@@ -79,10 +79,11 @@ class MemberReconversionPage extends React.Component {
     }
 
     submitForm = (data) => {
+        this.disableButton()
+
         data.member_login = this.state.member.login
 
         var computeForm = (data) => {
-            this.setState({data: data})
             this.refs.container.success(
                 __("L'enregistrement s'est déroulé correctement."),
                 "",
@@ -98,6 +99,8 @@ class MemberReconversionPage extends React.Component {
 
         var promiseError = (err) => {
             // Error during request, or parsing NOK :(
+            this.enableButton()
+
             console.error(this.props.url, err)
             this.refs.container.error(
                 __("Une erreur s'est produite lors de l'enregistrement !"),

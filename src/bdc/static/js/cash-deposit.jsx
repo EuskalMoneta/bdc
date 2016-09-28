@@ -127,6 +127,8 @@ var CashDepositPage = React.createClass({
     },
 
     submitForm(data) {
+        this.disableButton()
+
         var postData = {}
         postData.mode = this.props.mode
         postData.login_bdc = window.config.userName
@@ -149,6 +151,8 @@ var CashDepositPage = React.createClass({
 
         var promiseError = (err) => {
             // Error during request, or parsing NOK :(
+            this.enableButton()
+
             console.error(this.props.url, err)
             this.refs.container.error(
                 __("Une erreur s'est produite lors de l'enregistrement !"),
