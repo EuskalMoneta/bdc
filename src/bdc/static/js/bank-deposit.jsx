@@ -134,12 +134,15 @@ var BankDepositPage = React.createClass({
                     var res = _.filter(
                         i.customValues,
                             (j) => {
-                                if (j.field.internalName == 'mode_de_paiement')
+                                if (j.field.internalName == 'mode_de_paiement') {
                                     return j.enumeratedValues[0].id == item_cyclos_id
-                                else
+                                }
+                                else {
                                     return false
+                                }
                             }
                     )
+
                     if (_.isEmpty(res)) {
                         return false
                     }

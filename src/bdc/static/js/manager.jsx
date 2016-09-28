@@ -1,7 +1,7 @@
 import {
     fetchAuth,
     getAPIBaseURL,
-    NavbarTitle
+    NavbarTitle,
 } from 'Utils'
 
 class Manager extends React.Component {
@@ -100,11 +100,79 @@ var CaisseEuro = React.createClass({
         }
     },
 
+    componentDidMount() {
+        var computeData = (data) => {
+            // Si un paiement n'a pas de champ personnalisé "Mode de paiement",
+            // alors il faut le compter dans les espèces
+            // (c'est le cas pour les paiements de type "Paiement de Banque de dépôt vers Caisse € BDC").
+            var cheques_res = _.filter(data.result.pageItems,
+                (i) => {
+                    // Firstly, I need to verify if i.customValues.field.internalName == "mode_de_paiement"
+                    // If this is true, I have to verify that a field is = Chèque
+                    var res = _.filter(
+                        i.customValues,
+                            (j) => {
+                                if (j.field.internalName == 'mode_de_paiement') {
+                                    return j.enumeratedValues[0].value == 'Chèque'
+                                }
+                                else {
+                                    return false
+                                }
+                            }
+                    )
+
+                    if (_.isEmpty(res)) {
+                        return false
+                    }
+                    else {
+                        return true
+                    }
+                })
+
+            var cash_res = _.filter(data.result.pageItems,
+                (i) => {
+                    // Firstly, I need to verify if i.customValues.field.internalName == "mode_de_paiement"
+                    // If this is true, I have to verify that a field is = Espèces
+                    var res = _.filter(
+                        i.customValues,
+                            (j) => {
+                                if (j.field.internalName == 'mode_de_paiement') {
+                                    return j.enumeratedValues[0].value == 'Espèces'
+                                }
+                                else {
+                                    return false
+                                }
+                            }
+                    )
+
+                    if (_.isEmpty(res)) {
+                        return false
+                    }
+                    else {
+                        return true
+                    }
+                })
+
+            this.setState({cash: _.reduce(cash_res,
+                                          (memo, row) => {
+                                            return memo + Number(row.amount)
+                                          }, Number(0)),
+                           cheques: _.reduce(cheques_res,
+                                             (memo, row) => {
+                                                return memo + Number(row.amount)
+                                             }, Number(0))
+            })
+        }
+        fetchAuth(getAPIBaseURL +
+                  "accounts-history/?account_type=caisse_euro_bdc&" +
+                  "filter=a_remettre_a_euskal_moneta&" +
+                  "direction=CREDIT",
+                  'get', computeData)
+    },
+
     componentWillReceiveProps(nextProps) {
         if (nextProps.data) {
             this.setState({balance: nextProps.data.balance,
-                           cash: '',
-                           checks: '',
                            currency: nextProps.data.currency})
         }
     },
