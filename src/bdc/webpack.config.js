@@ -19,7 +19,8 @@ module.exports = Object.keys(languages).map(function(language) {
         // devtool: 'source-map',
 
         entry: {
-            Base: './static/js/base', // Your global app's entry point
+            Base: './static/js/base',
+            ChangePassword: './static/js/change-password',
             MemberAdd: './static/js/member-add',
             MemberAddSubscription: './static/js/member-add-subscription',
             MemberSearch: './static/js/member-search',

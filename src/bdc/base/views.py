@@ -1,6 +1,7 @@
 import logging
 
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils.translation import LANGUAGE_SESSION_KEY, check_for_language
@@ -49,3 +50,8 @@ def setlang_custom(request):
                             domain=settings.LANGUAGE_COOKIE_DOMAIN)
 
     return response
+
+
+@login_required
+def change_password(request):
+    return render(request, 'change-password.html')
