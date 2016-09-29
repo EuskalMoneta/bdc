@@ -3,9 +3,9 @@
 // thus we can also setup JavaScript things ... all of those will be used everywhere in our app
 
 import {
-    Flags,
     NavbarTitle,
-    NavbarItems
+    NavbarItems,
+    NavbarRight,
 } from 'Utils'
 
 // Load the CSS stylesheets for our dependencies
@@ -26,11 +26,6 @@ Raven.config('http://02c622eee5004e9fa9b661395e6ca409@localhost:8081/3').install
 
 
 ReactDOM.render(
-    <Flags />,
-    document.getElementById('flags')
-)
-
-ReactDOM.render(
     <NavbarTitle />,
     document.getElementById('navbar-title')
 )
@@ -42,4 +37,9 @@ const navbarObjects = [{href: '/members/search', label: __("Adhérents"), id: 0}
 ReactDOM.render(
     <NavbarItems objects={navbarObjects} />,
     document.getElementById('navbar-content')
+)
+
+ReactDOM.render(
+    <NavbarRight />,
+    document.getElementById('navbar-right')
 )

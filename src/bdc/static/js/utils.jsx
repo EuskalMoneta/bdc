@@ -111,6 +111,7 @@ var isPositiveNumeric = (values, value) =>
     if (!value || value == 0) {
         return false
     }
+
     if (value.match(/^\+?(?:\d*[.])?\d+$/))
         return true
     else
@@ -119,7 +120,7 @@ var isPositiveNumeric = (values, value) =>
 
 var titleCase = (str) => {
     if ((str===null) || (str===''))
-       return false;
+        return false;
     else
         str = str.toString();
 
@@ -179,16 +180,13 @@ class NavbarTitle extends React.Component {
 class NavbarItems extends React.Component {
     render() {
         if (window.config.userAuth) {
-            var navbarData = this.props.objects.map((item) => {
+            var navbarData = _.map(this.props.objects, (item) => {
                 return (
                     <li key={item.id}>
                         <a href={item.href}>{item.label}</a>
                     </li>
                 )
             })
-            navbarData.push(<li key={navbarData.length + 1}>
-                                <a href={window.config.getLogoutURL}>{__("Déconnexion")}</a>
-                            </li>)
         }
         else
             var navbarData = null
@@ -199,6 +197,62 @@ class NavbarItems extends React.Component {
         )
     }
 }
+
+var NavbarRight = React.createClass({
+    getInitialState() {
+        return {
+            bdcName: '',
+            userAuth: window.config.userAuth,
+            showDropdown: false,
+        }
+    },
+
+    componentDidMount() {
+        // Get bdc name
+        var computeData = (data) => {
+            this.setState({bdcName: data})
+        }
+        fetchAuth(getAPIBaseURL + "bdc-name/", 'get', computeData)
+    },
+
+    toggleDropdown() {
+        this.setState({showDropdown: !this.state.showDropdown})
+    },
+
+    hideDropdown() {
+        this.setState({showDropdown: false})
+    },
+
+    render() {
+        if (this.state.userAuth)
+        {
+            if (this.state.showDropdown) {
+                var dropdownClassName = "dropdown-menu show-dropdown-menu"
+            }
+            else {
+                var dropdownClassName = "dropdown-menu"
+            }
+
+            return (
+                <ul className="nav navbar-nav pull-right" onBlur={() => this.toggleDropdown()}>
+                    <li className="dropdown">
+                        <a className="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"
+                           onClick={() => this.toggleDropdown()}>
+                            {window.config.userName + " - " + this.state.bdcName + " "}<span className="caret"></span>
+                        </a>
+                        <ul className={dropdownClassName} role="menu">
+                            <li><a href="/change-password">{__("Changer mon mot de passe")}</a></li>
+                            <li className="divider"></li>
+                            <li><a href={window.config.getLogoutURL}>{__("Me déconnecter")}</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            )
+        }
+        else
+            return null
+    }
+})
 
 class SelectizeUtils {
     // generic callback for all selectize objects
@@ -221,7 +275,7 @@ class SelectizeUtils {
 
     static selectizeRenderOption (item) {
         // This is how the list itself is displayed
-        return  <div className="simple-option" style={{display: "flex", alignItems: "center"}}>
+        return    <div className="simple-option" style={{display: "flex", alignItems: "center"}}>
                     <div className="memberaddform" style={{marginLeft: 10}}>
                         {item.label}
                     </div>
@@ -230,7 +284,7 @@ class SelectizeUtils {
 
     static selectizeNewRenderOption (item) {
         // This is how the list itself is displayed
-        return  <div className="simple-option" style={{display: "flex", alignItems: "center"}}>
+        return    <div className="simple-option" style={{display: "flex", alignItems: "center"}}>
                     <div className="memberaddform" style={{marginLeft: 10}}>
                         {!!item.newOption ? __("Ajouter") + " " + item.label + " ..." : item.label}
                     </div>
@@ -239,13 +293,13 @@ class SelectizeUtils {
 
     static selectizeRenderValue (item) {
         // When we select a value, this is how we display it
-        return  <div className="simple-value">
+        return    <div className="simple-value">
                     <span className="memberaddform" style={{marginLeft: 10, verticalAlign: "middle"}}>{item.label}</span>
                 </div>
     }
 
     static selectizeNoResultsFound () {
-        return  <div className="no-results-found" style={{fontSize: 15}}>
+        return    <div className="no-results-found" style={{fontSize: 15}}>
                     {__("Pas de résultat")}
                 </div>
     }
@@ -267,6 +321,7 @@ module.exports = {
     getAPIBaseURL: getAPIBaseURL,
     NavbarTitle: NavbarTitle,
     NavbarItems: NavbarItems,
+    NavbarRight: NavbarRight,
     Flags: Flags,
     Flag: Flag,
     SelectizeUtils: SelectizeUtils
