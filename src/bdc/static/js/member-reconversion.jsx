@@ -118,12 +118,16 @@ class MemberReconversionPage extends React.Component {
     render = () => {
         if (this.state.member) {
             if (this.state.member.company)
-                var memberName = (this.state.member.company)
+                var memberName = this.state.member.company
             else
                 var memberName = this.state.member.firstname + " " + this.state.member.lastname
+
+            var memberLogin = this.state.member.login
         }
-        else
+        else {
+            var memberLogin = null
             var memberName = null
+        }
 
         if (this.state.commisionAmount)
             var commisionAmount = this.state.commisionAmount + " €"
@@ -143,11 +147,23 @@ class MemberReconversionPage extends React.Component {
                     onValid={this.enableButton}
                     ref="memberreconversion">
                     <fieldset>
+                        <div className="form-group row member-login-row">
+                            <label
+                                className="control-label col-sm-3"
+                                htmlFor="memberretrait-eusko-numerique-fullname">
+                                {__("N° Adhérent")}
+                            </label>
+                            <div className="col-sm-6 memberretrait-eusko-numerique control-label text-align-left"
+                                 data-eusko="memberretrait-eusko-numerique-fullname">
+                                {memberLogin}
+                            </div>
+                            <div className="col-sm-3"></div>
+                        </div>
                         <div className="form-group row">
                             <label
                                 className="control-label col-sm-3"
                                 htmlFor="memberreconversion-fullname">
-                                {__("Nom complet")}
+                                {__("Nom")}
                             </label>
                             <div className="col-sm-6 memberreconversion control-label text-align-left"
                                  data-eusko="memberreconversion-fullname">

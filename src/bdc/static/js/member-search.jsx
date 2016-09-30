@@ -104,7 +104,7 @@ class MemberSearchPage extends React.Component {
             var searchResultsTable = (
                 <BootstrapTable data={this.state.searchResults} striped={true} hover={true} selectRow={selectRowProp}>
                     <TableHeaderColumn dataField="login" isKey={true} width="100">{__("N° adhérent")}</TableHeaderColumn>
-                    <TableHeaderColumn dataField="name">{__("Nom complet")}</TableHeaderColumn>
+                    <TableHeaderColumn dataField="name">{__("Nom")}</TableHeaderColumn>
                 </BootstrapTable>
             )
         }

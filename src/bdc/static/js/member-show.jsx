@@ -206,7 +206,7 @@ const MemberShow = React.createClass({
                                 </div>
                             </div>
                             <div className="form-group row">
-                                <label className="control-label col-sm-2">{__("Nom complet")}</label>
+                                <label className="control-label col-sm-2">{__("Nom")}</label>
                                 {memberName}
                                 <div className="col-sm-6">
                                 </div>

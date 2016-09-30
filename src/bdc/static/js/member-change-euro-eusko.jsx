@@ -162,9 +162,11 @@ class MemberChangeEuroEuskoPage extends React.Component {
 
         if (this.state.member) {
             var memberName = this.state.member.firstname + " " + this.state.member.lastname
+            var memberLogin = this.state.member.login
         }
         else {
             var memberName = null
+            var memberLogin = null
         }
 
         return (
@@ -175,11 +177,23 @@ class MemberChangeEuroEuskoPage extends React.Component {
                     onValid={this.validFields}
                     ref="memberchangeeuroeusko">
                     <fieldset>
+                        <div className="form-group row member-login-row">
+                            <label
+                                className="control-label col-sm-3"
+                                htmlFor="memberretrait-eusko-numerique-fullname">
+                                {__("N° Adhérent")}
+                            </label>
+                            <div className="col-sm-6 memberretrait-eusko-numerique control-label text-align-left"
+                                 data-eusko="memberretrait-eusko-numerique-fullname">
+                                {memberLogin}
+                            </div>
+                            <div className="col-sm-3"></div>
+                        </div>
                         <div className="form-group row">
                             <label
                                 className="control-label col-sm-3"
                                 htmlFor="memberchangeeuroeusko-fullname">
-                                {__("Nom complet")}
+                                {__("Nom")}
                             </label>
                             <div className="col-sm-6 memberchangeeuroeusko control-label text-align-left"
                                  data-eusko="memberchangeeuroeusko-fullname">
