@@ -104,7 +104,7 @@ class MemberChangePasswordPage extends React.Component {
                             data-eusko="changepassword-old_password"
                             value=""
                             label={__("Mot de passe actuel")}
-                            type="text"
+                            type="password"
                             placeholder={__("Votre mot de passe")}
                             validations="isExisty"
                             validationErrors={{
