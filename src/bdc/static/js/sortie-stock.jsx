@@ -56,7 +56,9 @@ class SortieStockPage extends React.Component {
             validFields: false,
             validCustomFields: false,
             porteur: '',
-            porteurList: ''
+            porteurList: '',
+            bdcName: '',
+            textareaDescription: this.props.textarea_description,
         }
 
         // Get porteurList data
@@ -64,6 +66,13 @@ class SortieStockPage extends React.Component {
             this.setState({porteurList: _.sortBy(porteurList, function(item){ return item.label })})
         }
         fetchAuth(getAPIBaseURL + "porteurs-eusko/", 'get', computePorteurListData)
+
+        // Get bdc name
+        var computeData = (data) => {
+            this.setState({bdcName: data,
+                           textareaDescription: this.state.textareaDescription.replace(" - _",  " - " + data)})
+        }
+        fetchAuth(getAPIBaseURL + "bdc-name/", 'get', computeData)
     }
 
     // porteur
@@ -195,7 +204,7 @@ class SortieStockPage extends React.Component {
                         </div>
                         <Textarea
                             name="description"
-                            value={this.props.textarea_description}
+                            value={this.state.textareaDescription}
                             data-eusko="sortiestock-description"
                             rows={3}
                             elementWrapperClassName={[{'col-sm-9': false}, 'col-sm-6']}
@@ -228,11 +237,12 @@ class SortieStockPage extends React.Component {
 
 var propURL = getAPIBaseURL + "sortie-stock/"
 var propTitle = "Sortie stock BDC"
+var propTextareaDescription = "Sortie stock - " + window.config.userName + " - _"
 var propTranslateTitle = __("Sortie stock BDC")
 var propTranslateButton = __("Enregistrer la sortie stock")
 
 ReactDOM.render(
-    <SortieStockPage url={propURL} textarea_description={propTitle} validate_button={propTranslateButton} />,
+    <SortieStockPage url={propURL} textarea_description={propTextareaDescription} validate_button={propTranslateButton} />,
     document.getElementById('sortie-stock')
 )
 
