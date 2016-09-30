@@ -60,8 +60,12 @@ class MemberSearchPage extends React.Component {
             return false;
         }
         else if (search) {
-            if (isMemberIdEusko('', search))
-                var searchString = '?login=' + search
+            var searchUpperCase = search.toUpperCase()
+
+            if ((searchUpperCase.startsWith("E", 0) ||
+                searchUpperCase.startsWith("Z", 0)) &&
+                search.length === 6)
+                var searchString = '?login=' + searchUpperCase
             else
                 var searchString = '?name=' + search
 
