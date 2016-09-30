@@ -170,9 +170,12 @@ var BankDepositPage = React.createClass({
         if (this.state.paymentMode &&
             this.state.paymentMode.value.toLowerCase() === 'euro-chq' &&
             this.state.historyTableData)
+        {
             this.setState({currentNumberCheques: this.state.historyTableData.length})
-        else
+        }
+        else {
             this.setState({currentNumberCheques: undefined})
+        }
 
         this.setState({currentAmount: currentAmount})
     },
@@ -349,29 +352,34 @@ var BankDepositPage = React.createClass({
 
         if (this.state.currentNumberCheques != undefined) {
             var divNumberCheques = (
-                <div className="col-md-2 col-sm-4">
-                    <span className="col-md-12 amount-history-label">
-                        {__("Nombre de chèques") + ": "}
-                        <span className="font-weight-normal">
-                            {this.state.currentNumberCheques}
+                <div className="row">
+                    <div className="col-md-2 col-sm-4">
+                        <span className="col-md-12 amount-history-label">
+                            {__("Nombre de chèques") + ": "}
+                            <span className="font-weight-normal">
+                                {this.state.currentNumberCheques}
+                            </span>
                         </span>
-                    </span>
+                    </div>
                 </div>
             )
         }
-        else
+        else {
             var divNumberCheques = null
+        }
 
         var statusRow = (
-            <div className="row margin-bottom">
+            <div>
                 {divNumberCheques}
-                <div className="col-md-2 col-sm-4">
-                    <span className="col-md-12 amount-history-label">
-                        {__("Montant total") + ": "}
-                        <span className="font-weight-normal">
-                            {currentAmountLabel}
+                <div className="row margin-bottom">
+                    <div className="col-md-2 col-sm-4">
+                        <span className="col-md-12 amount-history-label">
+                            {__("Montant total") + ": "}
+                            <span className="font-weight-normal">
+                                {currentAmountLabel}
+                            </span>
                         </span>
-                    </span>
+                    </div>
                 </div>
             </div>
         )
