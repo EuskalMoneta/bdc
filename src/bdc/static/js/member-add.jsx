@@ -72,6 +72,7 @@ class MemberAddPage extends React.Component {
             canSubmit: false,
             validFields: false,
             validCustomFields: false,
+            login: undefined,
             country: undefined,
             zip: undefined,
             zipSearch: undefined,
@@ -146,6 +147,10 @@ class MemberAddPage extends React.Component {
 
     onFormChange = (event, value) => {
         this.setState({[event]: value}, this.validateFormOnBlur)
+    }
+
+    onLoginChange = (event, value) => {
+        this.setState({[event]: value.toUpperCase()})
     }
 
     handleBirthChange = (date) => {
@@ -283,6 +288,7 @@ class MemberAddPage extends React.Component {
         data.country_id = this.state.country.value
         data.zip = this.state.zip.value
         data.town = this.state.town.value
+        data.login = this.state.login.toUpperCase()
 
         // We need to verify whether we are in "saisie libre" or not
         if (this.state.fkAsso) {
@@ -341,11 +347,12 @@ class MemberAddPage extends React.Component {
                         <Input
                             name="login"
                             data-eusko="memberaddform-login"
-                            value=""
+                            value={this.state.login ? this.state.login : ""}
                             label={__("N° adhérent")}
                             type="text"
                             placeholder={__("N° adhérent")}
                             help={__("Format: E12345")}
+                            onChange={this.onLoginChange}
                             validations="isMemberIdEusko"
                             validationErrors={{
                                 isMemberIdEusko: __("Ceci n'est pas un N° adhérent Eusko valide.")
@@ -509,7 +516,7 @@ class MemberAddPage extends React.Component {
                             label={__("N° téléphone")}
                             type="tel"
                             placeholder={__("N° téléphone")}
-                            validations="isValidPhoneNumber"
+                            validations={this.state.email ? false : "isValidPhoneNumber"}
                             validationErrors={{
                                 isValidPhoneNumber: __("Ceci n'est pas un N° téléphone valide. Evitez les points et les espaces.")
                             }}
@@ -524,7 +531,7 @@ class MemberAddPage extends React.Component {
                             label={__("Email")}
                             type="email"
                             placeholder={__("Email de l'adhérent")}
-                            validations="isEmail"
+                            validations={this.state.phone ? false : "isEmail"}
                             validationErrors={{
                                 isEmail: __("Adresse email non valide")
                             }}
