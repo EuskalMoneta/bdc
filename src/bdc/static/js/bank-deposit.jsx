@@ -352,13 +352,15 @@ var BankDepositPage = React.createClass({
 
         if (this.state.currentNumberCheques != undefined) {
             var divNumberCheques = (
-                <div className="row">
-                    <div className="col-md-2 col-sm-4">
-                        <span className="col-md-12 amount-history-label">
-                            {__("Nombre de chèques") + ": "}
-                            <span className="font-weight-normal">
-                                {this.state.currentNumberCheques}
-                            </span>
+                <div className="form-group row">
+                    <label
+                        className="control-label col-sm-3"
+                        htmlFor="bank-deposit-deposit_amount">
+                        {__("Nombre de chèques") + ": "}
+                    </label>
+                    <div className="col-sm-8 bank-deposit deposit-amount-div" data-eusko="bank-deposit-deposit_bank">
+                        <span className="deposit-amount-span">
+                            {this.state.currentNumberCheques}
                         </span>
                     </div>
                 </div>
@@ -370,7 +372,6 @@ var BankDepositPage = React.createClass({
 
         var statusRow = (
             <div>
-                {divNumberCheques}
                 <div className="row margin-bottom">
                     <div className="col-md-2 col-sm-4">
                         <span className="col-md-12 amount-history-label">
@@ -517,7 +518,7 @@ var BankDepositPage = React.createClass({
                                 label={__("Montant")}
                                 type="number"
                                 placeholder={__("Montant du dépôt")}
-                                validations="isPositiveNumeric"
+                                validaions="isPositiveNumeric"
                                 validationErrors={{
                                     isPositiveNumeric: __("Montant invalide.")
                                 }}
@@ -528,6 +529,7 @@ var BankDepositPage = React.createClass({
                                 required={this.state.displayCustomAmount}
                                 disabled={!this.state.displayCustomAmount}
                             />
+                            {divNumberCheques}
                             <div className="form-group row">
                                 <label
                                     className="control-label col-sm-3"
