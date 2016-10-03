@@ -117,6 +117,7 @@ class MemberChangeEuroEuskoPage extends React.Component {
 
         data.member_login = this.state.member.login
         data.payment_mode = this.state.paymentMode.cyclos_id
+        data.payment_mode_name = this.state.paymentMode.label
 
         var computeForm = (data) => {
             this.refs.container.success(
