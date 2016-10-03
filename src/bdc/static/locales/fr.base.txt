@@ -1,0 +1,108 @@
+10 (cotisation classique)
+20 ou plus (cotisation de soutien)
+5 (bas revenus)
+Adhérents
+Adresse email non valide
+À jour
+Ajouter
+Attention, il manque %%% € dans le dépôt !
+Attention, il y a %%% € de trop dans le dépôt !
+Aucun parrain
+Banque
+Banque de dépôt
+Bordereau
+Caisse € — Euros des changes et cotisations
+Caisse eusko — Eusko des cotisations
+Ce champ ne peut pas faire plus de 45 caractères!
+Ceci n'est pas un N° adhérent Eusko valide.
+Ceci n'est pas un N° téléphone valide. Evitez les points et les espaces.
+Change
+Change € - Eusko
+Chèques
+Choix Association 3% #1
+Choix Association 3% #2
+Civilité
+Code Postal
+Confirmation de votre nouveau mot de passe
+Confirmer le nouveau mot de passe
+Cotisation
+Création d'un adhérent
+Date de naissance
+Dépot en banque
+Description
+Email
+Email de l'adhérent
+Enregistrement d'une cotisation
+Enregistrer la cotisation
+Enregistrer la reconversion
+Enregistrer la sortie stock
+Enregistrer le change
+Enregistrer le mot de passe
+Entrée stock BDC
+Espèces
+Euros versés au prestataire (95%)
+Fiche adhérent
+Format: E12345
+Frais de commission (5%)
+Historique
+Historique caisse Euro
+Historique caisse Eusko
+Historique retour Eusko
+Historique stock billets
+Identifiant Bureau de Change
+Identifiants incorrects !
+Je ne connais pas le n° du bordereau
+La création de l'adhérent s'est déroulée correctement.
+L'adhérent recevra un à deux mails par semaine.
+L'enregistrement de la cotisation s'est déroulée correctement.
+Les mots de passe ne correspondent pas.
+Madame
+Me déconnecter
+Monsieur
+Montant de la cotisation
+Montant de la reconversion
+Montant de l'enregistrement
+Montant du change
+Montant du dépot
+Montant du dépôt
+Montant du retrait
+Montant personnalisé
+Montant personnalisé incorrect, choisissez un montant dans la liste ou un montant supérieur à 20 (€ ou euskos)
+Montant total
+Mot de passe
+Mot de passe actuel
+Mot de passe invalide.
+N° bordereau invalide.
+N° de facture invalide.
+N° du bordereau de remise
+N° facture
+Nombre de chèques
+Non
+Nouveau mot de passe
+Nouvel adhérent
+N° téléphone
+Oui
+Paiement
+parrain
+parrains
+Pas à jour
+Pas d'historique à afficher.
+Pays
+Porteur
+Prénom
+Recherche d'un adhérent
+Retours d'eusko — Eusko retournés pour être reconvertis en €
+Saisir Nom, Prénom ou N°adhérent (Format E12345)
+Se connecter
+Sortie caisse eusko
+Sortie retours d'eusko
+Sortie stock BDC
+Souhaite être informé des actualités liées à l'eusko
+Stock de billets — Eusko disponibles pour le change
+Taper 4 chiffres minimum ...
+Une erreur s'est produite lors de la création de l'adhérent !
+Une erreur s'est produite lors de l'enregistrement de la cotisation !
+Ville
+Votre mot de passe
+Votre nouveau mot de passe
+Vous devez fournir une description.
