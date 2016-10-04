@@ -14,13 +14,13 @@ var parseJSON = (response) => {
 
 var storeToken = (data) => {
     // Save data to sessionStorage
-    sessionStorage.setItem('api-token-auth', data.token)
+    sessionStorage.setItem('bdc-api-token-auth', data.token)
     return data.token
 }
 
 var getToken = () => {
     // Get saved data from sessionStorage
-    return sessionStorage.getItem('api-token-auth')
+    return sessionStorage.getItem('bdc-api-token-auth')
 }
 
 var fetchCustom = (url, method, promise, token, data, promiseError=null) => {
@@ -52,7 +52,7 @@ var fetchCustom = (url, method, promise, token, data, promiseError=null) => {
 }
 
 var fetchGetToken = (username, password, promiseSuccess, promiseError) => {
-    sessionStorage.removeItem('api-token-auth')
+    sessionStorage.removeItem('bdc-api-token-auth')
 
     fetch(getAPIBaseURL + 'api-token-auth/',
     {
