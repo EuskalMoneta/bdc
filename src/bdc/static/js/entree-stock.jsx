@@ -1,17 +1,9 @@
 import {
     fetchAuth,
     getAPIBaseURL,
-    isPositiveNumeric,
     NavbarTitle,
-    SelectizeUtils,
     getCurrentLang
 } from 'Utils'
-
-const {
-    Input,
-    Checkbox,
-    Row
-} = FRC
 
 import {
     BootstrapTable,
@@ -19,38 +11,12 @@ import {
 } from 'react-bootstrap-table'
 import 'node_modules/react-bootstrap-table/dist/react-bootstrap-table.min.css'
 
-import ReactSelectize from 'react-selectize'
-const SimpleSelect = ReactSelectize.SimpleSelect
-
 import classNames from 'classnames'
 
 const {
     ToastContainer
 } = ReactToastr
 const ToastMessageFactory = React.createFactory(ReactToastr.ToastMessage.animation)
-
-Formsy.addValidationRule('isPositiveNumeric', isPositiveNumeric)
-
-const EntreeStockForm = React.createClass({
-
-    mixins: [FRC.ParentContextMixin],
-
-    propTypes: {
-        children: React.PropTypes.node
-    },
-
-    render() {
-        return (
-            <Formsy.Form
-                className={this.getLayoutClassName()}
-                {...this.props}
-                ref="entree-stock"
-            >
-                {this.props.children}
-            </Formsy.Form>
-        );
-    }
-});
 
 var EntreeStockPage = React.createClass({
 
