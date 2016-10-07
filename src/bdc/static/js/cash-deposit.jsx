@@ -59,6 +59,8 @@ var CashDepositPage = React.createClass({
             canSubmit: false,
             historyTableData: undefined,
             historyTableSelectedRows: Array(),
+            porteur: undefined,
+            porteurList: Array(),
             depositCalculatedAmount: Number(0),
         }
     },
@@ -69,6 +71,12 @@ var CashDepositPage = React.createClass({
             this.setState({historyTableData: historyTableData.result.pageItems})
         }
         fetchAuth(this.props.getHistory, 'get', computeHistoryTableData)
+
+        // Get porteurList data
+        var computePorteurListData = (porteurList) => {
+            this.setState({porteurList: _.sortBy(porteurList, function(item){ return item.label })})
+        }
+        fetchAuth(getAPIBaseURL + "porteurs-eusko/", 'get', computePorteurListData)
     },
 
     onSelectTableRow(row, isSelected, event) {
@@ -111,6 +119,11 @@ var CashDepositPage = React.createClass({
         }
     },
 
+    // porteur
+    porteurOnValueChange(item) {
+        this.setState({porteur: item}, this.validateForm)
+    },
+
     enableButton() {
         this.setState({canSubmit: true})
     },
@@ -130,10 +143,14 @@ var CashDepositPage = React.createClass({
         this.disableButton()
 
         var postData = {}
-        postData.mode = this.props.mode
         postData.login_bdc = window.config.userName
         postData.deposit_amount = this.state.depositCalculatedAmount
         postData.selected_payments = this.state.historyTableSelectedRows
+
+        if (this.props.mode == "sortie-retour-eusko")
+            postData.porteur = this.state.porteur.value
+        else
+            postData.mode = this.props.mode
 
         var computeForm = (data) => {
             this.refs.container.success(
@@ -205,6 +222,38 @@ var CashDepositPage = React.createClass({
         else
             var dataTable = null;
 
+        if (this.props.mode == "sortie-retour-eusko")
+        {
+            var divPorteur = (
+                <div className="form-group row">
+                    <label
+                        className="control-label col-sm-4"
+                        data-required="true"
+                        htmlFor="cash-deposit-porteur">
+                        {__("Porteur")}
+                        <span className="required-symbol">&nbsp;*</span>
+                    </label>
+                    <div className="col-sm-8" data-eusko="cash-deposit-porteur">
+                        <SimpleSelect
+                            ref="select"
+                            value={this.state.porteur}
+                            options={this.state.porteurList}
+                            placeholder={__("Porteur")}
+                            theme="bootstrap3"
+                            onValueChange={this.porteurOnValueChange}
+                            renderOption={SelectizeUtils.selectizeRenderOption}
+                            renderValue={SelectizeUtils.selectizeRenderValue}
+                            onBlur={this.validateForm}
+                            renderNoResultsFound={SelectizeUtils.selectizeNoResultsFound}
+                            required
+                        />
+                    </div>
+                </div>
+            )
+        }
+        else
+            var divPorteur = null;
+
         return (
             <div className="row">
                 <div className="col-md-3 history-form">
@@ -226,6 +275,7 @@ var CashDepositPage = React.createClass({
                                     </span>
                                 </div>
                             </div>
+                            {divPorteur}
                         </fieldset>
                         <fieldset>
                             <Row layout="horizontal">
