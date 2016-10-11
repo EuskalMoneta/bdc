@@ -69,10 +69,10 @@ var EntreeStockPage = React.createClass({
     },
 
     validateForm() {
-        if (this.state.historyTableSelectedRows == Array())
-            this.disableButton()
-        else
+        if (this.state.historyTableSelectedRows.length > 0)
             this.enableButton()
+        else
+            this.disableButton()
     },
 
     submitForm(data) {
