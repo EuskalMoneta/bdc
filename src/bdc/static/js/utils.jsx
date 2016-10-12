@@ -39,7 +39,7 @@ var fetchCustom = (url, method, promise, token, data, promiseError=null) => {
         }
     }
 
-    if (method.toLowerCase() != 'get') {
+    if (method.toLowerCase() != 'get' && data != null) {
         payload.body = JSON.stringify(data)
     }
 
