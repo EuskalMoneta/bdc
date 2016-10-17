@@ -6,7 +6,8 @@
   "scripts": {
     "build": "webpack --config webpack.config.js --progress --colors",
     "build-production": "webpack --config webpack.prod.config.js --progress --colors",
-    "watch": "webpack --config webpack.config.js --watch"
+    "watch": "webpack --config webpack.config.js --watch",
+    "test": "./node_modules/.bin/mocha \"tests/*.js\""
   },
   "author": "META-IT",
   "license": "UNLICENSED",
@@ -28,6 +29,7 @@
     "i18n-webpack-plugin": "^0.3.0",
     "imports-loader": "^0.6.5",
     "less": "^2.7.1",
+    "mocha": "^3.1.2",
     "moment": "^2.15.1",
     "node-sass": "^3.10.0",
     "raven-js": "^3.7.0",
@@ -42,6 +44,7 @@
     "react-spinjs": "^3.0.0",
     "react-toastr": "^2.8.1",
     "sass-loader": "^4.0.2",
+    "selenium-webdriver": "^3.0.0-beta-3",
     "style-loader": "^0.13.1",
     "svg-url-loader": "^1.1.0",
     "underscore": "^1.8.3",

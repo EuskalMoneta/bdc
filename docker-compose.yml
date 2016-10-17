@@ -3,6 +3,7 @@ version: '2'
 services:
   bdc:
     build: src/bdc
+    container_name: bdc
     volumes:
       - ./src/bdc:/usr/src/app
       - /usr/src/app/node_modules
