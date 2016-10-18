@@ -204,7 +204,7 @@ class MemberChangeEuroEuskoPage extends React.Component {
                         </div>
                         <Input
                             name="amount"
-                            data-eusko="entreestock-amount"
+                            data-eusko="memberchangeeuroeusko-amount"
                             value=""
                             label={__("Montant")}
                             type="number"
