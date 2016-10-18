@@ -22,7 +22,9 @@ def driver(request):
                               command_executor=SELENIUM_URL)
     driver.wait = WebDriverWait(driver, 20)
     driver.long_wait = WebDriverWait(driver, 60)
-    return driver
+    yield driver
+    print("teardown driver")
+    driver.close()
 
 
 class TestSuite:
