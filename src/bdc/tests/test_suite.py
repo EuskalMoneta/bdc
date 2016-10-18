@@ -133,7 +133,7 @@ class TestSuite:
 
         # wait until memberaddsubscription-amount field is present
         try:
-            driver.long_wait.until(ec.presence_of_element_located(
+            driver.wait.until(ec.presence_of_element_located(
                 (By.XPATH, '//div[@data-eusko="memberaddsubscription-amount"]')))
         except:
             driver.close()
@@ -157,19 +157,20 @@ class TestSuite:
 
         # toast div is in id="toast-container"
         try:
-            driver.long_wait.until(ec.presence_of_element_located((By.ID, 'toast-container')))
+            driver.wait.until(ec.presence_of_element_located((By.ID, 'toast-container')))
         except:
             driver.close()
             assert False, 'Could not locate element "id=toast-container" (toast parent div for member add page)!'
 
         # assert div with class="toast-succes" is present : member subscription add is OK!
         try:
-            driver.long_wait.until(ec.presence_of_element_located((By.CLASS_NAME, 'toast-success')))
+            driver.wait.until(ec.presence_of_element_located((By.CLASS_NAME, 'toast-success')))
         except:
             driver.close()
             assert False, 'Could not locate element "class=toast-success" (toast success confirm for member add page)!'  # noqa
 
     def test_5_member_show(self, driver):
+        # driver.get('{}/members/2554'.format(BASE_URL))
         try:
             # assert element data-eusko="member-show-login" is present
             driver.wait.until(ec.presence_of_element_located((By.XPATH, '//span[@data-eusko="member-show-login"]')))
@@ -188,7 +189,7 @@ class TestSuite:
                 (By.XPATH, '//input[@data-eusko="memberchangeeuroeusko-amount"]')))
         except:
             driver.close()
-            assert False, 'Could not locate element data-eusko="memberchangeeuroeusko-amount" (in member change page)!'
+            assert False, 'Could not locate element data-eusko="memberchangeeuroeusko-amount" (in member change page)!'  # noqa
 
         # change_euro_eusko amount
         driver.find_element_by_xpath('//input[@data-eusko="memberchangeeuroeusko-amount"]').send_keys('10')
@@ -203,14 +204,65 @@ class TestSuite:
 
         # toast div is in id="toast-container"
         try:
-            driver.long_wait.until(ec.presence_of_element_located((By.ID, 'toast-container')))
+            driver.wait.until(ec.presence_of_element_located((By.ID, 'toast-container')))
         except:
             driver.close()
             assert False, 'Could not locate element "id=toast-container" (toast parent div for member change page)!'
 
         # assert div with class="toast-succes" is present : member change_euro_eusko is OK!
         try:
-            driver.long_wait.until(ec.presence_of_element_located((By.CLASS_NAME, 'toast-success')))
+            driver.wait.until(ec.presence_of_element_located((By.CLASS_NAME, 'toast-success')))
         except:
             driver.close()
             assert False, 'Could not locate element "class=toast-success" (toast success confirm for member change page)!'  # noqa
+
+    def test_9_member_change_password(self, driver):
+        driver.find_element_by_class_name('dropdown-toggle').click()
+        driver.find_element_by_link_text('Changer mon mot de passe').click()
+
+        try:
+            driver.wait.until(ec.presence_of_element_located((By.NAME, 'old_password')))
+        except:
+            driver.close()
+            assert False, 'Could not locate element "name=old_password" (old_password field in change password page)!'
+
+        driver.find_element_by_name('old_password').send_keys('B001')
+        driver.find_element_by_name('new_password').send_keys('b001')
+        driver.find_element_by_name('confirm_password').send_keys('b001')
+
+        # submit form
+        driver.find_element_by_class_name('btn-success').click()
+
+        # toast div is in id="toast-container"
+        try:
+            driver.wait.until(ec.presence_of_element_located((By.ID, 'toast-container')))
+        except:
+            driver.close()
+            assert False, 'Could not locate element "id=toast-container" (toast parent div for member change page)!'
+
+        # assert div with class="toast-succes" is present : member change_euro_eusko is OK!
+        try:
+            driver.wait.until(ec.presence_of_element_located((By.CLASS_NAME, 'toast-success')))
+        except:
+            driver.close()
+            assert False, 'Could not locate element "class=toast-success" (toast success confirm for member change page)!'  # noqa
+
+    def test_9zzz_member_logout(self, driver):
+        # wait until searchValue field is present (the page have successfully changed if its the case)
+        try:
+            driver.long_wait.until(ec.presence_of_element_located((By.NAME, 'searchValue')))
+        except:
+            driver.close()
+            assert False, 'Could not locate element "name=searchValue" (search field in member search page)!'
+
+        driver.find_element_by_class_name('dropdown-toggle').click()
+        driver.find_element_by_link_text('Me déconnecter').click()
+
+        # wait until username field is present (the page have successfully changed if its the case)
+        try:
+            driver.wait.until(ec.presence_of_element_located((By.NAME, 'username')))
+        except:
+            driver.close()
+            assert False, 'Could not locate element "name=username" (username field in member login)!'
+
+        assert '/login' in driver.current_url
