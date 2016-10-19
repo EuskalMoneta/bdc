@@ -10,7 +10,7 @@ services:
     ports:
       - 8001:8000
     environment:
-      - API_PUBLIC_URL=http://api:8000
+      - API_PUBLIC_URL=http://localhost:8000
       - API_INTERNAL_URL=http://api:8000
       - DJANGO_DEBUG=True
     networks:
