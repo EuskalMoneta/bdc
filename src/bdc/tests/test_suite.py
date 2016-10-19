@@ -238,14 +238,14 @@ class TestSuite:
             driver.wait.until(ec.presence_of_element_located((By.ID, 'toast-container')))
         except:
             driver.close()
-            assert False, 'Could not locate element "id=toast-container" (toast parent div for member change page)!'
+            assert False, 'Could not locate element "id=toast-container" (toast parent div for member change password page)!'  # noqa
 
         # assert div with class="toast-succes" is present : member change_euro_eusko is OK!
         try:
             driver.wait.until(ec.presence_of_element_located((By.CLASS_NAME, 'toast-success')))
         except:
             driver.close()
-            assert False, 'Could not locate element "class=toast-success" (toast success confirm for member change page)!'  # noqa
+            assert False, 'Could not locate element "class=toast-success" (toast success confirm for member change password page)!'  # noqa
 
     def test_9zzz_member_logout(self, driver):
         # wait until searchValue field is present (the page have successfully changed if its the case)
