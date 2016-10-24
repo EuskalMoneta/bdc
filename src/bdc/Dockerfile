@@ -1,4 +1,13 @@
-FROM django:onbuild
+FROM python:3.5-onbuild
+
+# This apt-get thing is from the now deprecated django docker image
+RUN apt-get update && apt-get install -y \
+    gcc \
+    gettext \
+    mysql-client libmysqlclient-dev \
+    postgresql-client libpq-dev \
+    sqlite3 \
+  --no-install-recommends && rm -rf /var/lib/apt/lists/*
 
 # Installing node / npm in Debian (following official nodejs Dockerfile https://github.com/nodejs/docker-node):
 
@@ -18,7 +27,7 @@ RUN set -ex \
   done
 
 ENV NPM_CONFIG_LOGLEVEL info
-ENV NODE_VERSION 6.6.0
+ENV NODE_VERSION 6.9.1
 
 RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz" \
   && curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
@@ -31,3 +40,7 @@ RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-
 # Install of nodejs / npm is ok now, we can install our dependencies
 RUN npm install \
   && npm run build
+
+EXPOSE 8000
+
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
