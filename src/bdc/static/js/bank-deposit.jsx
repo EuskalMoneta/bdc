@@ -303,6 +303,9 @@ var BankDepositPage = React.createClass({
         postData.bordereau = this.state.bordereau
         postData.selected_payments = this.state.historyTableSelectedRows
 
+        if (this.state.paymentMode.value == 'Euro-CHQ')
+            postData.deposit_amount = this.state.depositCalculatedAmount
+
         var computeForm = (data) => {
             this.refs.container.success(
                 __("L'enregistrement s'est déroulé correctement."),
