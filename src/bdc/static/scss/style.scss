@@ -1,0 +1,317 @@
+/* Base variable */
+
+$font-stack: "Lato","Helvetica Neue",Helvetica,Arial,sans-serif;
+
+/* Custom styles */
+
+.lang-select {
+  cursor: pointer;
+}
+
+.lang-select-flag-fr {
+  height: 14px;
+  width: 20px;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+textarea {
+  resize: none;
+}
+
+.container-eusko {
+  margin-top: 80px;
+  margin-bottom: 80px;
+}
+
+.navbar-header a:hover, .navbar-bdc-name, .navbar-bdc-name:hover {
+  cursor: default;
+  color: #fff !important;
+}
+
+.toast-top-right-navbar {
+  margin-top: 90px;
+}
+
+.footer {
+  border-top: solid 1px #CCCCCC;
+  background-color: #f9f6f6;
+  text-align: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+.margin-top {
+  margin-top: 20px;
+}
+
+.margin-right {
+  margin-right: 5px;
+}
+
+.margin-bottom {
+  margin-bottom: 20px;
+}
+
+.font-weight-normal {
+  font-weight: normal;
+}
+
+.btn-default {
+  background-color: #ffffff;
+  color: #95a5a6;
+  border-color: #95a5a6;
+}
+
+.btn-default:hover {
+  background-color: #95a5a6;
+  color: #ffffff;
+  border-color: #95a5a6;
+}
+
+.btn-inverse {
+  color: red;
+  background-color: white;
+}
+
+.btn-info-inverse, .btn-info-inverse:hover, .btn-info-inverse:active,  .btn-info-inverse:focus {
+  color: #3498db;
+  border-color: #3498db;
+  background-color: white;
+}
+
+/* MemberShow */
+.member-show-panel {
+  label {
+    text-align: right;
+  }
+}
+
+.member-status-text {
+  margin-right: 5px;
+}
+
+.member-status-date {
+  font-size: 15px;
+}
+
+.font-member-status {
+  font-size: 20px;
+  vertical-align: middle;
+}
+
+.member-status-ok {
+  color: #128f76;
+  vertical-align: -1px;
+  margin-right: 5px;
+}
+
+.member-status-nok {
+  color: #e74c3c;
+  vertical-align: -2px;
+  margin-right: 5px;
+}
+
+.member-show-status {
+  padding-top: 10px;
+  padding-right: 15px;
+  padding-bottom: 10px;
+  padding-left: 15px;
+  vertical-align: middle;
+}
+
+.member-show-div-margin-left {
+  margin-left: 50px;
+}
+
+/* MemberAddForm */
+// Adjust size for the "birthdate" field
+.memberaddform-birth {
+  .react-datepicker__input-container {
+    display: block;
+  }
+}
+
+// Set the correct font for the react-selectize fields
+.react-selectize.root-node {
+  width: 100% !important;
+}
+
+.memberaddform {
+  .react-selectize-placeholder {
+    font-size: 16px;
+    font-family: $font-stack;
+    line-height: 1.42857143;
+  }
+}
+
+.memberaddsubscription {
+  .react-selectize-placeholder {
+    font-size: 16px;
+    font-family: $font-stack;
+    line-height: 1.42857143;
+  }
+}
+
+.memberaddform {
+  font-size: 16px;
+  font-family: $font-stack;
+  line-height: 1.42857143;
+}
+
+.has-error .form-control {
+  border-color: #d9534f;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+}
+
+.has-error-value {
+  color: #d9534f;
+}
+
+.has-error .form-control {
+  .react-selectize-control {
+    border-color: #d9534f !important;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+  }
+}
+
+/* login */
+
+.login-div {
+  background-color: #eee;
+  padding-top: 50px;
+}
+
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+  margin-top: 25px;
+}
+
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 10px;
+}
+
+.member-login-row {
+  margin-bottom: 5px;
+}
+
+.form-signin .checkbox {
+  font-weight: normal;
+}
+
+.form-signin .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.form-signin .form-control:focus { z-index: 2; }
+
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+/* search members */
+
+.search-no-results {
+  margin-top: 30px;
+  position: relative;
+  font-style: italic;
+  color: #BDBDBD;
+}
+
+.react-bs-container-body {
+  td {
+    cursor: pointer;
+  }
+}
+
+/* manager/history */
+
+.amount-history-label {
+  margin-bottom: 0;
+  padding-top: 11px;
+  font-weight: bold;
+}
+
+.solde-history-label {
+  text-align: right;
+  margin-bottom: 0;
+  padding-top: 11px;
+  font-weight: bold;
+}
+
+.solde-history-span {
+  font-weight: normal;
+}
+
+.react-selectize-manager-history {
+  background-color: white;
+}
+
+.react-bs-table-account-history {
+  margin-top: 0px !important;
+  margin-right: 10px !important;
+  margin-left: 0px !important;
+  margin-bottom: 0px !important;
+}
+
+.react-bs-table-account-history {
+  .react-bs-table-no-data {
+    font-style: oblique;
+  }
+}
+
+/* cash-deposit  */
+
+.cash-deposit-amount-div {
+  padding-top: 11px;
+}
+
+/* bank-deposit  */
+
+.deposit-amount-div {
+  padding-top: 20px;
+}
+
+.alert-deposit-amount-difference {
+  margin-bottom: 0px;
+}
+
+/* divers */
+
+.text-align-left {
+  text-align: left !important;
+}
+
+.hidden {
+  display: none;
+}
+
+.show-dropdown-menu {
+  visibility: visible;
+  display: block;
+}

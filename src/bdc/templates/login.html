@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block container %}
+    <div class="container container-eusko">
+        <div class="row">
+            <div class="col-lg-12" id="login"></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+  {% with 'bundles/js/'|add:CURRENT_LANG|add:'.Login.js' as login_js_static %}
+    <script src="{% static login_js_static %}"></script>
+  {% endwith %}
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load staticfiles i18n %}
+{% get_current_language as CURRENT_LANG %}
+
+{% block container %}
+    <div class="container-fluid container-eusko">
+        <input type="hidden" id="account_name" value="{{ account_name }}">
+        <div class="row">
+            <div id="manager-history"></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+  {% with 'bundles/js/'|add:CURRENT_LANG|add:'.ManagerHistory.js' as managerhistory_js_static %}
+    <script src="{% static managerhistory_js_static %}"></script>
+  {% endwith %}
+{% endblock %}

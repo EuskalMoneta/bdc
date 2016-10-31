@@ -1,0 +1,20 @@
+version: '2'
+
+services:
+  bdc:
+    build: src/bdc
+    volumes:
+      - ./src/bdc:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - 8001:8000
+    environment:
+      - API_PUBLIC_URL=http://localhost:8000
+      - API_INTERNAL_URL=http://api:8000
+    networks:
+      - eusko_net
+
+networks:
+  eusko_net:
+    external:
+      name: api_eusko_net
