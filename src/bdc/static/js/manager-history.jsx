@@ -100,7 +100,7 @@ var ManagerHistoryPage = React.createClass({
                         <a href="/manager/bank-deposit" className="btn btn-info">{__("Dépôt en banque")}</a>
                     </div>
                     <div className="col-md-offset-1 col-md-2 col-sm-4">
-                        <a href="/manager/cash-deposit" className="btn btn-default">{__("Remise d'espèces")}</a>
+                        <a href="/manager/cash-deposit" className="btn btn-default">{__("Remise de monnaie à Euskal Moneta")}</a>
                     </div>
                     <div className="col-md-offset-1 col-md-2 col-sm-4">
                         <label className="control-label col-md-12 solde-history-label">
