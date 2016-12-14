@@ -146,11 +146,10 @@ var CashDepositPage = React.createClass({
         postData.login_bdc = window.config.userName
         postData.deposit_amount = this.state.depositCalculatedAmount
         postData.selected_payments = this.state.historyTableSelectedRows
+        postData.mode = this.props.mode
 
-        if (this.props.mode == "sortie-retour-eusko")
+        if (this.props.mode == "sortie-retour-eusko" || this.props.mode == "sortie-caisse-eusko")
             postData.porteur = this.state.porteur.value
-        else
-            postData.mode = this.props.mode
 
         var computeForm = (data) => {
             this.refs.container.success(
@@ -222,7 +221,7 @@ var CashDepositPage = React.createClass({
         else
             var dataTable = null;
 
-        if (this.props.mode == "sortie-retour-eusko")
+        if (this.props.mode == "sortie-retour-eusko" || this.props.mode == "sortie-caisse-eusko")
         {
             var divPorteur = (
                 <div className="form-group row">
