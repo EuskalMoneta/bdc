@@ -147,7 +147,7 @@ var ManagerHistoryPage = React.createClass({
             var dateFormatter = (cell, row) => {
                 // Force moment i18n
                 moment.locale(getCurrentLang)
-                return moment(cell).format('LLLL')
+                return moment(cell).format('DD/MM/YYYY HH:mm')
             }
 
             var amountFormatter = (cell, row) => {
@@ -155,20 +155,35 @@ var ManagerHistoryPage = React.createClass({
                 // we need to cast it in a Number object to use the toFixed method.
                 return Number(cell).toFixed(2)
             }
-
-            var historyTable = (
-                <BootstrapTable
-                 data={this.state.historyList} striped={true} hover={true} pagination={true}
-                 selectRow={{mode: 'none'}} tableContainerClass="react-bs-table-account-history"
-                 options={{noDataText: __("Pas d'historique à afficher."), hideSizePerPage: true, sizePerPage: 20}}
-                 >
-                    <TableHeaderColumn isKey={true} hidden={true} dataField="id">{__("ID")}</TableHeaderColumn>
-                    <TableHeaderColumn dataField="date" dataFormat={dateFormatter}>{__("Date")}</TableHeaderColumn>
-                    <TableHeaderColumn dataField="description">{__("Libellé")}</TableHeaderColumn>
-                    <TableHeaderColumn dataField="amount" dataFormat={amountFormatter}>{__("Montant")}</TableHeaderColumn>
-                    <TableHeaderColumn dataField="solde">{__("Solde")}</TableHeaderColumn>
-                </BootstrapTable>
-            )
+            if (this.props.mode == 'stock_de_billets_bdc') {
+                var historyTable = (
+                    <BootstrapTable
+                     data={this.state.historyList} striped={true} hover={true} pagination={true}
+                     selectRow={{mode: 'none'}} tableContainerClass="react-bs-table-account-history"
+                     options={{noDataText: __("Pas d'historique à afficher."), hideSizePerPage: true, sizePerPage: 20}}
+                     >
+                        <TableHeaderColumn isKey={true} hidden={true} dataField="id">{__("ID")}</TableHeaderColumn>
+                        <TableHeaderColumn dataField="date" dataFormat={dateFormatter}>{__("Date")}</TableHeaderColumn>
+                        <TableHeaderColumn dataField="description">{__("Libellé")}</TableHeaderColumn>
+                        <TableHeaderColumn dataField="amount" dataFormat={amountFormatter}>{__("Montant")}</TableHeaderColumn>
+                    </BootstrapTable>
+                )
+            }
+            else {
+                var historyTable = (
+                    <BootstrapTable
+                     data={this.state.historyList} striped={true} hover={true} pagination={true}
+                     selectRow={{mode: 'none'}} tableContainerClass="react-bs-table-account-history"
+                     options={{noDataText: __("Pas d'historique à afficher."), hideSizePerPage: true, sizePerPage: 20}}
+                     >
+                        <TableHeaderColumn isKey={true} hidden={true} dataField="id">{__("ID")}</TableHeaderColumn>
+                        <TableHeaderColumn dataField="date" dataFormat={dateFormatter}>{__("Date")}</TableHeaderColumn>
+                        <TableHeaderColumn dataField="description">{__("Libellé")}</TableHeaderColumn>
+                        <TableHeaderColumn dataField="amount" dataFormat={amountFormatter}>{__("Montant")}</TableHeaderColumn>
+                        <TableHeaderColumn dataField="solde">{__("Solde")}</TableHeaderColumn>
+                    </BootstrapTable>
+                )
+            }
         }
         else
             var historyTable = null;
