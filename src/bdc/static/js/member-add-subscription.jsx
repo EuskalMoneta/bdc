@@ -284,7 +284,7 @@ class MemberSubscriptionPage extends React.Component {
                                 className={buttonClassiqueClass}
                                 onClick={() => this.setAmount({amount: '10', customAmount: undefined, displayCustomAmount: false,
                                            buttonBasRevenusActivated: false, buttonClassiqueActivated: true, buttonSoutienActivated: false})}>
-                                {__('10 (cotisation classique)')}
+                                {__('10 (cotisation normale)')}
                             </button>
                             {' '}
                             <button
