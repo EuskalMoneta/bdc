@@ -99,7 +99,7 @@ class MemberDepotEuskoNumeriquePage extends React.Component {
 
             console.error(this.props.url, err)
             this.refs.container.error(
-                __("Une erreur s'est produite lors de l'enregistrement !"),
+                __("Une erreur s'est produite lors de l'enregistrement, vérifiez si le solde est bien disponible !"),
                 "",
                 {
                     timeOut: 5000,
