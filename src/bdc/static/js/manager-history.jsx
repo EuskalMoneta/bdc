@@ -164,7 +164,7 @@ var ManagerHistoryPage = React.createClass({
                  >
                     <TableHeaderColumn isKey={true} hidden={true} dataField="id">{__("ID")}</TableHeaderColumn>
                     <TableHeaderColumn dataField="date" dataFormat={dateFormatter}>{__("Date")}</TableHeaderColumn>
-                    <TableHeaderColumn dataField="description">{__("Libellé")}</TableHeaderColumn>
+                    <TableHeaderColumn columnClassName="line-break" dataField="description">{__("Libellé")}</TableHeaderColumn>
                     <TableHeaderColumn dataField="amount" dataFormat={amountFormatter}>{__("Montant")}</TableHeaderColumn>
                     <TableHeaderColumn dataField="solde">{__("Solde")}</TableHeaderColumn>
                 </BootstrapTable>
