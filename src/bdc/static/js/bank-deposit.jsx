@@ -59,6 +59,7 @@ var BankDepositPage = React.createClass({
             canSubmit: false,
             historyTableInitData: undefined,
             historyTableData: undefined,
+            historyTableSelectedIds: Array(),
             historyTableSelectedRows: Array(),
             currentAmount: undefined,
             currentNumberCheques: undefined,
@@ -129,19 +130,29 @@ var BankDepositPage = React.createClass({
                     // Firstly, I need to verify if i.customValues.field.internalName == "mode_de_paiement"
                     // If this is true, I have to verify that the field id == item.cyclos_id (which is the payment mode cyclos id)
 
-                    // This item_cyclos_id var is needed because the function inside _.filter only knows parent scope
-                    var item_cyclos_id = item.cyclos_id
-                    var res = _.filter(
-                        i.customValues,
-                            (j) => {
-                                if (j.field.internalName == 'mode_de_paiement') {
-                                    return j.enumeratedValues[0].id == item_cyclos_id
+                    // Some items like "Espèces non déposées" does not have customValues
+                    if (! _.isEmpty(i.customValues)) {
+                        // This var is needed because the function inside _.filter only knows its parent scope
+                        var item_cyclos_id = item.cyclos_id
+
+                        var res = _.filter(
+                            i.customValues,
+                                (j) => {
+                                    if (j.field.internalName == 'mode_de_paiement') {
+                                        return j.enumeratedValues[0].id == item_cyclos_id
+                                    }
+                                    else {
+                                        return false
+                                    }
                                 }
-                                else {
-                                    return false
-                                }
-                            }
-                    )
+                        )
+                    }
+                    else {
+                        if (item.value === "Euro-LIQ" &&
+                            i.type.internalName === "banque_de_depot.paiement_de_banque_de_depot_vers_caisse_euro_bdc") {
+                            var res = i
+                        }
+                    }
 
                     if (_.isEmpty(res)) {
                         return false
@@ -151,9 +162,13 @@ var BankDepositPage = React.createClass({
                     }
                 })
 
+            // deselect all lines
+            this.onSelectTableAll(false, null)
             this.setState({historyTableData: historyTableData}, this.computeAmount)
         }
         else {
+            // deselect all lines
+            this.onSelectTableAll(false, null)
             this.setState({historyTableData: this.state.historyTableInitData}, this.computeAmount)
         }
     },
@@ -233,17 +248,22 @@ var BankDepositPage = React.createClass({
         if (isSelected) {
             historyTableSelectedRows.push(row)
             this.setState({depositCalculatedAmount: baseNumber + Number(row.amount),
+                           historyTableSelectedIds: _.pluck(historyTableSelectedRows, 'id'),
                            historyTableSelectedRows: historyTableSelectedRows},
                           this.depositAmountOnBlur)
         }
         else {
+            var rows = _.filter(historyTableSelectedRows,
+                (item) => {
+                    if (row != item)
+                        return item
+                }
+            )
+
             this.setState({depositCalculatedAmount: baseNumber - Number(row.amount),
-                           historyTableSelectedRows: _.filter(historyTableSelectedRows,
-                            (item) => {
-                                if (row != item)
-                                    return item
-                            })
-                          }, this.depositAmountOnBlur)
+                           historyTableSelectedIds: _.pluck(rows, 'id'),
+                           historyTableSelectedRows: rows},
+                          this.depositAmountOnBlur)
         }
     },
 
@@ -253,11 +273,13 @@ var BankDepositPage = React.createClass({
                                 (memo, row) => {
                                     return memo + Number(row.amount)
                                 }, Number(0)),
+                           historyTableSelectedIds: _.pluck(rows, 'id'),
                            historyTableSelectedRows: rows},
                           this.depositAmountOnBlur)
         }
         else {
             this.setState({depositCalculatedAmount: Number(0),
+                           historyTableSelectedIds: Array(),
                            historyTableSelectedRows: Array()},
                           this.depositAmountOnBlur)
         }
@@ -393,6 +415,7 @@ var BankDepositPage = React.createClass({
             clickToSelect: true,
             onSelect: this.onSelectTableRow,
             onSelectAll: this.onSelectTableAll,
+            selected: this.state.historyTableSelectedIds
         }
 
         // History data table
