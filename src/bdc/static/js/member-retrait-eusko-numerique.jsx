@@ -82,16 +82,28 @@ class MemberRetraitEuskoNumeriquePage extends React.Component {
         var computeForm = (data) => {
             console.log(this.props.url, data.error)
             if (data.error) {
-                console.log('oui')
-                this.refs.container.success(
-                    __(data.error),
-                    "",
-                    {
-                        timeOut: 5000,
-                        extendedTimeOut: 10000,
-                        closeButton:true
-                    }
-                )
+                if (data.error == 'error-member-not-enough-money') {
+                    this.refs.container.error(
+                        __("Ce membre n'a pas assez d'eusko afin de réaliser cet échange."),
+                        "",
+                        {
+                            timeOut: 5000,
+                            extendedTimeOut: 10000,
+                            closeButton:true
+                        }
+                    )
+                }
+                else if (data.error == 'error-bureau-not-enough-money') {
+                    this.refs.container.error(
+                        __("Ce bureau de change n'a pas assez d'eusko afin de réaliser cet échange."),
+                        "",
+                        {
+                            timeOut: 5000,
+                            extendedTimeOut: 10000,
+                            closeButton:true
+                        }
+                    )
+                }
             }
             else {
                 this.refs.container.success(
@@ -103,7 +115,7 @@ class MemberRetraitEuskoNumeriquePage extends React.Component {
                         closeButton:true
                     }
                 )
-                setTimeout(() => window.location.assign("/members/" + document.getElementById("member_id").value), 3000)
+                //setTimeout(() => window.location.assign("/members/" + document.getElementById("member_id").value), 3000)
             }
         }
 
