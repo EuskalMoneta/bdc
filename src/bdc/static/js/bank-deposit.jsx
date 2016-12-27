@@ -175,7 +175,6 @@ var BankDepositPage = React.createClass({
 
     computeAmount() {
         var currentAmount = {balance: Number(0), currency: '€'}
-
         currentAmount.balance = _.reduce(
             this.state.historyTableData,
             (memo, row) => {
@@ -186,7 +185,12 @@ var BankDepositPage = React.createClass({
             this.state.paymentMode.value.toLowerCase() === 'euro-chq' &&
             this.state.historyTableData)
         {
-            this.setState({currentNumberCheques: this.state.historyTableData.length})
+            currentNumberCheques = _.reduce(
+            this.state.historyTableData,
+            (memo, row) => {
+                return memo + Number(row)
+            }, Number(0))
+            this.setState({currentNumberCheques: currentNumberCheques})
         }
         else {
             this.setState({currentNumberCheques: undefined})
@@ -241,18 +245,32 @@ var BankDepositPage = React.createClass({
     onSelectTableRow(row, isSelected, event) {
         var baseNumber = Number(this.state.depositCalculatedAmount)
         var historyTableSelectedRows = this.state.historyTableSelectedRows
+        var nbCheques =  Number(this.state.currentNumberCheques)
 
         if (Number.isNaN(baseNumber))
             var baseNumber = Number(0)
 
         if (isSelected) {
+            if (this.state.paymentMode &&
+            this.state.paymentMode.value.toLowerCase() === 'euro-chq' &&
+            this.state.historyTableData)
+            { nbCheques ++ }
+            else 
+            { nbCheques = undefined }
             historyTableSelectedRows.push(row)
             this.setState({depositCalculatedAmount: baseNumber + Number(row.amount),
                            historyTableSelectedIds: _.pluck(historyTableSelectedRows, 'id'),
-                           historyTableSelectedRows: historyTableSelectedRows},
+                           historyTableSelectedRows: historyTableSelectedRows,
+                           currentNumberCheques: nbCheques },
                           this.depositAmountOnBlur)
         }
         else {
+            if (this.state.paymentMode &&
+            this.state.paymentMode.value.toLowerCase() === 'euro-chq' &&
+            this.state.historyTableData)
+            { nbCheques -- }
+            else 
+            { nbCheques = undefined }
             var rows = _.filter(historyTableSelectedRows,
                 (item) => {
                     if (row != item)
@@ -262,23 +280,44 @@ var BankDepositPage = React.createClass({
 
             this.setState({depositCalculatedAmount: baseNumber - Number(row.amount),
                            historyTableSelectedIds: _.pluck(rows, 'id'),
-                           historyTableSelectedRows: rows},
+                           historyTableSelectedRows: rows,
+                           currentNumberCheques: nbCheques },
                           this.depositAmountOnBlur)
         }
     },
 
     onSelectTableAll(isSelected, rows) {
+        var nbCheques =  Number(this.state.currentNumberCheques)
         if (isSelected) {
+            if (this.state.paymentMode &&
+            this.state.paymentMode.value.toLowerCase() === 'euro-chq' &&
+            this.state.historyTableData)
+            {
+                nbCheques = _.reduce(rows, (memo, row) => { return memo + 1}, Number(0))
+            }
+            else { nbCheques = undefined }
+
+
+
             this.setState({depositCalculatedAmount: _.reduce(rows,
                                 (memo, row) => {
                                     return memo + Number(row.amount)
                                 }, Number(0)),
+                           currentNumberCheques: nbCheques,
                            historyTableSelectedIds: _.pluck(rows, 'id'),
                            historyTableSelectedRows: rows},
                           this.depositAmountOnBlur)
         }
         else {
+            if (this.state.paymentMode &&
+            this.state.paymentMode.value.toLowerCase() === 'euro-chq' &&
+            this.state.historyTableData)
+            {
+                nbCheques = Number(0)
+            }
+            else { nbCheques = undefined }
             this.setState({depositCalculatedAmount: Number(0),
+                           currentNumberCheques: nbCheques,
                            historyTableSelectedIds: Array(),
                            historyTableSelectedRows: Array()},
                           this.depositAmountOnBlur)
