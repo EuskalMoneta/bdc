@@ -80,26 +80,39 @@ class MemberRetraitEuskoNumeriquePage extends React.Component {
         data.login_bdc = window.config.userName
 
         var computeForm = (data) => {
-            this.refs.container.success(
-                __("L'enregistrement s'est déroulé correctement."),
-                "",
-                {
-                    timeOut: 5000,
-                    extendedTimeOut: 10000,
-                    closeButton:true
-                }
-            )
-
-            setTimeout(() => window.location.assign("/members/" + document.getElementById("member_id").value), 3000)
+            console.log(this.props.url, data.error)
+            if (data.error) {
+                console.log('oui')
+                this.refs.container.success(
+                    __(data.error),
+                    "",
+                    {
+                        timeOut: 5000,
+                        extendedTimeOut: 10000,
+                        closeButton:true
+                    }
+                )
+            }
+            else {
+                this.refs.container.success(
+                    __("L'enregistrement s'est déroulé correctement."),
+                    "",
+                    {
+                        timeOut: 5000,
+                        extendedTimeOut: 10000,
+                        closeButton:true
+                    }
+                )
+                setTimeout(() => window.location.assign("/members/" + document.getElementById("member_id").value), 3000)
+            }
         }
 
         var promiseError = (err) => {
             // Error during request, or parsing NOK :(
             this.enableButton()
-
             console.error(this.props.url, err)
             this.refs.container.error(
-                __("Une erreur s'est produite lors de l'enregistrement !"),
+                __(data.error),
                 "",
                 {
                     timeOut: 5000,
