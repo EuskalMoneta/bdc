@@ -84,7 +84,7 @@ class MemberRetraitEuskoNumeriquePage extends React.Component {
             if (data.error) {
                 if (data.error == 'error-member-not-enough-money') {
                     this.refs.container.error(
-                        __("Ce membre n'a pas assez d'eusko afin de réaliser cet échange."),
+                        __("Vous n'avez pas assez d'eusko en stock pour réaliser cette opération."),
                         "",
                         {
                             timeOut: 5000,
@@ -95,7 +95,7 @@ class MemberRetraitEuskoNumeriquePage extends React.Component {
                 }
                 else if (data.error == 'error-bureau-not-enough-money') {
                     this.refs.container.error(
-                        __("Ce bureau de change n'a pas assez d'eusko afin de réaliser cet échange."),
+                        __("Le compte de l'adhérent-e n'a pas un solde suffisant pour réaliser cette opération."),
                         "",
                         {
                             timeOut: 5000,
@@ -115,7 +115,7 @@ class MemberRetraitEuskoNumeriquePage extends React.Component {
                         closeButton:true
                     }
                 )
-                //setTimeout(() => window.location.assign("/members/" + document.getElementById("member_id").value), 3000)
+                setTimeout(() => window.location.assign("/members/" + document.getElementById("member_id").value), 3000)
             }
         }
 
