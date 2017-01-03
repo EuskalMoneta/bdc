@@ -59,6 +59,8 @@ var CashDepositPage = React.createClass({
             canSubmit: false,
             historyTableData: undefined,
             historyTableSelectedRows: Array(),
+            porteur: undefined,
+            porteurList: Array(),
             depositCalculatedAmount: Number(0),
         }
     },
@@ -69,6 +71,12 @@ var CashDepositPage = React.createClass({
             this.setState({historyTableData: historyTableData.result.pageItems})
         }
         fetchAuth(this.props.getHistory, 'get', computeHistoryTableData)
+
+        // Get porteurList data
+        var computePorteurListData = (porteurList) => {
+            this.setState({porteurList: _.sortBy(porteurList, function(item){ return item.label })})
+        }
+        fetchAuth(getAPIBaseURL + "porteurs-eusko/", 'get', computePorteurListData)
     },
 
     onSelectTableRow(row, isSelected, event) {
@@ -111,6 +119,11 @@ var CashDepositPage = React.createClass({
         }
     },
 
+    // porteur
+    porteurOnValueChange(item) {
+        this.setState({porteur: item}, this.validateForm)
+    },
+
     enableButton() {
         this.setState({canSubmit: true})
     },
@@ -130,10 +143,13 @@ var CashDepositPage = React.createClass({
         this.disableButton()
 
         var postData = {}
-        postData.mode = this.props.mode
         postData.login_bdc = window.config.userName
         postData.deposit_amount = this.state.depositCalculatedAmount
         postData.selected_payments = this.state.historyTableSelectedRows
+        postData.mode = this.props.mode
+
+        if (this.props.mode == "sortie-retour-eusko" || this.props.mode == "sortie-caisse-eusko")
+            postData.porteur = this.state.porteur.value
 
         var computeForm = (data) => {
             this.refs.container.success(
@@ -197,13 +213,45 @@ var CashDepositPage = React.createClass({
                  >
                     <TableHeaderColumn isKey={true} hidden={true} dataField="id">{__("ID")}</TableHeaderColumn>
                     <TableHeaderColumn dataField="date" dataFormat={dateFormatter}>{__("Date")}</TableHeaderColumn>
-                    <TableHeaderColumn dataField="description">{__("Libellé")}</TableHeaderColumn>
+                    <TableHeaderColumn columnClassName="line-break" dataField="description">{__("Libellé")}</TableHeaderColumn>
                     <TableHeaderColumn dataField="amount" dataFormat={amountFormatter}>{__("Montant")}</TableHeaderColumn>
                 </BootstrapTable>
             )
         }
         else
             var dataTable = null;
+
+        if (this.props.mode == "sortie-retour-eusko" || this.props.mode == "sortie-caisse-eusko")
+        {
+            var divPorteur = (
+                <div className="form-group row">
+                    <label
+                        className="control-label col-sm-4"
+                        data-required="true"
+                        htmlFor="cash-deposit-porteur">
+                        {__("Porteur")}
+                        <span className="required-symbol">&nbsp;*</span>
+                    </label>
+                    <div className="col-sm-8" data-eusko="cash-deposit-porteur">
+                        <SimpleSelect
+                            ref="select"
+                            value={this.state.porteur}
+                            options={this.state.porteurList}
+                            placeholder={__("Porteur")}
+                            theme="bootstrap3"
+                            onValueChange={this.porteurOnValueChange}
+                            renderOption={SelectizeUtils.selectizeRenderOption}
+                            renderValue={SelectizeUtils.selectizeRenderValue}
+                            onBlur={this.validateForm}
+                            renderNoResultsFound={SelectizeUtils.selectizeNoResultsFound}
+                            required
+                        />
+                    </div>
+                </div>
+            )
+        }
+        else
+            var divPorteur = null;
 
         return (
             <div className="row">
@@ -226,6 +274,7 @@ var CashDepositPage = React.createClass({
                                     </span>
                                 </div>
                             </div>
+                            {divPorteur}
                         </fieldset>
                         <fieldset>
                             <Row layout="horizontal">
@@ -262,7 +311,7 @@ if (window.location.pathname.toLowerCase().indexOf("cash-deposit") != -1)
     var propMode = "cash-deposit"
     var propGetHistoryURL =  "accounts-history/?account_type=caisse_euro_bdc&filter=a_remettre_a_euskal_moneta"
     var propNextURL =  "/manager/history/caisse-euro"
-    var propTranslateTitle = __("Remise d'espèces")
+    var propTranslateTitle = __("Remise de monnaie à Euskal Moneta")
     var propCurrency = '€'
 }
 else if (window.location.pathname.toLowerCase().indexOf("sortie-caisse-eusko") != -1)
@@ -276,7 +325,7 @@ else if (window.location.pathname.toLowerCase().indexOf("sortie-caisse-eusko") !
 }
 else if (window.location.pathname.toLowerCase().indexOf("sortie-retour-eusko") != -1)
 {
-    // URL = sortie-caisse-eusko
+    // URL = sortie-retour-eusko
     var propMode =  "sortie-retour-eusko"
     var propGetHistoryURL =  "accounts-history/?account_type=retours_d_eusko_bdc&filter=a_remettre_a_euskal_moneta"
     var propNextURL =  "/manager/history/retour-eusko"

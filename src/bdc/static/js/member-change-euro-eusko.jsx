@@ -139,7 +139,7 @@ class MemberChangeEuroEuskoPage extends React.Component {
 
             console.error(this.props.url, err)
             this.refs.container.error(
-                __("Une erreur s'est produite lors de l'enregistrement !"),
+                __("Une erreur s'est produite lors de l'enregistrement, vérifiez si le solde est bien disponible !"),
                 "",
                 {
                     timeOut: 5000,
@@ -204,7 +204,7 @@ class MemberChangeEuroEuskoPage extends React.Component {
                         </div>
                         <Input
                             name="amount"
-                            data-eusko="entreestock-amount"
+                            data-eusko="memberchangeeuroeusko-amount"
                             value=""
                             label={__("Montant")}
                             type="number"

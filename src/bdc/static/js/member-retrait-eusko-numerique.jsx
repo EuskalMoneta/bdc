@@ -80,26 +80,51 @@ class MemberRetraitEuskoNumeriquePage extends React.Component {
         data.login_bdc = window.config.userName
 
         var computeForm = (data) => {
-            this.refs.container.success(
-                __("L'enregistrement s'est déroulé correctement."),
-                "",
-                {
-                    timeOut: 5000,
-                    extendedTimeOut: 10000,
-                    closeButton:true
+            console.log(this.props.url, data.error)
+            if (data.error) {
+                if (data.error == 'error-member-not-enough-money') {
+                    this.refs.container.error(
+                        __("Le compte de l'adhérent-e n'a pas un solde suffisant pour réaliser cette opération."),
+                        "",
+                        {
+                            timeOut: 5000,
+                            extendedTimeOut: 10000,
+                            closeButton:true
+                        }
+                    )
                 }
-            )
-
-            setTimeout(() => window.location.assign("/members/" + document.getElementById("member_id").value), 3000)
+                else if (data.error == 'error-bureau-not-enough-money') {
+                    this.refs.container.error(
+                        __("Vous n'avez pas assez d'eusko en stock pour réaliser cette opération."),
+                        "",
+                        {
+                            timeOut: 5000,
+                            extendedTimeOut: 10000,
+                            closeButton:true
+                        }
+                    )
+                }
+            }
+            else {
+                this.refs.container.success(
+                    __("L'enregistrement s'est déroulé correctement."),
+                    "",
+                    {
+                        timeOut: 5000,
+                        extendedTimeOut: 10000,
+                        closeButton:true
+                    }
+                )
+                setTimeout(() => window.location.assign("/members/" + document.getElementById("member_id").value), 3000)
+            }
         }
 
         var promiseError = (err) => {
             // Error during request, or parsing NOK :(
             this.enableButton()
-
             console.error(this.props.url, err)
             this.refs.container.error(
-                __("Une erreur s'est produite lors de l'enregistrement !"),
+                __(data.error),
                 "",
                 {
                     timeOut: 5000,

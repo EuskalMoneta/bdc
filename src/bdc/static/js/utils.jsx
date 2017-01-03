@@ -1,7 +1,13 @@
 var checkStatus = (response) => {
-    if (response.status >= 200 && response.status < 300) {
+    if (response.status != 204 && response.status >= 200 && response.status < 300) {
         return response
-    } else {
+    }
+    else if (response.status == 204) {
+        var error = new Error("No content")
+        error.response = response
+        throw error
+    }
+    else {
         var error = new Error(response.statusText)
         error.response = response
         throw error
@@ -14,13 +20,13 @@ var parseJSON = (response) => {
 
 var storeToken = (data) => {
     // Save data to sessionStorage
-    sessionStorage.setItem('api-token-auth', data.token)
+    sessionStorage.setItem('bdc-api-token-auth', data.token)
     return data.token
 }
 
 var getToken = () => {
     // Get saved data from sessionStorage
-    return sessionStorage.getItem('api-token-auth')
+    return sessionStorage.getItem('bdc-api-token-auth')
 }
 
 var fetchCustom = (url, method, promise, token, data, promiseError=null) => {
@@ -33,14 +39,16 @@ var fetchCustom = (url, method, promise, token, data, promiseError=null) => {
         }
     }
 
-    if (method.toLowerCase() == 'post') {
+    if (method.toLowerCase() != 'get' && data != null) {
         payload.body = JSON.stringify(data)
     }
 
     if (!promiseError) {
         var promiseError = (err) => {
             // Error during request, or parsing NOK :(
-            console.error(url, method, promise, token, data, promiseError, err)
+            if (err.message != "No content") {
+                console.error(url, method, promise, token, data, promiseError, err)
+            }
         }
     }
 
@@ -52,7 +60,7 @@ var fetchCustom = (url, method, promise, token, data, promiseError=null) => {
 }
 
 var fetchGetToken = (username, password, promiseSuccess, promiseError) => {
-    sessionStorage.removeItem('api-token-auth')
+    sessionStorage.removeItem('bdc-api-token-auth')
 
     fetch(getAPIBaseURL + 'api-token-auth/',
     {

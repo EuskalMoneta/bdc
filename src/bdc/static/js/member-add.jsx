@@ -555,10 +555,10 @@ class MemberAddPage extends React.Component {
                             <label
                                 className="control-label col-sm-3"
                                 data-required="true"
-                                htmlFor="memberaddform-town">
+                                htmlFor="memberaddform-asso">
                                 {__("Choix Association 3% #1")}
                             </label>
-                            <div className="col-sm-6 memberaddform" data-eusko="memberaddform-town">
+                            <div className="col-sm-6 memberaddform" data-eusko="memberaddform-asso">
                                 <SimpleSelect
                                     ref="select"
                                     value={this.state.fkAsso}
@@ -578,10 +578,10 @@ class MemberAddPage extends React.Component {
                             <label
                                 className="control-label col-sm-3"
                                 data-required="true"
-                                htmlFor="memberaddform-town">
+                                htmlFor="memberaddform-asso2">
                                 {__("Choix Association 3% #2")}
                             </label>
-                            <div className="col-sm-6 memberaddform" data-eusko="memberaddform-town">
+                            <div className="col-sm-6 memberaddform" data-eusko="memberaddform-asso2">
                                 <SimpleSelect
                                     ref="select"
                                     value={this.state.fkAsso2}

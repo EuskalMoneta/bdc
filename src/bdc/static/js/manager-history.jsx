@@ -100,7 +100,7 @@ var ManagerHistoryPage = React.createClass({
                         <a href="/manager/bank-deposit" className="btn btn-info">{__("Dépôt en banque")}</a>
                     </div>
                     <div className="col-md-offset-1 col-md-2 col-sm-4">
-                        <a href="/manager/cash-deposit" className="btn btn-default">{__("Remise d'espèces")}</a>
+                        <a href="/manager/cash-deposit" className="btn btn-default">{__("Remise de monnaie à Euskal Moneta")}</a>
                     </div>
                     <div className="col-md-offset-1 col-md-2 col-sm-4">
                         <label className="control-label col-md-12 solde-history-label">
@@ -147,7 +147,7 @@ var ManagerHistoryPage = React.createClass({
             var dateFormatter = (cell, row) => {
                 // Force moment i18n
                 moment.locale(getCurrentLang)
-                return moment(cell).format('LLLL')
+                return moment(cell).format('DD/MM/YYYY HH:mm')
             }
 
             var amountFormatter = (cell, row) => {
@@ -164,9 +164,8 @@ var ManagerHistoryPage = React.createClass({
                  >
                     <TableHeaderColumn isKey={true} hidden={true} dataField="id">{__("ID")}</TableHeaderColumn>
                     <TableHeaderColumn dataField="date" dataFormat={dateFormatter}>{__("Date")}</TableHeaderColumn>
-                    <TableHeaderColumn dataField="description">{__("Libellé")}</TableHeaderColumn>
+                    <TableHeaderColumn columnClassName="line-break" dataField="description">{__("Libellé")}</TableHeaderColumn>
                     <TableHeaderColumn dataField="amount" dataFormat={amountFormatter}>{__("Montant")}</TableHeaderColumn>
-                    <TableHeaderColumn dataField="solde">{__("Solde")}</TableHeaderColumn>
                 </BootstrapTable>
             )
         }

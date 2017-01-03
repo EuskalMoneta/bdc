@@ -131,25 +131,29 @@ var CaisseEuro = React.createClass({
 
             var cash_res = _.filter(data.result.pageItems,
                 (i) => {
-                    // Firstly, I need to verify if i.customValues.field.internalName == "mode_de_paiement"
-                    // If this is true, I have to verify that a field is = Espèces
-                    var res = _.filter(
-                        i.customValues,
-                            (j) => {
-                                if (j.field.internalName == 'mode_de_paiement') {
-                                    return j.enumeratedValues[0].value == 'Espèces'
-                                }
-                                else {
-                                    return false
-                                }
-                            }
-                    )
-
-                    if (_.isEmpty(res)) {
-                        return false
-                    }
+                    if (i.description == "Espèces non déposées")
+                        return true 
                     else {
-                        return true
+                        // Firstly, I need to verify if i.customValues.field.internalName == "mode_de_paiement"
+                        // If this is true, I have to verify that a field is = Espèces
+                        var res = _.filter(
+                            i.customValues,
+                                (j) => {
+                                    if (j.field.internalName == 'mode_de_paiement') {
+                                        return j.enumeratedValues[0].value == 'Espèces'
+                                    }
+                                    else {
+                                        return false
+                                    }
+                                }
+                        )
+
+                        if (_.isEmpty(res)) {
+                            return false
+                        }
+                        else {
+                            return true
+                        }
                     }
                 })
 
@@ -210,7 +214,7 @@ var CaisseEuro = React.createClass({
                             <a href="/manager/bank-deposit" className="btn btn-info">{__("Dépôt en banque")}</a>
                         </div>
                         <div className="col-md-offset-2 col-md-2 col-sm-4">
-                            <a href="/manager/cash-deposit" className="btn btn-default">{__("Remise d'espèces")}</a>
+                            <a href="/manager/cash-deposit" className="btn btn-default">{__("Remise de monnaie à Euskal Moneta")}</a>
                         </div>
                     </div>
                 </div>
