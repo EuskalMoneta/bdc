@@ -188,7 +188,7 @@ class MemberReconversionPage extends React.Component {
                         />
                         <Input
                             name="facture"
-                            data-eusko="reconversion-amount"
+                            data-eusko="reconversion-facture"
                             value=""
                             label={__("N° facture")}
                             type="text"
