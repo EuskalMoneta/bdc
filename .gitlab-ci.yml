@@ -4,13 +4,24 @@ image: docker:latest
 # improved performance.
 variables:
   DOCKER_DRIVER: overlay
-  CONTAINER_TEST_IMAGE: sources.meta-it.fr:4567/euskal-moneta/gi:$CI_BUILD_REF_NAME
-  CONTAINER_RELEASE_IMAGE: sources.meta-it.fr:4567/euskal-moneta/gi
+  CONTAINER_TEST_IMAGE: sources.meta-it.fr:4567/euskal-moneta/bdc:$CI_BUILD_REF_NAME
+  CONTAINER_RELEASE_IMAGE: sources.meta-it.fr:4567/euskal-moneta/bdc
 
 services:
   - docker:dind
 
 before_script:
+  # This code allows to use SSH with public key authentication
+  # See https://docs.gitlab.com/ce/ci/ssh_keys/README.html
+  - 'which ssh-agent || ( apk --update --no-cache add openssh-client )'
+  - eval $(ssh-agent -s)
+  - echo "$SSH_PRIVATE_KEY" > /tmp/ssh_key
+  - chmod 600 /tmp/ssh_key
+  - ssh-add /tmp/ssh_key
+  - rm /tmp/ssh_key
+  - mkdir -p ~/.ssh
+  - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+  
   - docker info
   - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN sources.meta-it.fr:4567
 
