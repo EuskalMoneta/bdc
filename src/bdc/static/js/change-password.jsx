@@ -120,9 +120,11 @@ class MemberChangePasswordPage extends React.Component {
                             label={__("Nouveau mot de passe")}
                             type="password"
                             placeholder={__("Votre nouveau mot de passe")}
-                            validations={{equalsField: "confirm_password"}}
+                            validations="equalsField:confirm_password,minLength:4,maxLength:12"
                             validationErrors={{
-                                equalsField: __("Les mots de passe ne correspondent pas.")
+                                equalsField: __("Les mots de passe ne correspondent pas."),
+                                minLength: __("Un mot de passe doit faire entre 4 et 12 caractères."),
+                                maxLength: __("Un mot de passe doit faire entre 4 et 12 caractères.")
                             }}
                             elementWrapperClassName={[{'col-sm-9': false}, 'col-sm-5']}
                             required
@@ -134,9 +136,11 @@ class MemberChangePasswordPage extends React.Component {
                             label={__("Confirmer le nouveau mot de passe")}
                             type="password"
                             placeholder={__("Confirmation de votre nouveau mot de passe")}
-                            validations={{equalsField: "new_password"}}
+                            validations="equalsField:new_password,minLength:4,maxLength:12"
                             validationErrors={{
-                                equalsField: __("Les mots de passe ne correspondent pas.")
+                                equalsField: __("Les mots de passe ne correspondent pas."),
+                                minLength: __("Un mot de passe doit faire entre 4 et 12 caractères."),
+                                maxLength: __("Un mot de passe doit faire entre 4 et 12 caractères.")
                             }}
                             elementWrapperClassName={[{'col-sm-9': false}, 'col-sm-5']}
                             required
