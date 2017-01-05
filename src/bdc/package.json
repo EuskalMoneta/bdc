@@ -40,6 +40,7 @@
     "react-bootstrap-table": "^2.7.1",
     "react-datepicker ": "^0.29.0",
     "react-dom": "15.3.2",
+    "react-modal-bootstrap": "^1.1.0",
     "react-selectize": "^2.0.3",
     "react-spinjs": "^3.0.0",
     "react-toastr": "^2.8.1",

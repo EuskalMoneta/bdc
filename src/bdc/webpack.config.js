@@ -120,7 +120,8 @@ module.exports = Object.keys(languages).map(function(language) {
             root: path.resolve(__dirname),
 
             alias: {
-                Utils: 'static/js/utils'
+                Utils: 'static/js/utils',
+                Modal: 'static/js/modal'
             },
 
             // tells webpack where to look for modules
