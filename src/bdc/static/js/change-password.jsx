@@ -70,7 +70,7 @@ class MemberChangePasswordPage extends React.Component {
                 }
             )
 
-            setTimeout(() => window.location.assign("/members/search"), 3000)
+            setTimeout(() => window.location.assign("/logout"), 3000)
         }
 
         var promiseError = (err) => {
