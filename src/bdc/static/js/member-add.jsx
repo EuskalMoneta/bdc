@@ -6,6 +6,8 @@ import {
     SelectizeUtils,
 } from 'Utils'
 
+import ModalEusko from 'Modal'
+
 const {
     Input,
     RadioGroup,
@@ -69,6 +71,7 @@ class MemberAddPage extends React.Component {
 
         // Default state
         this.state = {
+            isModalOpen: false,
             canSubmit: false,
             validFields: false,
             validCustomFields: false,
@@ -86,7 +89,9 @@ class MemberAddPage extends React.Component {
             fkAsso: undefined,
             fkAsso2: undefined,
             fkAssoAllList: undefined,
-            fkAssoApprovedList: undefined
+            fkAssoApprovedList: undefined,
+            formData: undefined,
+            modalBody: undefined,
         }
 
         // Get countries for the country selector
@@ -254,11 +259,11 @@ class MemberAddPage extends React.Component {
     }
 
     enableButton = () => {
-        this.setState({canSubmit: true});
+        this.setState({canSubmit: true, isModalOpen: false});
     }
 
     disableButton = () => {
-        this.setState({canSubmit: false});
+        this.setState({canSubmit: false, isModalOpen: false});
     }
 
     validFields = () => {
@@ -280,27 +285,71 @@ class MemberAddPage extends React.Component {
             this.disableButton()
     }
 
-    submitForm = (data) => {
-        this.disableButton()
+    openModal = () => {
+        this.setState({isModalOpen: true})
+    }
 
-        // We push custom fields (like DatePickers, Selectize, ...) into the data passed to the server
-        data.birth = this.state.birth.format('DD/MM/YYYY')
-        data.country_id = this.state.country.value
-        data.zip = this.state.zip.value
-        data.town = this.state.town.value
-        data.login = this.state.login.toUpperCase()
+    hideModal = () => {
+        this.setState({isModalOpen: false})
+    }
 
-        // We need to verify whether we are in "saisie libre" or not
-        if (this.state.fkAsso) {
-            if (this.state.assoSaisieLibre)
-                data.options_asso_saisie_libre = this.state.fkAsso.value
-            else
-                data.fk_asso = this.state.fkAsso.value
-        }
+    getModalElements = () => {
+        this.setState({modalBody:
+            _.map(this.state.formData,
+                (item, key) => {
+                    switch (key) {
+                        case 'login':
+                            return {'label': __('N° adhérent'), 'value': item}
+                            break;
+                        case 'civility_id':
+                            return {'label': __('Civilité'), 'value': item}
+                            break;
+                        case 'lastname':
+                            return {'label': __('Nom'), 'value': item}
+                            break;
+                        case 'firstname':
+                            return {'label': __('Prénom'), 'value': item}
+                            break;
+                        case 'birth':
+                            return {'label': __('Date de naissance'), 'value': item}
+                            break;
+                        case 'address':
+                            return {'label': __('Adresse postale'), 'value': item}
+                            break;
+                        case 'zip':
+                            return {'label': __('Code Postal'), 'value': item}
+                            break;
+                        case 'town':
+                            return {'label': __('Ville'), 'value': item}
+                            break;
+                        case 'country_id':
+                            return {'label': __('Pays'), 'value': item}
+                            break;
+                        case 'phone':
+                            return {'label': __('N° téléphone'), 'value': item}
+                            break;
+                        case 'email':
+                            return {'label': __('Email'), 'value': item}
+                            break;
+                        case 'options_recevoir_actus':
+                            return {'label': __("Souhaite être informé des actualités liées à l'eusko"), 'value': item}
+                            break;
+                        case 'fk_asso':
+                            return {'label': __('Choix Association 3% #1'), 'value': item}
+                            break;
+                        case 'fk_asso2':
+                            return {'label': __('Choix Association 3% #2'), 'value': item}
+                            break;
+                        default:
+                            return {'label': item, 'value': item}
+                            break;
+                    }
+                }
+            )
+        }, this.openModal)
+    }
 
-        if (this.state.fkAsso2)
-            data.fk_asso2 = this.state.fkAsso2.value
-
+    submitForm = () => {
         var computeForm = (data) => {
             this.refs.container.success(
                 __("La création de l'adhérent s'est déroulée correctement."),
@@ -331,7 +380,31 @@ class MemberAddPage extends React.Component {
                 }
             )
         }
-        fetchAuth(this.props.url, this.props.method, computeForm, data, promiseError)
+        fetchAuth(this.props.url, this.props.method, computeForm, this.state.formData, promiseError)
+    }
+
+    buildForm = (data) => {
+        this.disableButton()
+
+        // We push custom fields (like DatePickers, Selectize, ...) into the data passed to the server
+        data.birth = this.state.birth.format('DD/MM/YYYY')
+        data.country_id = this.state.country.value
+        data.zip = this.state.zip.value
+        data.town = this.state.town.value
+        data.login = this.state.login.toUpperCase()
+
+        // We need to verify whether we are in "saisie libre" or not
+        if (this.state.fkAsso) {
+            if (this.state.assoSaisieLibre)
+                data.options_asso_saisie_libre = this.state.fkAsso.value
+            else
+                data.fk_asso = this.state.fkAsso.value
+        }
+
+        if (this.state.fkAsso2)
+            data.fk_asso2 = this.state.fkAsso2.value
+
+        this.setState({formData: data}, this.getModalElements)
     }
 
     render = () => {
@@ -339,7 +412,7 @@ class MemberAddPage extends React.Component {
         return (
             <div className="row">
                 <MemberAddForm
-                    onValidSubmit={this.submitForm}
+                    onValidSubmit={this.buildForm}
                     onInvalid={this.disableButton}
                     onValid={this.validFields}
                     ref="memberaddform">
@@ -614,6 +687,7 @@ class MemberAddPage extends React.Component {
                 <ToastContainer ref="container"
                                 toastMessageFactory={ToastMessageFactory}
                                 className="toast-top-right toast-top-right-navbar" />
+                <ModalEusko isModalOpen={this.state.isModalOpen} modalBody={this.state.modalBody} onValidate={this.submitForm} />
             </div>
         );
     }
