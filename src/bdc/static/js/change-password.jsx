@@ -170,7 +170,7 @@ class MemberChangePasswordPage extends React.Component {
 
 
 ReactDOM.render(
-    <MemberChangePasswordPage url={getAPIBaseURL + "bdc-change-password/"} method="POST" />,
+    <MemberChangePasswordPage url={getAPIBaseURL + "change-password/"} method="POST" />,
     document.getElementById('change-password')
 )
 
