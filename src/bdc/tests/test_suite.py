@@ -59,11 +59,11 @@ class TestSuite:
         assert len(driver.find_elements_by_xpath('//table/tbody/tr')) == 2
 
     def test_3_member_add(self, driver):
-      try:
-          # assert that the page is /members/search
-          assert driver.current_url == '{}/members/search'.format(BASE_URL)
-      except:
-          driver.get('{}/members/search'.format(BASE_URL))
+        try:
+            # assert that the page is /members/search
+            assert driver.current_url == '{}/members/search'.format(BASE_URL)
+        except:
+            driver.get('{}/members/search'.format(BASE_URL))
 
         driver.find_element_by_class_name('btn-success').click()
 
@@ -110,6 +110,14 @@ class TestSuite:
         # submit form
         driver.find_element_by_class_name('btn-success').click()
 
+        # validate modal
+        try:
+            driver.wait.until(ec.presence_of_element_located((By.XPATH, '//button[@data-eusko="validate-modal"]')))
+            driver.find_element_by_xpath('//button[@data-eusko="validate-modal"]').click()
+        except:
+            driver.close()
+            assert False, 'Could not locate button to validate the modal!'
+
         # toast div is in id="toast-container"
         try:
             driver.long_wait.until(ec.presence_of_element_located((By.ID, 'toast-container')))
@@ -125,12 +133,6 @@ class TestSuite:
             assert False, 'Could not locate element "class=toast-success" (toast success confirm for member add page)!'  # noqa
 
     def test_4_member_subscription_add(self, driver):
-        try:
-            # assert that the page changed to /members/subscription/add/<member_id>
-            assert '/members/subscription/add/' in driver.current_url
-        except:
-            driver.get('{}/members/subscription/add/2554'.format(BASE_URL))
-
         # wait until memberaddsubscription-amount field is present
         try:
             driver.wait.until(ec.presence_of_element_located(
@@ -139,6 +141,9 @@ class TestSuite:
             driver.close()
             assert False, ('Could not locate element "data-eusko=memberaddsubscription-amount" '
                            '(amount field in member subscription add page)!')
+
+        # assert that the page changed to /members/subscription/add/<member_id>
+        assert '/members/subscription/add/' in driver.current_url
 
         # subscription amount
         amount = driver.find_element_by_xpath('//div[@data-eusko="memberaddsubscription-amount"]//button')
@@ -240,23 +245,12 @@ class TestSuite:
             driver.close()
             assert False, 'Could not locate element "id=toast-container" (toast parent div for member change password page)!'  # noqa
 
-        # assert div with class="toast-succes" is present : member change_euro_eusko is OK!
+        # assert div with class="toast-succes" is present : member change_password is OK!
         try:
             driver.wait.until(ec.presence_of_element_located((By.CLASS_NAME, 'toast-success')))
         except:
             driver.close()
             assert False, 'Could not locate element "class=toast-success" (toast success confirm for member change password page)!'  # noqa
-
-    def test_9zzz_member_logout(self, driver):
-        # wait until searchValue field is present (the page have successfully changed if its the case)
-        try:
-            driver.long_wait.until(ec.presence_of_element_located((By.NAME, 'searchValue')))
-        except:
-            driver.close()
-            assert False, 'Could not locate element "name=searchValue" (search field in member search page)!'
-
-        driver.find_element_by_class_name('dropdown-toggle').click()
-        driver.find_element_by_link_text('Me déconnecter').click()
 
         # wait until username field is present (the page have successfully changed if its the case)
         try:
