@@ -63,7 +63,7 @@ export default class ModalEusko extends React.Component {
                     <button className="btn btn-default" onClick={this.hideModal.bind(this)}>
                       {this.props.cancelLabel}
                     </button>
-                    <button onClick={this.onValidate.bind(this)} className="btn btn-success">
+                    <button className="btn btn-success" data-eusko="validate-modal" onClick={this.onValidate.bind(this)}>
                       {this.props.validateLabel}
                     </button>
                 </ModalFooter>
