@@ -362,7 +362,80 @@ class TestSuite:
             raise SeleniumTestException('Could not locate element "class=toast-success" '
                                         '(toast success confirm for sortie stock page)!')
 
+    def test_009_reconversion(self, driver):
+        # go to homepage / member search page
+        driver.get('{}/members/search'.format(BASE_URL))
+
+        # wait until searchValue field is present (the page have successfully changed if its the case)
+        try:
+            driver.long_wait.until(ec.presence_of_element_located((By.NAME, 'searchValue')))
+        except:
+            driver.close()
+            raise SeleniumTestException('Could not locate element "name=searchValue" '
+                                        '(search field in member search page)!')
+
+        driver.find_element_by_name('searchValue').send_keys('guilde')
+
+        try:
+            # wait until table is present
+            driver.wait.until(ec.presence_of_element_located((By.CLASS_NAME, 'table')))
+        except:
+            driver.close()
+            raise SeleniumTestException('Could not locate element "class=table" (table in member search page)!')
+
+        assert len(driver.find_elements_by_xpath('//table[contains(@class, "table-striped")]/tbody/tr')) == 1
+
+        # click member row in table
+        driver.find_element_by_xpath('//table[contains(@class, "table-striped")]/tbody/tr[1]').click()
+
+        # click reconversion link
+        try:
+            driver.wait.until(ec.presence_of_element_located((By.XPATH, '//a[text()="Reconversion"]')))
+        except:
+            driver.close()
+            raise SeleniumTestException('Could not locate element "class=toast-success" '
+                                        '(toast success confirm for member page)!')
+
+        driver.find_element_by_xpath('//a[text()="Reconversion"]').click()
+
+        # toast div is in id="toast-container"
+        try:
+            driver.wait.until(ec.presence_of_element_located((By.XPATH, '//input[@data-eusko="reconversion-amount"]')))
+        except:
+            driver.close()
+            raise SeleniumTestException('Could not locate element reconversion-amount '
+                                        '(reconversion-amount in reconversion page)!')
+
+        # fill form
+        driver.find_element_by_xpath('//input[@data-eusko="reconversion-amount"]').send_keys('10')
+        driver.find_element_by_xpath('//input[@data-eusko="reconversion-facture"]').send_keys('abcde')
+
+        # submit form
+        driver.find_element_by_class_name('btn-success').click()
+
+        # toast div is in id="toast-container"
+        try:
+            driver.wait.until(ec.presence_of_element_located((By.ID, 'toast-container')))
+        except:
+            driver.close()
+            raise SeleniumTestException('Could not locate element "id=toast-container" '
+                                        '(toast parent div for reconversion page)!')
+
+        # assert div with class="toast-succes" is present : member change_euro_eusko is OK!
+        try:
+            driver.wait.until(ec.presence_of_element_located((By.CLASS_NAME, 'toast-success')))
+        except:
+            driver.close()
+            raise SeleniumTestException('Could not locate element "class=toast-success" '
+                                        '(toast success confirm for reconversion page)!')
+
     def test_999_member_change_password(self, driver):
+        try:
+            driver.wait.until(ec.presence_of_element_located((By.CLASS_NAME, 'dropdown-toggle')))
+        except:
+            driver.close()
+            raise SeleniumTestException('Could not locate element "class=dropdown-toggle" !')
+
         driver.find_element_by_class_name('dropdown-toggle').click()
         driver.find_element_by_link_text('Changer mon mot de passe').click()
 
