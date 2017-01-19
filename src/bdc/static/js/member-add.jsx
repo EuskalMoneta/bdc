@@ -302,7 +302,8 @@ class MemberAddPage extends React.Component {
                             return {'label': __('N° adhérent'), 'value': item}
                             break;
                         case 'civility_id':
-                            return {'label': __('Civilité'), 'value': item}
+                            return {'label': __('Civilité'),
+                                    'value': item == 'MR' ? __('Monsieur') : __('Madame')}
                             break;
                         case 'lastname':
                             return {'label': __('Nom'), 'value': item}
@@ -323,7 +324,7 @@ class MemberAddPage extends React.Component {
                             return {'label': __('Ville'), 'value': item}
                             break;
                         case 'country_id':
-                            return {'label': __('Pays'), 'value': item}
+                            return {'label': __('Pays'), 'value': this.state.country.label}
                             break;
                         case 'phone':
                             return {'label': __('N° téléphone'), 'value': item}
@@ -332,13 +333,14 @@ class MemberAddPage extends React.Component {
                             return {'label': __('Email'), 'value': item}
                             break;
                         case 'options_recevoir_actus':
-                            return {'label': __("Souhaite être informé des actualités liées à l'eusko"), 'value': item}
-                            break;
+                            return {'label': __("Souhaite être informé des actualités liées à l'eusko"),
+                                    'value': item == '1' ? __('Oui') : __('Non')}
+                            break
                         case 'fk_asso':
-                            return {'label': __('Choix Association 3% #1'), 'value': item}
+                            return {'label': __('Choix Association 3% #1'), 'value': this.state.fkAsso.label}
                             break;
                         case 'fk_asso2':
-                            return {'label': __('Choix Association 3% #2'), 'value': item}
+                            return {'label': __('Choix Association 3% #2'), 'value': this.state.fkAsso2.label}
                             break;
                         default:
                             return {'label': item, 'value': item}
