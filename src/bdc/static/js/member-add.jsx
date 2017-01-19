@@ -299,51 +299,54 @@ class MemberAddPage extends React.Component {
                 (item, key) => {
                     switch (key) {
                         case 'login':
-                            return {'label': __('N° adhérent'), 'value': item}
+                            return {'label': __('N° adhérent'), 'value': item, order: 1}
                             break;
                         case 'civility_id':
                             return {'label': __('Civilité'),
-                                    'value': item == 'MR' ? __('Monsieur') : __('Madame')}
+                                    'value': item == 'MR' ? __('Monsieur') : __('Madame'), order: 2}
                             break;
                         case 'lastname':
-                            return {'label': __('Nom'), 'value': item}
+                            return {'label': __('Nom'), 'value': item, order: 3}
                             break;
                         case 'firstname':
-                            return {'label': __('Prénom'), 'value': item}
+                            return {'label': __('Prénom'), 'value': item, order: 4}
                             break;
                         case 'birth':
-                            return {'label': __('Date de naissance'), 'value': item}
+                            return {'label': __('Date de naissance'), 'value': item, order: 5}
                             break;
                         case 'address':
-                            return {'label': __('Adresse postale'), 'value': item}
+                            return {'label': __('Adresse postale'), 'value': item, order: 6}
                             break;
                         case 'zip':
-                            return {'label': __('Code Postal'), 'value': item}
+                            return {'label': __('Code Postal'), 'value': item, order: 7}
                             break;
                         case 'town':
-                            return {'label': __('Ville'), 'value': item}
+                            return {'label': __('Ville'), 'value': item, order: 8}
                             break;
                         case 'country_id':
-                            return {'label': __('Pays'), 'value': this.state.country.label}
+                            return {'label': __('Pays'), 'value': this.state.country.label, order: 9}
                             break;
                         case 'phone':
-                            return {'label': __('N° téléphone'), 'value': item}
+                            return {'label': __('N° téléphone'), 'value': item, order: 10}
                             break;
                         case 'email':
-                            return {'label': __('Email'), 'value': item}
+                            return {'label': __('Email'), 'value': item, order: 11}
                             break;
                         case 'options_recevoir_actus':
                             return {'label': __("Souhaite être informé des actualités liées à l'eusko"),
-                                    'value': item == '1' ? __('Oui') : __('Non')}
+                                    'value': item == '1' ? __('Oui') : __('Non'), order: 12}
+                            break
+                        case 'options_asso_saisie_libre':
+                            return {'label': __('Choix Association 3% #1'), 'value': item, order: 13}
                             break
                         case 'fk_asso':
-                            return {'label': __('Choix Association 3% #1'), 'value': this.state.fkAsso.label}
+                            return {'label': __('Choix Association 3% #1'), 'value': this.state.fkAsso.label, order: 13}
                             break;
                         case 'fk_asso2':
-                            return {'label': __('Choix Association 3% #2'), 'value': this.state.fkAsso2.label}
+                            return {'label': __('Choix Association 3% #2'), 'value': this.state.fkAsso2.label, order: 14}
                             break;
                         default:
-                            return {'label': item, 'value': item}
+                            return {'label': item, 'value': item, order: 999}
                             break;
                     }
                 }

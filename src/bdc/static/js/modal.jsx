@@ -18,14 +18,17 @@ export default class ModalEusko extends React.Component {
     }
 
     computeModalBody(modalBody) {
-        return _.map(modalBody, (item) => {
-            return (<div className="form-group row" key={item.label}>
-                        <label className="col-sm-3">{item.label} :</label>
-                        <div className="col-sm-6">
-                            <span>{item.value}</span>
-                        </div>
-                    </div>)
-        })
+        return _.chain(modalBody)
+                .sortBy((item) => { return item.order })
+                .map((item) => {
+                    return (<div className="form-group row" key={item.label}>
+                            <label className="col-sm-3">{item.label} :</label>
+                            <div className="col-sm-6">
+                                <span>{item.value}</span>
+                            </div>
+                        </div>)
+                })
+                .value()
     }
 
     componentWillReceiveProps(nextProps) {
