@@ -41,26 +41,22 @@ export default class ModalEusko extends React.Component {
         }
     }
 
-    hideModal() {
-        this.setState({isModalOpen: false})
-    }
-
     onValidate() {
         this.setState({isModalOpen: false}, this.props.onValidate)
     }
 
     render() {
         return (
-            <Modal isOpen={this.state.isModalOpen} onRequestHide={this.hideModal.bind(this)}>
+            <Modal isOpen={this.state.isModalOpen} onRequestHide={this.props.hideModal}>
                 <ModalHeader>
-                    <ModalClose onClick={this.hideModal.bind(this)}/>
+                    <ModalClose onClick={this.props.hideModal}/>
                     <ModalTitle>{this.props.modalTitle}</ModalTitle>
                 </ModalHeader>
                 <ModalBody>
                     <div>{this.state.modalBody}</div>
                 </ModalBody>
                 <ModalFooter>
-                    <button className="btn btn-default" onClick={this.hideModal.bind(this)}>
+                    <button className="btn btn-default" onClick={this.props.hideModal}>
                       {this.props.cancelLabel}
                     </button>
                     <button className="btn btn-success" data-eusko="validate-modal" onClick={this.onValidate.bind(this)}>
