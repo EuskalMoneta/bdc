@@ -117,7 +117,7 @@ class MemberChangeEuroEuskoPage extends React.Component {
             this.disableButton()
     }
 
-    submitForm = (data) => {
+    submitForm = () => {
         var computeForm = (data) => {
             this.refs.container.success(
                 __("L'enregistrement s'est déroulé correctement."),
