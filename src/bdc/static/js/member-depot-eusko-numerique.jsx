@@ -6,6 +6,8 @@ import {
     SelectizeUtils
 } from 'Utils'
 
+import ModalEusko from 'Modal'
+
 const {
     Input,
     Row
@@ -51,7 +53,10 @@ class MemberDepotEuskoNumeriquePage extends React.Component {
         this.state = {
             canSubmit: false,
             memberID: document.getElementById("member_id").value,
-            member: undefined
+            member: undefined,
+            isModalOpen: false,
+            formData: undefined,
+            modalBody: undefined
         }
 
         // Get member data
@@ -73,12 +78,7 @@ class MemberDepotEuskoNumeriquePage extends React.Component {
         // nothing here
     }
 
-    submitForm = (data) => {
-        this.disableButton()
-
-        data.member_login = this.state.member.login
-        data.login_bdc = window.config.userName
-
+    submitForm = () => {
         var computeForm = (data) => {
             this.refs.container.success(
                 __("L'enregistrement s'est déroulé correctement."),
@@ -108,7 +108,47 @@ class MemberDepotEuskoNumeriquePage extends React.Component {
                 }
             )
         }
-        fetchAuth(this.props.url, this.props.method, computeForm, data, promiseError)
+        fetchAuth(this.props.url, this.props.method, computeForm, this.state.formData, promiseError)
+    }
+
+    buildForm = (data) => {
+        this.disableButton()
+
+        data.member_login = this.state.member.login
+        data.login_bdc = window.config.userName
+
+        this.setState({formData: data}, this.getModalElements)
+    }
+
+    openModal = () => {
+        this.setState({isModalOpen: true})
+    }
+
+    hideModal = () => {
+        this.setState({isModalOpen: false})
+    }
+
+    getModalElements = () => {
+        this.setState({modalBody:
+            _.map(this.state.formData,
+                (item, key) => {
+                    switch (key) {
+                        case 'member_login':
+                            return {'label': __('N° adhérent - Nom'), order: 1,
+                                    'value': item + ' - ' + this.state.member.firstname + ' ' + this.state.member.lastname}
+                            break;
+                        case 'amount':
+                            return {'label': __('Montant'), 'value': item, order: 2}
+                            break;
+                        case 'login_bdc':
+                            break;
+                        default:
+                            return {'label': item, 'value': item, order: 999}
+                            break;
+                    }
+                }
+            )
+        }, this.openModal)
     }
 
     render = () => {
@@ -128,7 +168,7 @@ class MemberDepotEuskoNumeriquePage extends React.Component {
         return (
             <div className="row">
                 <MemberDepotEuskoNumeriqueForm
-                    onValidSubmit={this.submitForm}
+                    onValidSubmit={this.buildForm}
                     onInvalid={this.disableButton}
                     onValid={this.enableButton}
                     ref="memberdepot-eusko-numerique">
@@ -190,6 +230,7 @@ class MemberDepotEuskoNumeriquePage extends React.Component {
                 <ToastContainer ref="container"
                                 toastMessageFactory={ToastMessageFactory}
                                 className="toast-top-right toast-top-right-navbar" />
+                <ModalEusko hideModal={this.hideModal} isModalOpen={this.state.isModalOpen} modalBody={this.state.modalBody} onValidate={this.submitForm} />
             </div>
         )
     }
