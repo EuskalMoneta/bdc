@@ -6,6 +6,8 @@ import {
     SelectizeUtils,
 } from 'Utils'
 
+import ModalEusko from 'Modal'
+
 const {
     Input,
     Row,
@@ -64,6 +66,9 @@ class MemberSubscriptionPage extends React.Component {
             paymentMode: '',
             paymentModeList: undefined,
             displayCustomAmount: false,
+            isModalOpen: false,
+            formData: undefined,
+            modalBody: undefined
         }
 
         // Get member data
@@ -88,16 +93,6 @@ class MemberSubscriptionPage extends React.Component {
     }
 
     submitForm = () => {
-        this.disableButton()
-
-        var data = {amount: this.state.amount,
-                    payment_mode: this.state.paymentMode.value,
-                    member_id: document.getElementById("member_id").value,
-                    cyclos_id_payment_mode: this.state.paymentMode.cyclos_id}
-
-        if (this.state.customAmount)
-            data.amount = this.state.customAmount
-
         var computeForm = (data) => {
             this.refs.container.success(
                 __("L'enregistrement de la cotisation s'est déroulée correctement."),
@@ -127,7 +122,67 @@ class MemberSubscriptionPage extends React.Component {
                 }
             )
         }
-        fetchAuth(this.props.url, this.props.method, computeForm, data, promiseError)
+        fetchAuth(this.props.url, this.props.method, computeForm, this.state.formData, promiseError)
+    }
+
+    buildForm = () => {
+        this.disableButton()
+
+        var data = {amount: this.state.amount,
+                    payment_mode: this.state.paymentMode.value,
+                    member_id: document.getElementById("member_id").value,
+                    cyclos_id_payment_mode: this.state.paymentMode.cyclos_id}
+
+        if (this.state.customAmount)
+            data.amount = this.state.customAmount
+
+        this.setState({formData: data}, this.getModalElements)
+    }
+
+    openModal = () => {
+        this.setState({isModalOpen: true})
+    }
+
+    hideModal = () => {
+        this.setState({isModalOpen: false})
+    }
+
+    getModalElements = () => {
+        this.setState({modalBody:
+            _.map(this.state.formData,
+                (item, key) => {
+                    switch (key) {
+                        case 'member_id':
+                            return {'label': __('N° adhérent - Nom'), order: 1,
+                                    'value': this.state.member.login + ' - ' + this.state.member.firstname + ' ' + this.state.member.lastname}
+                            break;
+                        case 'amount':
+                            var value = undefined
+
+                            if (item == '5') {
+                                value = __('5 (bas revenus)')
+                            }
+                            else if (item == '10') {
+                                value = __('10 (cotisation normale)')
+                            }
+                            else if (Number(item) >= Number(20)) {
+                                value = __('%%% (cotisation de soutien)').replace('%%%', item)
+                            }
+
+                            return {'label': __('Montant'), 'value': value, order: 2}
+                            break;
+                        case 'payment_mode':
+                            return {'label': __('Mode de paiement'), 'value': this.state.paymentMode.label, order: 3}
+                            break;
+                        case 'cyclos_id_payment_mode':
+                            break;
+                        default:
+                            return {'label': item, 'value': item, order: 999}
+                            break;
+                    }
+                }
+            )
+        }, this.openModal)
     }
 
     validateForm = () => {
@@ -347,7 +402,7 @@ class MemberSubscriptionPage extends React.Component {
                                 defaultValue={__("Enregistrer la cotisation")}
                                 className="btn btn-success"
                                 formNoValidate={true}
-                                onClick={() => this.submitForm()}
+                                onClick={() => this.buildForm()}
                                 disabled={!this.state.canSubmit}
                             />
                         </Row>
@@ -356,6 +411,7 @@ class MemberSubscriptionPage extends React.Component {
                 <ToastContainer ref="container"
                                 toastMessageFactory={ToastMessageFactory}
                                 className="toast-top-right toast-top-right-navbar" />
+                <ModalEusko hideModal={this.hideModal} isModalOpen={this.state.isModalOpen} modalBody={this.state.modalBody} onValidate={this.submitForm} />
             </div>
         );
     }
