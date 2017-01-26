@@ -286,7 +286,11 @@ class MemberReconversionPage extends React.Component {
                 <ToastContainer ref="container"
                                 toastMessageFactory={ToastMessageFactory}
                                 className="toast-top-right toast-top-right-navbar" />
-                <ModalEusko hideModal={this.hideModal} isModalOpen={this.state.isModalOpen} modalBody={this.state.modalBody} onValidate={this.submitForm} />
+                <ModalEusko hideModal={this.hideModal} isModalOpen={this.state.isModalOpen}
+                            modalBody={this.state.modalBody}
+                            modalTitle={__("Reconversion") + " - " + __("Confirmation")}
+                            onValidate={this.submitForm}
+                />
             </div>
         )
     }
