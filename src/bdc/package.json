@@ -5,9 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack --config webpack.config.js --progress --colors",
-    "build-production": "webpack --config webpack.prod.config.js --progress --colors",
-    "watch": "webpack --config webpack.config.js --watch",
-    "test": "./node_modules/.bin/mocha \"tests/*.js\""
+    "watch": "webpack --config webpack.config.js --watch"
   },
   "author": "META-IT",
   "license": "UNLICENSED",
