@@ -5,9 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack --config webpack.config.js --progress --colors",
-    "build-production": "webpack --config webpack.prod.config.js --progress --colors",
-    "watch": "webpack --config webpack.config.js --watch",
-    "test": "./node_modules/.bin/mocha \"tests/*.js\""
+    "watch": "webpack --config webpack.config.js --watch"
   },
   "author": "META-IT",
   "license": "UNLICENSED",
@@ -40,6 +38,7 @@
     "react-bootstrap-table": "^2.7.1",
     "react-datepicker ": "^0.29.0",
     "react-dom": "15.3.2",
+    "react-modal-bootstrap": "^1.1.0",
     "react-selectize": "^2.0.3",
     "react-spinjs": "^3.0.0",
     "react-toastr": "^2.8.1",

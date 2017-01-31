@@ -8,7 +8,51 @@ var languages = {
     "eu": require('./static/locales/eu.json')
 }
 
-module.exports = Object.keys(languages).map(function(language) {
+// if env var NODE_ENV === 'production', it will uglify/minify our JS codebase
+// if this is anything else, it will not: and we will be in 'dev' mode (.js files will be *MUCH LARGER*)
+var isProd = (process.env.NODE_ENV === 'production')
+
+module.exports = Object.keys(languages).map(function(language)
+{
+    // Conditionally return a list of plugins to use based on the current environment.
+    // Repeat this pattern for any other config key (ie: loaders, etc).
+    function getPlugins() {
+        var plugins = [];
+
+        // Always expose NODE_ENV to webpack, you can now use `process.env.NODE_ENV`
+        // inside your code for any environment checks; UglifyJS will automatically
+        // drop any unreachable code.
+        plugins.push(
+            new webpack.EnvironmentPlugin([
+                'NODE_ENV'
+            ]),
+            // makes our dependencies available in every module
+            new webpack.ProvidePlugin({
+                Promise: 'imports?this=>global!exports?global.Promise!es6-promise',
+                fetch: 'imports?this=>global!exports?global.fetch!whatwg-fetch',
+                Raven: 'raven-js',
+                React: 'react',
+                ReactDOM: 'react-dom',
+                ReactToastr: 'react-toastr',
+                Formsy: 'formsy-react',
+                FRC: 'formsy-react-components',
+                moment: 'moment',
+                "_": 'underscore'
+            }),
+            new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /fr|eu/),
+            new I18nPlugin(
+                languages[language]
+            )
+        );
+
+        // Conditionally add plugins for Production builds.
+        if (isProd) {
+            plugins.push(new webpack.optimize.UglifyJsPlugin());
+        }
+
+        return plugins;
+    }
+
     return {
         // the base directory (absolute path) for resolving the entry option
         context: __dirname,
@@ -45,25 +89,7 @@ module.exports = Object.keys(languages).map(function(language) {
             filename: 'js/'+ language + '.[name].js',
         },
 
-        plugins: [
-            // makes our dependencies available in every module
-            new webpack.ProvidePlugin({
-                Promise: 'imports?this=>global!exports?global.Promise!es6-promise',
-                fetch: 'imports?this=>global!exports?global.fetch!whatwg-fetch',
-                Raven: 'raven-js',
-                React: 'react',
-                ReactDOM: 'react-dom',
-                ReactToastr: 'react-toastr',
-                Formsy: 'formsy-react',
-                FRC: 'formsy-react-components',
-                moment: 'moment',
-                "_": 'underscore'
-            }),
-            new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /fr|eu/),
-            new I18nPlugin(
-                languages[language]
-            )
-        ],
+        plugins: getPlugins(),
 
         module: {
             loaders: [
@@ -120,7 +146,8 @@ module.exports = Object.keys(languages).map(function(language) {
             root: path.resolve(__dirname),
 
             alias: {
-                Utils: 'static/js/utils'
+                Utils: 'static/js/utils',
+                Modal: 'static/js/modal'
             },
 
             // tells webpack where to look for modules

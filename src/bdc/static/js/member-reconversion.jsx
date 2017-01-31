@@ -6,6 +6,8 @@ import {
     SelectizeUtils
 } from 'Utils'
 
+import ModalEusko from 'Modal'
+
 const {
     Input,
     Row
@@ -54,6 +56,9 @@ class MemberReconversionPage extends React.Component {
             member: undefined,
             commisionAmount: undefined,
             prestataireAmount: undefined,
+            isModalOpen: false,
+            formData: undefined,
+            modalBody: undefined
         }
 
         // Get member data
@@ -78,11 +83,7 @@ class MemberReconversionPage extends React.Component {
                        prestataireAmount: String(Number(Number(value) * 0.95).toFixed(2)).replace(".", ",")})
     }
 
-    submitForm = (data) => {
-        this.disableButton()
-
-        data.member_login = this.state.member.login
-
+    submitForm = () => {
         var computeForm = (data) => {
             this.refs.container.success(
                 __("L'enregistrement s'est déroulé correctement."),
@@ -112,7 +113,50 @@ class MemberReconversionPage extends React.Component {
                 }
             )
         }
-        fetchAuth(this.props.url, this.props.method, computeForm, data, promiseError)
+        fetchAuth(this.props.url, this.props.method, computeForm, this.state.formData, promiseError)
+    }
+
+    buildForm = (data) => {
+        this.disableButton()
+
+        data.member_login = this.state.member.login
+
+        this.setState({formData: data}, this.getModalElements)
+    }
+
+    openModal = () => {
+        this.setState({isModalOpen: true})
+    }
+
+    hideModal = () => {
+        this.setState({isModalOpen: false})
+    }
+
+    getModalElements = () => {
+        var modalBody = _.map(this.state.formData,
+                (item, key) => {
+                    switch (key) {
+                        case 'member_login':
+                            return {'label': __('N° adhérent - Nom'), order: 1,
+                                    'value': item + ' - ' + this.state.member.company}
+                            break;
+                        case 'amount':
+                            return {'label': __('Montant'), 'value': item, order: 2}
+                            break;
+                        case 'facture':
+                            return {'label': __('N° facture'), 'value': item, order: 3}
+                            break;
+                        default:
+                            return {'label': item, 'value': item, order: 999}
+                            break;
+                    }
+                }
+            )
+
+        modalBody.push({'label': __("Frais de commission (5%)"), 'value': this.state.commisionAmount + " €", order: 4})
+        modalBody.push({'label': __("Euros versés au prestataire (95%)"), 'value': this.state.prestataireAmount + " €", order: 5})
+
+        this.setState({modalBody: modalBody}, this.openModal)
     }
 
     render = () => {
@@ -142,7 +186,7 @@ class MemberReconversionPage extends React.Component {
         return (
             <div className="row">
                 <MemberReconversionForm
-                    onValidSubmit={this.submitForm}
+                    onValidSubmit={this.buildForm}
                     onInvalid={this.disableButton}
                     onValid={this.enableButton}
                     ref="memberreconversion">
@@ -242,6 +286,11 @@ class MemberReconversionPage extends React.Component {
                 <ToastContainer ref="container"
                                 toastMessageFactory={ToastMessageFactory}
                                 className="toast-top-right toast-top-right-navbar" />
+                <ModalEusko hideModal={this.hideModal} isModalOpen={this.state.isModalOpen}
+                            modalBody={this.state.modalBody}
+                            modalTitle={__("Reconversion") + " - " + __("Confirmation")}
+                            onValidate={this.submitForm}
+                />
             </div>
         )
     }

@@ -13,6 +13,8 @@ services:
       - API_PUBLIC_URL=http://localhost:8000
       - API_INTERNAL_URL=http://api:8000
       - DJANGO_DEBUG=True
+      - TEST=False
+      - NODE_ENV=dev
     networks:
       - eusko_net
 
