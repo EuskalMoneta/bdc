@@ -108,7 +108,8 @@ var isMemberIdEusko = (values, value) =>
         return false
     }
 
-    if ((value.startsWith("E", 0) || value.startsWith("Z", 0)) && value.length === 6) {
+    if ((value.startsWith("E", 0) || value.startsWith("Z", 0)) && value.length === 6 && value.indexOf(" ") === -1 &&
+        !isNaN(value[1]) && !isNaN(value[2]) && !isNaN(value[3]) && !isNaN(value[4]) && !isNaN(value[5])) {
         return true
     }
     else {
