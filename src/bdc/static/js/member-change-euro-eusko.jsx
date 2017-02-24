@@ -174,8 +174,13 @@ class MemberChangeEuroEuskoPage extends React.Component {
                 (item, key) => {
                     switch (key) {
                         case 'member_login':
-                            return {'label': __('N° adhérent - Nom'), order: 1,
-                                    'value': item + ' - ' + this.state.member.firstname + ' ' + this.state.member.lastname}
+                            if (item.startsWith("Z")) {
+                                var name = item + ' - ' + this.state.member.company
+                            }
+                            else {
+                                var name = item + ' - ' + this.state.member.firstname + ' ' + this.state.member.lastname
+                            }
+                            return {'label': __('N° adhérent - Nom'), order: 1, 'value': name}
                             break;
                         case 'amount':
                             return {'label': __('Montant'), 'value': item, order: 2}
