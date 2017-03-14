@@ -308,9 +308,10 @@ class MemberChangeEuroEuskoPage extends React.Component {
                 <ToastContainer ref="container"
                                 toastMessageFactory={ToastMessageFactory}
                                 className="toast-top-right toast-top-right-navbar" />
-                <ModalEusko hideModal={this.hideModal} isModalOpen={this.state.isModalOpen}
+                <ModalEusko hideModal={this.hideModal}
+                            isModalOpen={this.state.isModalOpen}
                             modalBody={this.state.modalBody}
-                            modalTitle={__("Change € - Eusko") + " - " + __("Confirmation")}
+                            modalTitle={this.props.title + " : " + __("Confirmation")}
                             onValidate={this.submitForm}
                 />
             </div>
@@ -318,13 +319,22 @@ class MemberChangeEuroEuskoPage extends React.Component {
     }
 }
 
+// We use the same code for change billets and change numérique (except for POST url & page title)
+if (window.location.pathname.toLowerCase().indexOf("euro-eusko-numeriques") != -1) {
+    var url = getAPIBaseURL + "change-euro-eusko-numeriques/"
+    var title = __("Change € - Eusko numériques")
+}
+else {
+    var url = getAPIBaseURL + "change-euro-eusko/"
+    var title = __("Change € - Eusko billets")
+}
 
 ReactDOM.render(
-    <MemberChangeEuroEuskoPage url={getAPIBaseURL + "change-euro-eusko/"} method="POST" />,
+    <MemberChangeEuroEuskoPage url={url} title={title} method="POST" />,
     document.getElementById('change-euro-eusko')
 )
 
 ReactDOM.render(
-    <NavbarTitle title={__("Change € - Eusko")} />,
+    <NavbarTitle title={title} />,
     document.getElementById('navbar-title')
 )

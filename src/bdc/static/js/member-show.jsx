@@ -97,7 +97,12 @@ const MemberShow = React.createClass({
                             <div className="row member-show-div-margin-left">
                                 <a href={"/members/change/euro-eusko/" + this.state.member.id}
                                    className="btn btn-default">
-                                   {__("Change")}
+                                   {__("Change billets")}
+                                </a>
+                                {' '}
+                                <a href={"/members/change/euro-eusko-numeriques/" + this.state.member.id}
+                                   className="btn btn-default col-sm-offset-1">
+                                   {__("Change numérique")}
                                 </a>
                                 {' '}
                                 <a href={"/members/reconversion/" + this.state.member.id}
@@ -153,7 +158,12 @@ const MemberShow = React.createClass({
                             <div className="row member-show-div-margin-left">
                                 <a href={"/members/change/euro-eusko/" + this.state.member.id}
                                    className="btn btn-info">
-                                   {__("Change")}
+                                   {__("Change billets")}
+                                </a>
+                                {' '}
+                                <a href={"/members/change/euro-eusko-numeriques/" + this.state.member.id}
+                                   className="btn btn-default col-sm-offset-1">
+                                   {__("Change numérique")}
                                 </a>
                                 {' '}
                                 <a href={"/members/subscription/add/" + this.state.member.id}
