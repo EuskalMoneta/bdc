@@ -37,9 +37,17 @@ class LoginPage extends React.Component {
     constructor(props) {
         super(props)
 
+        var nextParam = getUrlParameter('next')
+
+        if (nextParam == window.config.getLoginRedirectURL || nextParam == "" || nextParam == "/")
+            var sessionExpired = false
+        else
+            var sessionExpired = true
+
         // Default state
         this.state = {
             canSubmit: false,
+            sessionExpired: sessionExpired,
             invalidLogin: false,
             displaySpinner: false,
             username: '',
@@ -75,7 +83,7 @@ class LoginPage extends React.Component {
         // See Notes: https://facebook.github.io/react/docs/component-api.html#setstate
         this.setState({
             [event.target.name]: event.target.value,
-            invalidLogin: false
+            invalidLogin: false,
         }, this.validateForm)
     }
 
@@ -88,7 +96,7 @@ class LoginPage extends React.Component {
 
     submitForm = (data) => {
         // Trigger <ReactSpinner /> to disable login form
-        this.setState({displaySpinner: true, canSubmit: false})
+        this.setState({displaySpinner: true, sessionExpired: false, canSubmit: false})
 
         // Get api-auth-token + auth in Django
 
@@ -154,6 +162,17 @@ class LoginPage extends React.Component {
         else
             var messageInvalidLogin = null
 
+        if (this.state.sessionExpired && !this.state.invalidLogin)
+            var messageSessionExpired = (
+                <div className="alert alert-info">
+                    {__("Session expirée.")}
+                    <br />
+                    {__("Veuillez vous reconnecter.")}
+                </div>
+            )
+        else
+            var messageSessionExpired = null
+
         if (this.state.displaySpinner)
             var spinner = <ReactSpinner config={this.state.spinnerConfig} />
         else
@@ -186,6 +205,7 @@ class LoginPage extends React.Component {
                             />
 
                             {messageInvalidLogin}
+                            {messageSessionExpired}
 
                             <input type="submit" className="btn btn-lg btn-success btn-block"
                                    defaultValue={__("Se connecter")} formNoValidate={true}

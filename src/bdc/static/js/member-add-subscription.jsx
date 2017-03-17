@@ -153,8 +153,13 @@ class MemberSubscriptionPage extends React.Component {
                 (item, key) => {
                     switch (key) {
                         case 'member_id':
-                            return {'label': __('N° adhérent - Nom'), order: 1,
-                                    'value': this.state.member.login + ' - ' + this.state.member.firstname + ' ' + this.state.member.lastname}
+                            if (this.state.member.login.startsWith("Z")) {
+                                var name = this.state.member.login + ' - ' + this.state.member.company
+                            }
+                            else {
+                                var name = this.state.member.login + ' - ' + this.state.member.firstname + ' ' + this.state.member.lastname
+                            }
+                            return {'label': __('N° adhérent - Nom'), order: 1, 'value': name}
                             break;
                         case 'amount':
                             var value = undefined

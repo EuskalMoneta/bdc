@@ -1,21 +1,63 @@
 var checkStatus = (response) => {
-    if (response.status != 204 && response.status >= 200 && response.status < 300) {
+    if (response.status >= 200 && response.status <= 401) {
         return response
     }
-    else if (response.status == 204) {
-        var error = new Error("No content")
-        error.response = response
-        throw error
-    }
     else {
-        var error = new Error(response.statusText)
-        error.response = response
-        throw error
+        try {
+            // If we got a forbidden (403) response,
+            // *AND* we're not already in the login page
+            // *AND* the call we've made was for the Euskal Moneta API and *NOT* the Django front
+            // we redirect to the login page, in this page a "session expired" message will be displayed
+            if (response.statusText == "Forbidden"
+                && window.location.pathname.indexOf("/login") === -1
+                && response.url.indexOf(window.config.getAPIBaseURL) != -1) {
+                window.location.assign("/logout?next=" + window.location.pathname)
+            }
+            else {
+                var error = new Error(response.statusText)
+                error.response = response
+                throw error
+            }
+        }
+        catch(e) {
+            var error = new Error(response.statusText)
+            error.response = response
+            throw error
+        }
     }
 }
 
 var parseJSON = (response) => {
-    return response.json()
+    if (response.status == 204) {
+        return {}
+    }
+    else if (response.status == 400 || response.status == 401) {
+        var error = new Error(response.statusText)
+        error.response = response
+        throw error
+    }
+    else {
+        return response.json()
+    }
+}
+
+var checkSession = (data) => {
+    try {
+        if (data.detail.indexOf("LOGGED_OUT") != -1) {
+            window.location.assign("/logout?next=" + window.location.pathname)
+        }
+        else if (data.detail.indexOf("Exception") != -1) {
+            var error = new Error(data)
+            error.response = data
+            throw error
+        }
+        else {
+            return data
+        }
+    }
+    catch(e) {
+        return data
+    }
 }
 
 var storeToken = (data) => {
@@ -55,6 +97,7 @@ var fetchCustom = (url, method, promise, token, data, promiseError=null) => {
     fetch(url, payload)
     .then(checkStatus)
     .then(parseJSON)
+    .then(checkSession)
     .then(promise)
     .catch(promiseError)
 }
@@ -108,7 +151,7 @@ var isMemberIdEusko = (values, value) =>
         return false
     }
 
-    if ((value.startsWith("E", 0) || value.startsWith("Z", 0)) && value.length === 6) {
+    if (value.match(/^E\d\d\d\d\d$/) || value.match(/^Z\d\d\d\d\d$/)) {
         return true
     }
     else {
@@ -116,8 +159,7 @@ var isMemberIdEusko = (values, value) =>
     }
 }
 
-var isPositiveNumeric = (values, value) =>
-{
+var isPositiveNumeric = (values, value) => {
     if (!value || value == 0) {
         return false
     }
@@ -219,10 +261,12 @@ var NavbarRight = React.createClass({
 
     componentDidMount() {
         // Get bdc name
-        var computeData = (data) => {
-            this.setState({bdcName: data})
+        if (window.config.userAuth) {
+            var computeData = (data) => {
+                this.setState({bdcName: data})
+            }
+            fetchAuth(getAPIBaseURL + "bdc-name/", 'get', computeData)
         }
-        fetchAuth(getAPIBaseURL + "bdc-name/", 'get', computeData)
     },
 
     toggleDropdown() {
@@ -319,6 +363,7 @@ class SelectizeUtils {
 module.exports = {
     checkStatus: checkStatus,
     parseJSON: parseJSON,
+    checkSession: checkSession,
     fetchAuth: fetchAuth,
     fetchCustom: fetchCustom,
     fetchGetToken: fetchGetToken,
