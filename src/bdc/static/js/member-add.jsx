@@ -70,28 +70,43 @@ class MemberAddPage extends React.Component {
         super(props);
 
         // Default state
-        this.state = {
-            isModalOpen: false,
-            canSubmit: false,
-            validFields: false,
-            validCustomFields: false,
-            login: undefined,
-            country: undefined,
-            zip: undefined,
-            zipSearch: undefined,
-            zipList: undefined,
-            town: undefined,
-            townList: undefined,
-            birth: undefined,
-            phone: undefined,
-            email: undefined,
-            assoSaisieLibre: false,
-            fkAsso: undefined,
-            fkAsso2: undefined,
-            fkAssoAllList: undefined,
-            fkAssoApprovedList: undefined,
-            formData: undefined,
-            modalBody: undefined,
+        var stateData = JSON.parse(sessionStorage.getItem('restart-member-add'))
+
+        if (stateData) {
+            stateData.birth = moment(stateData.birth)
+            stateData.isModalOpen = false
+            stateData.modalBody = undefined
+            this.state = stateData
+        }
+        else {
+            this.state = {
+                isModalOpen: false,
+                canSubmit: false,
+                validFields: false,
+                validCustomFields: false,
+                login: "",
+                lastname: "",
+                firstname: "",
+                address: "",
+                options_recevoir_actus: undefined,
+                civility_id: undefined,
+                country: undefined,
+                zip: undefined,
+                zipSearch: undefined,
+                zipList: undefined,
+                town: undefined,
+                townList: undefined,
+                birth: undefined,
+                phone: "",
+                email: "",
+                assoSaisieLibre: false,
+                fkAsso: undefined,
+                fkAsso2: undefined,
+                fkAssoAllList: undefined,
+                fkAssoApprovedList: undefined,
+                formData: undefined,
+                modalBody: undefined,
+            }
         }
 
         // Get countries for the country selector
@@ -109,7 +124,6 @@ class MemberAddPage extends React.Component {
             res.unshift(france)
             this.setState({countries: res, country: france})
         }
-        fetchAuth(getAPIBaseURL + "countries/", 'get', computeCountries)
 
         // Get all associations (no filter): fkAssoAllList
         var computeAllAssociations = (associations) => {
@@ -128,7 +142,6 @@ class MemberAddPage extends React.Component {
 
             this.setState({fkAssoAllList: res})
         }
-        fetchAuth(getAPIBaseURL + "associations/", 'get', computeAllAssociations)
 
         // Get only approved associations: fkAssoApprovedList
         var computeApprovedAssociations = (associations) => {
@@ -147,7 +160,13 @@ class MemberAddPage extends React.Component {
 
             this.setState({fkAssoApprovedList: res})
         }
-        fetchAuth(getAPIBaseURL + "associations/?approved=yes", 'get', computeApprovedAssociations)
+
+        // We don't need to update default state, if we already got a state from sessionStorage
+        if (!stateData) {
+            fetchAuth(getAPIBaseURL + "countries/", 'get', computeCountries)
+            fetchAuth(getAPIBaseURL + "associations/", 'get', computeAllAssociations)
+            fetchAuth(getAPIBaseURL + "associations/?approved=yes", 'get', computeApprovedAssociations)
+        }
     }
 
     onFormChange = (event, value) => {
@@ -356,6 +375,9 @@ class MemberAddPage extends React.Component {
 
     submitForm = () => {
         var computeForm = (data) => {
+            // Clean sessionStorage from data we may have saved
+            sessionStorage.removeItem('restart-member-add')
+
             this.refs.container.success(
                 __("La création de l'adhérent s'est déroulée correctement."),
                 "",
@@ -372,6 +394,9 @@ class MemberAddPage extends React.Component {
 
         var promiseError = (err) => {
             // Error during request, or parsing NOK :(
+            
+            // Save actual state for later
+            sessionStorage.setItem('restart-member-add', JSON.stringify(this.state))
             this.enableButton()
 
             console.log(this.props.url, err)
@@ -425,7 +450,7 @@ class MemberAddPage extends React.Component {
                         <Input
                             name="login"
                             data-eusko="memberaddform-login"
-                            value={this.state.login ? this.state.login : ""}
+                            value={this.state.login}
                             label={__("N° adhérent")}
                             type="text"
                             placeholder={__("N° adhérent")}
@@ -440,19 +465,22 @@ class MemberAddPage extends React.Component {
                         />
                         <RadioGroup
                             name="civility_id"
+                            value={this.state.civility_id}
                             data-eusko="memberaddform-civility_id"
                             type="inline"
                             label={__("Civilité")}
                             options={[{value: 'MME', label: __('Madame')},
                                      {value: 'MR', label: __('Monsieur')}
                             ]}
+                            onChange={this.onFormChange}
                             elementWrapperClassName={[{'col-sm-9': false}, 'col-sm-6']}
                             required
                         />
                         <Input
                             name="lastname"
                             data-eusko="memberaddform-lastname"
-                            value=""
+                            value={this.state.lastname}
+                            onChange={this.onFormChange}
                             label={__("Nom")}
                             type="text"
                             placeholder={__("Nom")}
@@ -466,7 +494,8 @@ class MemberAddPage extends React.Component {
                         <Input
                             name="firstname"
                             data-eusko="memberaddform-firstname"
-                            value=""
+                            value={this.state.firstname}
+                            onChange={this.onFormChange}
                             label={__("Prénom")}
                             type="text"
                             placeholder={__("Prénom")}
@@ -501,7 +530,8 @@ class MemberAddPage extends React.Component {
                         <Textarea
                             name="address"
                             data-eusko="memberaddform-address"
-                            value=""
+                            value={this.state.address}
+                            onChange={this.onFormChange}
                             label={__("Adresse postale")}
                             type="text"
                             placeholder={__("Adresse postale")}
@@ -590,7 +620,7 @@ class MemberAddPage extends React.Component {
                         <Input
                             name="phone"
                             data-eusko="memberaddform-phone"
-                            value=""
+                            value={this.state.phone}
                             label={__("N° téléphone")}
                             type="tel"
                             placeholder={__("N° téléphone")}
@@ -605,7 +635,7 @@ class MemberAddPage extends React.Component {
                         <Input
                             name="email"
                             data-eusko="memberaddform-email"
-                            value=""
+                            value={this.state.email}
                             label={__("Email")}
                             type="email"
                             placeholder={__("Email de l'adhérent")}
@@ -620,6 +650,8 @@ class MemberAddPage extends React.Component {
                         <RadioGroup
                             name="options_recevoir_actus"
                             data-eusko="memberaddform-options-recevoir-actus"
+                            value={this.state.options_recevoir_actus}
+                            onChange={this.onFormChange}
                             type="inline"
                             label={__("Souhaite être informé des actualités liées à l'eusko")}
                             help={__("L'adhérent recevra un à deux mails par semaine.")}
