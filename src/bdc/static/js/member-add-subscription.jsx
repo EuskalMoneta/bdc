@@ -52,36 +52,49 @@ class MemberSubscriptionPage extends React.Component {
     constructor(props) {
         super(props);
 
-        // Default state
-        this.state = {
-            canSubmit: false,
-            buttonBasRevenusActivated: false,
-            buttonClassiqueActivated: false,
-            buttonSoutienActivated: false,
-            amount: undefined,
-            customAmount: undefined,
-            amountInvalid: false,
-            memberID: document.getElementById("member_id").value,
-            member: undefined,
-            paymentMode: '',
-            paymentModeList: undefined,
-            displayCustomAmount: false,
-            isModalOpen: false,
-            formData: undefined,
-            modalBody: undefined
+        // Default state 
+        var stateData = JSON.parse(sessionStorage.getItem('restart-member-add-subscription'))
+
+        if (stateData) {
+            stateData.isModalOpen = false
+            stateData.modalBody = undefined
+            this.state = stateData
+        }
+        else {
+            this.state = {
+                canSubmit: false,
+                buttonBasRevenusActivated: false,
+                buttonClassiqueActivated: false,
+                buttonSoutienActivated: false,
+                amount: undefined,
+                customAmount: undefined,
+                amountInvalid: false,
+                memberID: document.getElementById("member_id").value,
+                member: undefined,
+                paymentMode: '',
+                paymentModeList: undefined,
+                displayCustomAmount: false,
+                isModalOpen: false,
+                formData: undefined,
+                modalBody: undefined
+            }
         }
 
         // Get member data
         var computeMemberData = (member) => {
             this.setState({member: member})
         }
-        fetchAuth(getAPIBaseURL + "members/" + this.state.memberID + "/", 'get', computeMemberData)
 
         // Get payment_modes
         var computePaymentModes = (paymentModes) => {
             this.setState({paymentModeList: paymentModes})
         }
-        fetchAuth(getAPIBaseURL + "payment-modes/", 'get', computePaymentModes)
+
+        // We don't need to update default state, if we already got a state from sessionStorage
+        if (!stateData) {
+            fetchAuth(getAPIBaseURL + "members/" + this.state.memberID + "/", 'get', computeMemberData)
+            fetchAuth(getAPIBaseURL + "payment-modes/", 'get', computePaymentModes)
+        }
     }
 
     enableButton = () => {
@@ -94,6 +107,9 @@ class MemberSubscriptionPage extends React.Component {
 
     submitForm = () => {
         var computeForm = (data) => {
+            // Clean sessionStorage from data we may have saved
+            sessionStorage.removeItem('restart-member-add-subscription')
+
             this.refs.container.success(
                 __("L'enregistrement de la cotisation s'est déroulée correctement."),
                 "",
@@ -109,6 +125,9 @@ class MemberSubscriptionPage extends React.Component {
 
         var promiseError = (err) => {
             // Error during request, or parsing NOK :(
+
+            // Save actual state for later
+            sessionStorage.setItem('restart-member-add-subscription', JSON.stringify(this.state))
             this.enableButton()
 
             console.error(this.props.url, err)
