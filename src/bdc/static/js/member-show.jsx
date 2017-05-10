@@ -83,21 +83,21 @@ const MemberShow = React.createClass({
                     var changeNumerique = (
                         <a href={"/members/change/euro-eusko-numeriques/" + this.state.member.id}
                            className="btn btn-default col-sm-offset-1">
-                           {__("Change numérique")}
+                           {__("Chargement du compte")}
                         </a>
                     )
 
                     var memberActionDepotCompte = (
                         <a href={"/members/depot-eusko-numerique/" + this.state.member.id}
                            className="btn btn-default">
-                            {__("Dépôt sur le compte")}
+                            {__("Dépôt d'eusko sur le compte")}
                         </a>
                     )
 
                     var memberActionRetraitCompte = (
                         <a href={"/members/retrait-eusko-numerique/" + this.state.member.id}
                            className="btn btn-default col-sm-offset-1">
-                            {__("Retrait du compte")}
+                            {__("Retrait d'eusko du compte")}
                         </a>
                     )
                 }
@@ -153,14 +153,14 @@ const MemberShow = React.createClass({
                     var changeNumerique = (
                         <a href={"/members/change/euro-eusko-numeriques/" + this.state.member.id}
                            className="btn btn-default col-sm-offset-1">
-                           {__("Change numérique")}
+                           {__("Chargement du compte")}
                         </a>
                     )
 
                     var memberActionRetraitCompte = (
                         <a href={"/members/retrait-eusko-numerique/" + this.state.member.id}
                            className="btn btn-default">
-                            {__("Retrait du compte")}
+                            {__("Retrait d'eusko du compte")}
                         </a>
                     )
                 }
