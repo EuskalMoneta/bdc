@@ -145,18 +145,8 @@ var getUrlParameter = (name) => {
     return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
 }
 
-var isMemberIdEusko = (values, value) =>
-{
-    if (!value) {
-        return false
-    }
-
-    if (value.match(/^E\d\d\d\d\d$/) || value.match(/^Z\d\d\d\d\d$/)) {
-        return true
-    }
-    else {
-        return false
-    }
+var isMemberIdEusko = (values, value) => {
+    return value && value.match(/^[EZ]\d\d\d\d\d$/)
 }
 
 var isPositiveNumeric = (values, value) => {
