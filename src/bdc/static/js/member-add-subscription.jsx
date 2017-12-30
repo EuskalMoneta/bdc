@@ -181,19 +181,7 @@ class MemberSubscriptionPage extends React.Component {
                             return {'label': __('N° adhérent - Nom'), order: 1, 'value': name}
                             break;
                         case 'amount':
-                            var value = undefined
-
-                            if (item == '5') {
-                                value = __('5 (bas revenus)')
-                            }
-                            else if (item == '10') {
-                                value = __('10 (cotisation normale)')
-                            }
-                            else if (Number(item) >= Number(20)) {
-                                value = __('%%% (cotisation de soutien)').replace('%%%', item)
-                            }
-
-                            return {'label': __('Montant'), 'value': value, order: 2}
+                            return {'label': __('Montant'), 'value': item + ' €/eusko', order: 2}
                             break;
                         case 'payment_mode':
                             return {'label': __('Mode de paiement'), 'value': this.state.paymentMode.label, order: 3}
@@ -230,7 +218,7 @@ class MemberSubscriptionPage extends React.Component {
             this.setState({customAmount: undefined}, this.validateForm)
         }
 
-        if (Number(value) >= Number(20)) {
+        if (Number(value) >= Number(5)) {
             this.setState({amountInvalid: false}, this.validateForm)
         }
         else {
@@ -297,8 +285,8 @@ class MemberSubscriptionPage extends React.Component {
 
         if (this.state.amountInvalid)
             var spanInvalidAmount = (
-                <span className="help-block validation-message">
-                    {__("Montant personnalisé incorrect, choisissez un montant dans la liste ou un montant supérieur à 20 (€ ou euskos)")}
+                <span className="help-block has-error-value">
+                    {__("Montant personnalisé incorrect, choisissez un montant dans la liste ou un montant supérieur à 5 €/eusko.")}
                 </span>)
         else
             var spanInvalidAmount = null
@@ -391,6 +379,7 @@ class MemberSubscriptionPage extends React.Component {
                             required={this.state.displayCustomAmount}
                             disabled={!this.state.displayCustomAmount}
                         />
+                        {spanInvalidAmount}
                         <div className="form-group row">
                             <label
                                 className="control-label col-sm-3"
