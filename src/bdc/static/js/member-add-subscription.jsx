@@ -10,6 +10,7 @@ import ModalEusko from 'Modal'
 
 const {
     Input,
+    RadioGroup,
     Row,
 } = FRC
 
@@ -63,9 +64,6 @@ class MemberSubscriptionPage extends React.Component {
         else {
             this.state = {
                 canSubmit: false,
-                buttonBasRevenusActivated: false,
-                buttonClassiqueActivated: false,
-                buttonSoutienActivated: false,
                 amount: undefined,
                 customAmount: undefined,
                 amountInvalid: false,
@@ -181,19 +179,7 @@ class MemberSubscriptionPage extends React.Component {
                             return {'label': __('N° adhérent - Nom'), order: 1, 'value': name}
                             break;
                         case 'amount':
-                            var value = undefined
-
-                            if (item == '5') {
-                                value = __('5 (bas revenus)')
-                            }
-                            else if (item == '10') {
-                                value = __('10 (cotisation normale)')
-                            }
-                            else if (Number(item) >= Number(20)) {
-                                value = __('%%% (cotisation de soutien)').replace('%%%', item)
-                            }
-
-                            return {'label': __('Montant'), 'value': value, order: 2}
+                            return {'label': __('Montant'), 'value': item, order: 2}
                             break;
                         case 'payment_mode':
                             return {'label': __('Mode de paiement'), 'value': this.state.paymentMode.label, order: 3}
@@ -230,7 +216,7 @@ class MemberSubscriptionPage extends React.Component {
             this.setState({customAmount: undefined}, this.validateForm)
         }
 
-        if (Number(value) >= Number(20)) {
+        if (Number(value) >= Number(5)) {
             this.setState({amountInvalid: false}, this.validateForm)
         }
         else {
@@ -238,8 +224,12 @@ class MemberSubscriptionPage extends React.Component {
         }
     }
 
-    setAmount = (value) => {
-        this.setState(value, this.validateForm)
+    setAmount = (field, value) => {
+        if (value == 'customAmount') {
+            this.setState({amount: 'customAmount', customAmount: undefined, displayCustomAmount: true}, this.validateForm)
+        } else {
+            this.setState({amount: value, customAmount: undefined, displayCustomAmount: false}, this.validateForm)
+        }
     }
 
     // paymentMode
@@ -271,24 +261,6 @@ class MemberSubscriptionPage extends React.Component {
     }
 
     render = () => {
-        var buttonBasRevenusClass = classNames({
-            "btn": true,
-            "btn-default": !this.state.buttonBasRevenusActivated,
-            "btn-info-inverse": this.state.buttonBasRevenusActivated,
-        })
-
-        var buttonClassiqueClass = classNames({
-            "btn": true,
-            "btn-default": !this.state.buttonClassiqueActivated,
-            "btn-info-inverse": this.state.buttonClassiqueActivated,
-        })
-
-        var buttonSoutienClass = classNames({
-            "btn": true,
-            "btn-default": !this.state.buttonSoutienActivated,
-            "btn-info-inverse": this.state.buttonSoutienActivated,
-        })
-
         var divCustomAmountClass = classNames({
             'form-group row': true,
             'hidden': !this.state.displayCustomAmount,
@@ -297,8 +269,8 @@ class MemberSubscriptionPage extends React.Component {
 
         if (this.state.amountInvalid)
             var spanInvalidAmount = (
-                <span className="help-block validation-message">
-                    {__("Montant personnalisé incorrect, choisissez un montant dans la liste ou un montant supérieur à 20 (€ ou euskos)")}
+                <span className="help-block has-error-value">
+                    {__("Montant personnalisé incorrect, choisissez un montant dans la liste ou un montant supérieur à 5 €/eusko.")}
                 </span>)
         else
             var spanInvalidAmount = null
@@ -343,37 +315,21 @@ class MemberSubscriptionPage extends React.Component {
                             </div>
                             <div className="col-sm-3"></div>
                         </div>
-                        <div className="form-group row">
-                            <label
-                                className="control-label col-sm-3"
-                                data-required="true"
-                                htmlFor="memberaddsubscription-amount">
-                                {__("Montant")}
-                                <span className="required-symbol">&nbsp;*</span>
-                            </label>
-                            <div className="col-sm-7 memberaddsubscription" data-eusko="memberaddsubscription-amount">
-                            <button
-                                className={buttonBasRevenusClass}
-                                onClick={() => this.setAmount({amount: '5', customAmount: undefined, displayCustomAmount: false,
-                                            buttonBasRevenusActivated: true, buttonClassiqueActivated: false, buttonSoutienActivated: false})}>
-                                {__('5 (bas revenus)')}
-                            </button>
-                            {' '}
-                            <button
-                                className={buttonClassiqueClass}
-                                onClick={() => this.setAmount({amount: '10', customAmount: undefined, displayCustomAmount: false,
-                                           buttonBasRevenusActivated: false, buttonClassiqueActivated: true, buttonSoutienActivated: false})}>
-                                {__('10 (cotisation normale)')}
-                            </button>
-                            {' '}
-                            <button
-                                className={buttonSoutienClass}
-                                onClick={() => this.setAmount({amount: undefined, customAmount: '20', displayCustomAmount: true,
-                                            buttonBasRevenusActivated: false, buttonClassiqueActivated: false, buttonSoutienActivated: true})}>
-                                {__('20 ou plus (cotisation de soutien)')}
-                            </button>
-                            </div>
-                        </div>
+                        <RadioGroup
+                            name="amount"
+                            data-eusko="memberaddsubscription-amount"
+                            value={this.state.amount}
+                            label={__("Montant")}
+                            options={[
+                                {value: '12', label: '12 €/eusko'},
+                                {value: '24', label: '24 €/eusko'},
+                                {value: '36', label: '36 €/eusko'},
+                                {value: '5', label: __("5 €/eusko (chômeurs, minima sociaux)")},
+                                {value: 'customAmount', label: __("Autre montant")},
+                            ]}
+                            required
+                            onChange={this.setAmount}
+                        />
                         <Input
                             name="customAmount"
                             data-eusko="bank-deposit-customAmount"
@@ -391,6 +347,7 @@ class MemberSubscriptionPage extends React.Component {
                             required={this.state.displayCustomAmount}
                             disabled={!this.state.displayCustomAmount}
                         />
+                        {spanInvalidAmount}
                         <div className="form-group row">
                             <label
                                 className="control-label col-sm-3"
