@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y \
 # gpg keys listed at https://github.com/nodejs/node
 RUN set -ex \
   && for key in gpg_keys/* ; do \
-    gpg --import ${key}; \
+    gpg --no-tty --import ${key}; \
   done
 
 ENV NPM_CONFIG_LOGLEVEL info
