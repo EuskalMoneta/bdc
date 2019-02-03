@@ -43,21 +43,21 @@ urlpatterns = [
 
     # basic operations
     url(r'^members/search$', members_views.search, name='member-search'),
-    url(r'^members/(?P<member_id>\d+)/?$', members_views.index, name='member-show'),
+    url(r'^members/(?P<member_id>[-]?\d+)/?$', members_views.index, name='member-show'),
     url(r'^members/add$', members_views.add, name='member-add'),
 
     # operations métiers for members
-    url(r'^members/subscription/add/(?P<member_id>\d+)/?$',
+    url(r'^members/subscription/add/(?P<member_id>[-]?\d+)/?$',
         members_views.add_subscription, name='member-subscription-add'),
-    url(r'^members/change/euro-eusko/(?P<member_id>\d+)/?$',
+    url(r'^members/change/euro-eusko/(?P<member_id>[-]?\d+)/?$',
         members_views.change_euro_eusko, name='member-change-euro-eusko'),
-    url(r'^members/change/euro-eusko-numeriques/(?P<member_id>\d+)/?$',
+    url(r'^members/change/euro-eusko-numeriques/(?P<member_id>[-]?\d+)/?$',
         members_views.change_euro_eusko, name='member-change-euro-eusko-numeriques'),
-    url(r'^members/reconversion/(?P<member_id>\d+)/?$',
+    url(r'^members/reconversion/(?P<member_id>[-]?\d+)/?$',
         members_views.reconversion, name='member-reconversion'),
-    url(r'^members/depot-eusko-numerique/(?P<member_id>\d+)/?$',
+    url(r'^members/depot-eusko-numerique/(?P<member_id>[-]?\d+)/?$',
         members_views.depot_eusko_numerique, name='depot-eusko-numerique'),
-    url(r'^members/retrait-eusko-numerique/(?P<member_id>\d+)/?$',
+    url(r'^members/retrait-eusko-numerique/(?P<member_id>[-]?\d+)/?$',
         members_views.retrait_eusko_numerique, name='retrait-eusko-numerique'),
 
     url(r'^manager/?$', manager_views.index, name='manager'),
