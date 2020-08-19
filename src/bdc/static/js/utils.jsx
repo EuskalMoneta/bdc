@@ -149,15 +149,8 @@ var isMemberIdEusko = (values, value) => {
     return value && value.match(/^[EZ]\d\d\d\d\d$/)
 }
 
-var isPositiveNumeric = (values, value) => {
-    if (!value || value == 0) {
-        return false
-    }
-
-    if (value.match(/^\+?(?:\d*[.])?\d+$/))
-        return true
-    else
-        return false
+var isPositiveInteger = (values, value) => {
+    return value.match(/^\d+$/)
 }
 
 var titleCase = (str) => {
@@ -359,7 +352,7 @@ module.exports = {
     fetchGetToken: fetchGetToken,
     getUrlParameter: getUrlParameter,
     isMemberIdEusko: isMemberIdEusko,
-    isPositiveNumeric: isPositiveNumeric,
+    isPositiveInteger: isPositiveInteger,
     titleCase: titleCase,
     getCurrentLang: getCurrentLang,
     getCSRFToken: getCSRFToken,

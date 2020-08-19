@@ -1,7 +1,7 @@
 import {
     fetchAuth,
     getAPIBaseURL,
-    isPositiveNumeric,
+    isPositiveInteger,
     NavbarTitle,
     SelectizeUtils,
 } from 'Utils'
@@ -24,7 +24,7 @@ const {
 } = ReactToastr
 const ToastMessageFactory = React.createFactory(ReactToastr.ToastMessage.animation)
 
-Formsy.addValidationRule('isPositiveNumeric', isPositiveNumeric)
+Formsy.addValidationRule('isPositiveInteger', isPositiveInteger)
 
 
 const MemberSubscriptionForm = React.createClass({
@@ -209,7 +209,7 @@ class MemberSubscriptionPage extends React.Component {
 
     // amount
     validateAmount = (field, value) => {
-        if (isPositiveNumeric(null, value)) {
+        if (isPositiveInteger(null, value)) {
             this.setState({customAmount: value}, this.validateForm)
         }
         else {
@@ -336,9 +336,9 @@ class MemberSubscriptionPage extends React.Component {
                             value={this.state.customAmount ? this.state.customAmount : ""}
                             type="number"
                             placeholder={__("Montant de la cotisation")}
-                            validations="isPositiveNumeric"
+                            validations="isPositiveInteger"
                             validationErrors={{
-                               isPositiveNumeric: __("Montant invalide.")
+                               isPositiveInteger: __("Montant invalide.")
                             }}
                             label={__("Montant personnalisé")}
                             onChange={this.validateAmount}
