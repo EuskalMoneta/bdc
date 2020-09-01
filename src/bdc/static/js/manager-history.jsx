@@ -1,7 +1,6 @@
 import {
     fetchAuth,
     getAPIBaseURL,
-    isPositiveNumeric,
     NavbarTitle,
     SelectizeUtils,
     getCurrentLang

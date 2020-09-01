@@ -61,7 +61,8 @@ const MemberShow = React.createClass({
         }
 
         // Whether or not, we have a business member or a individual
-        if (this.state.member.type.toLowerCase() != 'particulier') {
+        if (this.state.member.type.toLowerCase() != 'particulier'
+           && this.state.member.type.toLowerCase() != 'touriste') {
             // We have a business member
 
             var memberName = (

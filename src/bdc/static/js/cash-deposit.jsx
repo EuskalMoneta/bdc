@@ -1,7 +1,6 @@
 import {
     fetchAuth,
     getAPIBaseURL,
-    isPositiveNumeric,
     NavbarTitle,
     SelectizeUtils,
     getCurrentLang
@@ -28,8 +27,6 @@ const {
     ToastContainer
 } = ReactToastr
 const ToastMessageFactory = React.createFactory(ReactToastr.ToastMessage.animation)
-
-Formsy.addValidationRule('isPositiveNumeric', isPositiveNumeric)
 
 const CashDepositForm = React.createClass({
 

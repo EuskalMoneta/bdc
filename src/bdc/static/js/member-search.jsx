@@ -63,7 +63,8 @@ class MemberSearchPage extends React.Component {
             var searchUpperCase = search.toUpperCase()
 
             if ((searchUpperCase.startsWith("E", 0) ||
-                searchUpperCase.startsWith("Z", 0)) &&
+                searchUpperCase.startsWith("Z", 0) ||
+                searchUpperCase.startsWith("T", 0)) &&
                 search.length === 6)
                 var searchString = '?login=' + searchUpperCase
             else
@@ -73,7 +74,8 @@ class MemberSearchPage extends React.Component {
             var computeSearch = (search) => {
                 var searchResults = _.chain(search)
                     .map(function(item){
-                        if (item.login.startsWith("E", 0))
+                        if (item.login.startsWith("E", 0) ||
+                           item.login.startsWith("T", 0))
                             return {name: item.firstname + " " + item.lastname,
                                     id: item.id, login: item.login}
 

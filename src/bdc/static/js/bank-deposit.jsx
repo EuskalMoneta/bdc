@@ -1,7 +1,7 @@
 import {
     fetchAuth,
     getAPIBaseURL,
-    isPositiveNumeric,
+    isPositiveInteger,
     NavbarTitle,
     SelectizeUtils,
     getCurrentLang
@@ -29,7 +29,7 @@ const {
 } = ReactToastr
 const ToastMessageFactory = React.createFactory(ReactToastr.ToastMessage.animation)
 
-Formsy.addValidationRule('isPositiveNumeric', isPositiveNumeric)
+Formsy.addValidationRule('isPositiveInteger', isPositiveInteger)
 
 const BankDepositForm = React.createClass({
 
@@ -211,7 +211,7 @@ var BankDepositPage = React.createClass({
             var numDepositCalculatedAmount = Number(this.state.depositCalculatedAmount)
             var diff = numDepositAmount - numDepositCalculatedAmount
 
-            if ((numDepositAmount === numDepositCalculatedAmount) || !isPositiveNumeric(null, this.state.depositAmount)) {
+            if ((numDepositAmount === numDepositCalculatedAmount) || !isPositiveInteger(null, this.state.depositAmount)) {
                 this.setState({displayWarningPlusDifference: false,
                                displayWarningMinusDifference: false},
                               this.validateForm)
@@ -338,7 +338,7 @@ var BankDepositPage = React.createClass({
             this.state.depositCalculatedAmount != Number(0) &&
             (!this.state.displayCustomAmount ||
                 this.state.displayCustomAmount &&
-                isPositiveNumeric(null, this.state.depositAmount)) &&
+                isPositiveInteger(null, this.state.depositAmount)) &&
             (this.state.disableBordereau ||
                 !this.state.disableBordereau &&
                 this.state.bordereau)
@@ -583,9 +583,9 @@ var BankDepositPage = React.createClass({
                                 label={__("Montant")}
                                 type="number"
                                 placeholder={__("Montant du dépôt")}
-                                validations="isPositiveNumeric"
+                                validations="isPositiveInteger"
                                 validationErrors={{
-                                    isPositiveNumeric: __("Montant invalide.")
+                                    isPositiveInteger: __("Montant invalide.")
                                 }}
                                 onChange={this.onFormChange}
                                 onBlur={this.depositAmountOnBlur}
