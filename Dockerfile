@@ -11,7 +11,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN apt-get update && apt-get install -y \
     gcc \
     gettext \
-    mysql-client default-libmysqlclient-dev \
+    default-mysql-client default-libmysqlclient-dev \
     postgresql-client libpq-dev \
     sqlite3 \
   --no-install-recommends && rm -rf /var/lib/apt/lists/*
