@@ -51,8 +51,6 @@ urlpatterns = [
         members_views.add_subscription, name='member-subscription-add'),
     url(r'^members/change/euro-eusko/(?P<member_id>\d+)/?$',
         members_views.change_euro_eusko, name='member-change-euro-eusko'),
-    url(r'^members/change/euro-eusko-numeriques/(?P<member_id>\d+)/?$',
-        members_views.change_euro_eusko, name='member-change-euro-eusko-numeriques'),
     url(r'^members/reconversion/(?P<member_id>\d+)/?$',
         members_views.reconversion, name='member-reconversion'),
     url(r'^members/depot-eusko-numerique/(?P<member_id>\d+)/?$',

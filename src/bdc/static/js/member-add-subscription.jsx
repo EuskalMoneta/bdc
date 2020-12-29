@@ -321,10 +321,10 @@ class MemberSubscriptionPage extends React.Component {
                             value={this.state.amount}
                             label={__("Montant")}
                             options={[
-                                {value: '12', label: '12 €/eusko'},
                                 {value: '24', label: '24 €/eusko'},
                                 {value: '36', label: '36 €/eusko'},
-                                {value: '5', label: __("5 €/eusko (chômeurs, minima sociaux)")},
+                                {value: '60', label: '60 €/eusko'},
+                                {value: '5', label: __("5 €/eusko (chômeurs, allocataires de minima sociaux, étudiants)")},
                                 {value: 'customAmount', label: __("Autre montant")},
                             ]}
                             required
