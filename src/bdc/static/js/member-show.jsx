@@ -76,18 +76,10 @@ const MemberShow = React.createClass({
             // Whether or not, we have a up-to-date member subscription
             if (memberStatusUpToDate)
             {
-                var changeNumerique = null
                 var memberActionDepotCompte = null
                 var memberActionRetraitCompte = null
             
                 if (this.state.hasAcceptedCGU) {
-                    var changeNumerique = (
-                        <a href={"/members/change/euro-eusko-numeriques/" + this.state.member.id}
-                           className="btn btn-default col-sm-offset-1">
-                           {__("Chargement du compte")}
-                        </a>
-                    )
-
                     var memberActionDepotCompte = (
                         <a href={"/members/depot-eusko-numerique/" + this.state.member.id}
                            className="btn btn-default">
@@ -110,8 +102,6 @@ const MemberShow = React.createClass({
                                className="btn btn-default">
                                {__("Change billets")}
                             </a>
-                            {' '}
-                            {changeNumerique}
                             {' '}
                             <a href={"/members/reconversion/" + this.state.member.id}
                                className="btn btn-info col-sm-offset-1">
@@ -148,16 +138,8 @@ const MemberShow = React.createClass({
             // Whether or not, we have a up-to-date member subscription
             if (memberStatusUpToDate)
             {
-                var changeNumerique = null
                 var memberActionRetraitCompte = null
                 if (this.state.hasAcceptedCGU) {
-                    var changeNumerique = (
-                        <a href={"/members/change/euro-eusko-numeriques/" + this.state.member.id}
-                           className="btn btn-default col-sm-offset-1">
-                           {__("Chargement du compte")}
-                        </a>
-                    )
-
                     var memberActionRetraitCompte = (
                         <a href={"/members/retrait-eusko-numerique/" + this.state.member.id}
                            className="btn btn-default">
@@ -173,8 +155,6 @@ const MemberShow = React.createClass({
                                className="btn btn-info">
                                {__("Change billets")}
                             </a>
-                            {' '}
-                            {changeNumerique}
                             {' '}
                             <a href={"/members/subscription/add/" + this.state.member.id}
                                className="btn btn-default col-sm-offset-1">
