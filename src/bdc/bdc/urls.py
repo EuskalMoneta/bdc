@@ -65,7 +65,6 @@ urlpatterns = [
     url(r'^manager/sortie-stock/?$', manager_views.sortie_stock, name='sortie-stock'),
 
     url(r'^manager/bank-deposit/?$', manager_views.bank_deposit, name='bank-deposit'),
-    url(r'^manager/cash-deposit/?$', manager_views.cash_deposit, name='cash-deposit'),
     url(r'^manager/sortie-caisse-eusko/?$', manager_views.cash_deposit, name='sortie-caisse-eusko'),
     url(r'^manager/sortie-retour-eusko/?$', manager_views.cash_deposit, name='sortie-retour-eusko'),
 ]
