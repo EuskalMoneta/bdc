@@ -55,7 +55,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'csp.middleware.CSPMiddleware',
 
     'django.middleware.security.SecurityMiddleware',
@@ -63,7 +63,6 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -94,6 +93,7 @@ ROOT_URLCONF = 'bdc.urls'
 
 APPEND_SLASH = False
 LOGIN_REDIRECT_URL = '/members/search'
+LOGOUT_REDIRECT_URL = '/login'
 LOGIN_URL = '/login'
 LOGOUT_URL = '/logout'
 

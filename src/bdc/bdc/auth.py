@@ -12,10 +12,10 @@ import requests
 log = logging.getLogger()
 
 
-class BDCAuthBackend(object):
+class BDCAuthBackend:
     """ Authenticate BDC against Dolibarr through the EuskalMoneta API """
 
-    def authenticate(self, username, password):
+    def authenticate(self, request, username, password):
         user = None
         try:
             r_login = requests.post('{}{}'.format(settings.API_INTERNAL_URL, 'login/'),
