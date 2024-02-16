@@ -16,7 +16,7 @@ def config_js(request):
     I use 'true' and 'false' as string on purpose!
     It will be converted in real bool objects on JavaScript-side
     """
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         response = {'user_auth': 'true', 'username': request.user}
     else:
         response = {'user_auth': 'false', 'username': ''}

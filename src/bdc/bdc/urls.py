@@ -15,8 +15,8 @@ Including another URLconf
 """
 
 from django.conf.urls import url
-from django.contrib.auth.views import logout
-from django.core.urlresolvers import reverse_lazy
+from django.contrib.auth.views import LogoutView
+from django.urls import reverse_lazy
 
 from base import views as base_views
 from bdc.auth import login_view
@@ -34,7 +34,7 @@ urlpatterns = [
     # login
     url(r'^login/?$', login_view, name='login'),
     # logout
-    url(r'^logout/?$', logout, {'next_page': reverse_lazy('member-search')}, name='logout'),
+    url(r'^logout/?$', LogoutView.as_view(), {'next_page': reverse_lazy('member-search')}, name='logout'),
     # change-password
     url(r'^change-password/?$', base_views.change_password, name='change-password'),
 
