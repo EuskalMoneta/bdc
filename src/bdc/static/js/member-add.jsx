@@ -111,18 +111,20 @@ class MemberAddPage extends React.Component {
 
         // Get countries for the country selector
         var computeCountries = (countries) => {
-            var france = _.findWhere(countries, {label: "France"})
-            var france = {label: "France", value: france.id}
-
             var res = _.chain(countries)
-                .filter(function(item){ return item.active == 1 && item.code != "" &&  item.label != "France" })
+                .filter(function(item){ return item.label != "-" && item.id != "0" })
                 .map(function(item){ return {label: item.label, value: item.id} })
-                .sortBy(function(item){ return item.label })
                 .value()
 
-            // We add France at first position of the Array, and we set it as the default value
-            res.unshift(france)
-            this.setState({countries: res, country: france})
+            // Mettre la France en première position si elle existe
+            var franceIndex = _.findIndex(res, {label: "France"})
+            if (franceIndex > -1) {
+                var france = res.splice(franceIndex, 1)[0]
+                res.unshift(france)
+                this.setState({countries: res, country: france})
+            } else {
+                this.setState({countries: res, country: res.length > 0 ? res[0] : null})
+            }
         }
 
         // Get all associations (no filter): fkAssoAllList
@@ -539,6 +541,32 @@ class MemberAddPage extends React.Component {
                             rows={3}
                             required
                         />
+
+                        <div className="form-group row">
+                            <label
+                                className="control-label col-sm-3"
+                                data-required="true"
+                                htmlFor="memberaddform-country">
+                                {__("Pays")}
+                                <span className="required-symbol">&nbsp;*</span>
+                            </label>
+                            <div className="col-sm-6 memberaddform" data-eusko="memberaddform-country">
+                                <SimpleSelect
+                                    ref="select"
+                                    value={this.state.country}
+                                    options={this.state.countries}
+                                    placeholder={__("Pays")}
+                                    autocomplete="off"
+                                    theme="bootstrap3"
+                                    onValueChange={this.countryOnValueChange}
+                                    renderOption={SelectizeUtils.selectizeNewRenderOption}
+                                    renderValue={SelectizeUtils.selectizeRenderValue}
+                                    onBlur={this.validateFormOnBlur}
+                                    renderNoResultsFound={SelectizeUtils.selectizeNoResultsFound}
+                                    required
+                                />
+                            </div>
+                        </div>
                         <div className="form-group row">
                             <label
                                 className="control-label col-sm-3"
@@ -592,31 +620,7 @@ class MemberAddPage extends React.Component {
                                 />
                             </div>
                         </div>
-                        <div className="form-group row">
-                            <label
-                                className="control-label col-sm-3"
-                                data-required="true"
-                                htmlFor="memberaddform-country">
-                                {__("Pays")}
-                                <span className="required-symbol">&nbsp;*</span>
-                            </label>
-                            <div className="col-sm-6 memberaddform" data-eusko="memberaddform-country">
-                                <SimpleSelect
-                                    ref="select"
-                                    value={this.state.country}
-                                    options={this.state.countries}
-                                    placeholder={__("Pays")}
-                                    autocomplete="off"
-                                    theme="bootstrap3"
-                                    onValueChange={this.countryOnValueChange}
-                                    renderOption={SelectizeUtils.selectizeNewRenderOption}
-                                    renderValue={SelectizeUtils.selectizeRenderValue}
-                                    onBlur={this.validateFormOnBlur}
-                                    renderNoResultsFound={SelectizeUtils.selectizeNoResultsFound}
-                                    required
-                                />
-                            </div>
-                        </div>
+
                         <Input
                             name="phone"
                             data-eusko="memberaddform-phone"
