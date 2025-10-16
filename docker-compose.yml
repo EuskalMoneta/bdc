@@ -1,24 +1,39 @@
-version: '2'
-
 services:
   bdc:
     build: .
-    container_name: bdc
     volumes:
       - ./src/bdc:/usr/src/app
       - /usr/src/app/node_modules
     ports:
-      - 8001:8000
+      - "8001:8000"
     environment:
-      - API_PUBLIC_URL=http://localhost:8000
-      - API_INTERNAL_URL=http://api:8000
-      - DJANGO_DEBUG=True
-      - TEST=False
-      - NODE_ENV=dev
+      API_PUBLIC_URL: http://localhost:8000
+      API_INTERNAL_URL: http://api:8000
+      DJANGO_DEBUG: "True"
+      TEST: "False"
+      DATABASE_URL: postgres://bdc_user:bdc_password@bdc_db:5432/bdc_db
+    depends_on:
+      - bdc_db
     networks:
       - eusko_net
 
+  bdc_db:
+      image: postgres:16
+      restart: always
+      environment:
+        POSTGRES_DB: bdc_db
+        POSTGRES_USER: bdc_user
+        POSTGRES_PASSWORD: bdc_password
+      volumes:
+        - postgres_data:/var/lib/postgresql/data
+      ports:
+        - "5430:5432"
+      networks:
+        - eusko_net
+
+volumes:
+  postgres_data:
+
 networks:
   eusko_net:
-    external:
-      name: api_eusko_net
+    external: true

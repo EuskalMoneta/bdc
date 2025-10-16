@@ -8,6 +8,8 @@ data/
 log/
 old/
 
+.idea/
+
 db.sqlite3
 CR.md
 eusko.sublime-project
@@ -28,3 +30,5 @@ node_modules/
 
 ## Optional npm cache directory
 .npm/
+
+exportBDC.sql

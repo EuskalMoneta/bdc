@@ -43,7 +43,7 @@ Elle lance le watcher webpack, et c'est lui qui compile notre JSX et gère nos d
 est un (ou +) bundle(s) se trouvant dans `/assets/static/bundles` du container `bureaudechange`.
 
 ```
-docker-compose exec bureaudechange npm run watch
+sudo docker compose exec bdc npm run watch
 ```
 
 Il existe également 2 autres commandes:
