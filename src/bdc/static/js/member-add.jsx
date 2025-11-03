@@ -187,22 +187,27 @@ class MemberAddPage extends React.Component {
     zipOnSearchChange = (search) => {
         this.setState({zipSearch: search})
         // Search for towns for this zipcode for France only
-        if (search.length >= 4 && this.state.country.label == "France") {
-            // We use fetch API to ... fetch towns for this zipcode
-            var computeTowns = (towns) => {
-                var zipList = _.chain(towns)
-                    .map(function(item){ return {label: item.zip + " - " + item.town, value: item.zip, town: item.town} })
-                    .sortBy(function(item){ return item.label })
-                    .value()
+        if (this.state.country && this.state.country.label === "France") {
+            if (search.length >= 4) {
+                // We use fetch API to ... fetch towns for this zipcode
+                var computeTowns = (towns) => {
+                    var zipList = _.chain(towns)
+                        .map(function(item){ return {label: item.zip + " - " + item.town, value: item.zip, town: item.town} })
+                        .sortBy(function(item){ return item.label })
+                        .value()
 
-                var townList = _.chain(towns)
-                    .map(function(item){ return {label: item.town, value: item.town} })
-                    .sortBy(function(item){ return item.label })
-                    .value()
+                    var townList = _.chain(towns)
+                        .map(function(item){ return {label: item.town, value: item.town} })
+                        .sortBy(function(item){ return item.label })
+                        .value()
 
-                this.setState({zipList: zipList, townList: townList})
+                    this.setState({zipList: zipList, townList: townList})
+                }
+                fetchAuth(getAPIBaseURL + "towns/?zipcode=" + search, 'get', computeTowns)
             }
-            fetchAuth(getAPIBaseURL + "towns/?zipcode=" + search, 'get', computeTowns)
+        } else {
+            // Free input for other countries
+            this.setState({zipList: [], townList: []})
         }
     }
 
@@ -227,8 +232,8 @@ class MemberAddPage extends React.Component {
 
         if (message) {
             return  <div className="no-results-found" style={{fontSize: 15}}>
-                        {message}
-                    </div>
+                {message}
+            </div>
         }
     }
 
@@ -243,8 +248,8 @@ class MemberAddPage extends React.Component {
     zipRenderValue = (item) => {
         // When we select a value, this is how we display it
         return  <div className="simple-value">
-                    <span className="memberaddform" style={{marginLeft: 10, verticalAlign: "middle"}}>{item.value}</span>
-                </div>
+            <span className="memberaddform" style={{marginLeft: 10, verticalAlign: "middle"}}>{item.value}</span>
+        </div>
     }
 
     zipOnBlur = () => {
@@ -257,8 +262,16 @@ class MemberAddPage extends React.Component {
     }
 
     // country
-    countryOnValueChange = (item) => {
-        this.setState({country: item})
+    countryOnValueChange = (country) => {
+        this.setState({
+            country: country,
+            // erase all when cahnging country
+            zip: null,
+            town: null,
+            zipList: [],
+            townList: [],
+            zipSearch: ''
+        })
     }
 
     // fkasso
@@ -316,62 +329,62 @@ class MemberAddPage extends React.Component {
 
     getModalElements = () => {
         this.setState({modalBody:
-            _.map(this.state.formData,
-                (item, key) => {
-                    switch (key) {
-                        case 'login':
-                            return {'label': __('N° adhérent'), 'value': item, order: 1}
-                            break;
-                        case 'civility_id':
-                            return {'label': __('Civilité'),
+                _.map(this.state.formData,
+                    (item, key) => {
+                        switch (key) {
+                            case 'login':
+                                return {'label': __('N° adhérent'), 'value': item, order: 1}
+                                break;
+                            case 'civility_id':
+                                return {'label': __('Civilité'),
                                     'value': item == 'MR' ? __('Monsieur') : __('Madame'), order: 2}
-                            break;
-                        case 'lastname':
-                            return {'label': __('Nom'), 'value': item, order: 3}
-                            break;
-                        case 'firstname':
-                            return {'label': __('Prénom'), 'value': item, order: 4}
-                            break;
-                        case 'birth':
-                            return {'label': __('Date de naissance'), 'value': item, order: 5}
-                            break;
-                        case 'address':
-                            return {'label': __('Adresse postale'), 'value': item, order: 6}
-                            break;
-                        case 'zip':
-                            return {'label': __('Code Postal'), 'value': item, order: 7}
-                            break;
-                        case 'town':
-                            return {'label': __('Ville'), 'value': item, order: 8}
-                            break;
-                        case 'country_id':
-                            return {'label': __('Pays'), 'value': this.state.country.label, order: 9}
-                            break;
-                        case 'phone':
-                            return {'label': __('N° téléphone'), 'value': item, order: 10}
-                            break;
-                        case 'email':
-                            return {'label': __('Email'), 'value': item, order: 11}
-                            break;
-                        case 'options_recevoir_actus':
-                            return {'label': __("Souhaite être informé des actualités liées à l'eusko"),
+                                break;
+                            case 'lastname':
+                                return {'label': __('Nom'), 'value': item, order: 3}
+                                break;
+                            case 'firstname':
+                                return {'label': __('Prénom'), 'value': item, order: 4}
+                                break;
+                            case 'birth':
+                                return {'label': __('Date de naissance'), 'value': item, order: 5}
+                                break;
+                            case 'address':
+                                return {'label': __('Adresse postale'), 'value': item, order: 6}
+                                break;
+                            case 'zip':
+                                return {'label': __('Code Postal'), 'value': item, order: 7}
+                                break;
+                            case 'town':
+                                return {'label': __('Ville'), 'value': item, order: 8}
+                                break;
+                            case 'country_id':
+                                return {'label': __('Pays'), 'value': this.state.country.label, order: 9}
+                                break;
+                            case 'phone':
+                                return {'label': __('N° téléphone'), 'value': item, order: 10}
+                                break;
+                            case 'email':
+                                return {'label': __('Email'), 'value': item, order: 11}
+                                break;
+                            case 'options_recevoir_actus':
+                                return {'label': __("Souhaite être informé des actualités liées à l'eusko"),
                                     'value': item == '1' ? __('Oui') : __('Non'), order: 12}
-                            break
-                        case 'options_asso_saisie_libre':
-                            return {'label': __('Choix Association 3% #1'), 'value': item, order: 13}
-                            break
-                        case 'fk_asso':
-                            return {'label': __('Choix Association 3% #1'), 'value': this.state.fkAsso.label, order: 13}
-                            break;
-                        case 'fk_asso2':
-                            return {'label': __('Choix Association 3% #2'), 'value': this.state.fkAsso2.label, order: 14}
-                            break;
-                        default:
-                            return {'label': item, 'value': item, order: 999}
-                            break;
+                                break
+                            case 'options_asso_saisie_libre':
+                                return {'label': __('Choix Association 3% #1'), 'value': item, order: 13}
+                                break
+                            case 'fk_asso':
+                                return {'label': __('Choix Association 3% #1'), 'value': this.state.fkAsso.label, order: 13}
+                                break;
+                            case 'fk_asso2':
+                                return {'label': __('Choix Association 3% #2'), 'value': this.state.fkAsso2.label, order: 14}
+                                break;
+                            default:
+                                return {'label': item, 'value': item, order: 999}
+                                break;
+                        }
                     }
-                }
-            )
+                )
         }, this.openModal)
     }
 
@@ -396,7 +409,7 @@ class MemberAddPage extends React.Component {
 
         var promiseError = (err) => {
             // Error during request, or parsing NOK :(
-            
+
             // Save actual state for later
             sessionStorage.setItem('restart-member-add', JSON.stringify(this.state))
             this.enableButton()
@@ -472,7 +485,7 @@ class MemberAddPage extends React.Component {
                             type="inline"
                             label={__("Civilité")}
                             options={[{value: 'MME', label: __('Madame')},
-                                     {value: 'MR', label: __('Monsieur')}
+                                {value: 'MR', label: __('Monsieur')}
                             ]}
                             onChange={this.onFormChange}
                             elementWrapperClassName={[{'col-sm-9': false}, 'col-sm-6']}
@@ -584,7 +597,7 @@ class MemberAddPage extends React.Component {
                                     placeholder={__("Code Postal")}
                                     theme="bootstrap3"
                                     autocomplete="off"
-                                    createFromSearch={SelectizeUtils.selectizeCreateFromSearch}
+                                    createFromSearch={this.state.country && this.state.country.label !== "France" ? SelectizeUtils.selectizeCreateFromSearch : null}
                                     onSearchChange={this.zipOnSearchChange}
                                     onValueChange={this.zipOnValueChange}
                                     renderOption={SelectizeUtils.selectizeRenderOption}
@@ -611,11 +624,12 @@ class MemberAddPage extends React.Component {
                                     placeholder={__("Ville")}
                                     autocomplete="off"
                                     theme="bootstrap3"
-                                    createFromSearch={SelectizeUtils.selectizeCreateFromSearch}
+                                    createFromSearch={this.state.country && this.state.country.label !== "France" ? SelectizeUtils.selectizeCreateFromSearch : null}
                                     onValueChange={this.townOnValueChange}
                                     renderValue={SelectizeUtils.selectizeRenderValue}
                                     onBlur={this.validateFormOnBlur}
                                     renderNoResultsFound={SelectizeUtils.selectizeNoResultsFound}
+                                    disabled={this.state.country && this.state.country.label === "France"}
                                     required
                                 />
                             </div>
@@ -660,7 +674,7 @@ class MemberAddPage extends React.Component {
                             label={__("Souhaite être informé des actualités liées à l'eusko")}
                             help={__("L'adhérent recevra un à deux mails par semaine.")}
                             options={[{value: '1', label: __('Oui')},
-                                      {value: '0', label: __('Non')}
+                                {value: '0', label: __('Non')}
                             ]}
                             elementWrapperClassName={[{'col-sm-9': false}, 'col-sm-6']}
                             required
